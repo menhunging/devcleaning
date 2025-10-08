@@ -1,0 +1,11 @@
+.authForm {
+  width: 463px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background-color: $colorBlack-a5;
+  backdrop-filter: blur(20px);
+  padding: 45px 50px;
+  border-radius: 30px;
+}

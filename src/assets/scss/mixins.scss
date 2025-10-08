@@ -1,0 +1,62 @@
+@mixin cfix {
+  &:after {
+    content: " ";
+    display: block;
+    clear: both;
+  }
+}
+
+@mixin invisLink {
+  position: relative;
+  z-index: 1;
+
+  & > a {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 7;
+    overflow: hidden;
+    text-indent: 200%;
+    white-space: nowrap;
+  }
+}
+
+@mixin after {
+  &::after {
+    content: "";
+    position: absolute;
+    transition: all 0.3s;
+    @content;
+  }
+}
+
+@mixin before {
+  &::before {
+    content: "";
+    position: absolute;
+    transition: all 0.3s;
+    @content;
+  }
+}
+
+@mixin text-decoration-hover($color) {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration 0.3s;
+  text-underline-offset: 4px;
+
+  @include hover {
+    text-decoration-color: $color;
+  }
+}
+
+@mixin hover {
+  &:hover {
+    @media (hover: hover) {
+      @content;
+    }
+  }
+}

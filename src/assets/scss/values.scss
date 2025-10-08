@@ -1,0 +1,130 @@
+$fontMain: "Manrope", sans-serif !default;
+
+$colorWhite: rgba(255, 255, 255, 1) !default;
+$colorWhite-a1: rgba(255, 255, 255, 0.1) !default;
+$colorWhite-a2: rgba(255, 255, 255, 0.2) !default;
+$colorWhite-a3: rgba(255, 255, 255, 0.3) !default;
+$colorWhite-a4: rgba(255, 255, 255, 0.4) !default;
+$colorWhite-a5: rgba(255, 255, 255, 0.5) !default;
+$colorWhite-a6: rgba(255, 255, 255, 0.6) !default;
+$colorWhite-a7: rgba(255, 255, 255, 0.7) !default;
+$colorWhite-a8: rgba(255, 255, 255, 0.8) !default;
+$colorWhite-a9: rgba(255, 255, 255, 0.9) !default;
+
+$colorBlack: rgba(0, 0, 0, 1) !default;
+$colorBlack-a1: rgba(0, 0, 0, 0.1) !default;
+$colorBlack-a2: rgba(0, 0, 0, 0.2) !default;
+$colorBlack-a3: rgba(0, 0, 0, 0.3) !default;
+$colorBlack-a4: rgba(0, 0, 0, 0.4) !default;
+$colorBlack-a5: rgba(0, 0, 0, 0.5) !default;
+$colorBlack-a6: rgba(0, 0, 0, 0.6) !default;
+$colorBlack-a7: rgba(0, 0, 0, 0.7) !default;
+$colorBlack-a8: rgba(0, 0, 0, 0.8) !default;
+$colorBlack-a9: rgba(0, 0, 0, 0.9) !default;
+
+$colorDark: #2b2a2a !default;
+
+$colorGray: #f3f6f8 !default;
+$colorGrayLight: #6f7583 !default;
+
+$colorGreen: #019875 !default;
+$colorGreenLight: #99d6c8 !default;
+
+$colorRed: rgba(204, 35, 42, 1) !default;
+
+$responsive1799: "1799px" !default;
+$responsive1699: "1699px" !default;
+$responsive1549: "1549px" !default;
+$responsive1439: "1439px" !default;
+$responsive1199: "1199px" !default;
+$responsive1023: "1023px" !default;
+$responsive767: "767px" !default;
+$responsive639: "639px" !default;
+$responsive479: "479px" !default;
+$responsive389: "389px" !default;
+
+@mixin responsiveMinWidth1920 {
+  @media (min-width: 1920px) {
+    @content;
+  }
+}
+
+@mixin responsiveMinWidth1600 {
+  @media (min-width: 1600px) {
+    @content;
+  }
+}
+
+@mixin responsiveMinWidth1280 {
+  @media (min-width: 1280px) {
+    @content;
+  }
+}
+
+@mixin responsiveMinWidth768 {
+  @media (min-width: 768px) {
+    @content;
+  }
+}
+
+// /min-width
+
+@mixin responsive1799 {
+  @media (max-width: $responsive1799) {
+    @content;
+  }
+}
+
+@mixin responsive1699 {
+  @media (max-width: $responsive1699) {
+    @content;
+  }
+}
+
+@mixin responsive1549 {
+  @media (max-width: $responsive1549) {
+    @content;
+  }
+}
+
+@mixin responsive1439 {
+  @media (max-width: $responsive1439) {
+    @content;
+  }
+}
+
+@mixin responsive1199 {
+  @media (max-width: $responsive1199) {
+    @content;
+  }
+}
+
+@mixin responsive1023 {
+  @media (max-width: $responsive1023) {
+    @content;
+  }
+}
+
+@mixin responsive767 {
+  @media (max-width: $responsive767) {
+    @content;
+  }
+}
+
+@mixin responsive639 {
+  @media (max-width: $responsive639) {
+    @content;
+  }
+}
+
+@mixin responsive479 {
+  @media (max-width: $responsive479) {
+    @content;
+  }
+}
+
+@mixin responsive389 {
+  @media (max-width: $responsive389) {
+    @content;
+  }
+}

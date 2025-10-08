@@ -1,0 +1,46 @@
+@use "./values" as *;
+@use "./mixins" as *;
+
+body {
+  font-family: $fontMain;
+  font-size: 16px;
+  line-height: 18px;
+}
+
+.site-wrapper {
+  padding: 25px 50px;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.input-item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  input {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 20px;
+    width: 100%;
+    height: 56px;
+    height: 50px;
+    background-color: transparent;
+    color: $colorWhite;
+    border: solid 1px $colorWhite;
+    padding: 0 15px;
+    border-radius: 10px;
+
+    &::placeholder {
+      color: $colorWhite-a3;
+    }
+  }
+
+  .error {
+    color: $colorRed;
+  }
+}
