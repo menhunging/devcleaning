@@ -1,7 +1,7 @@
 // import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 // import api from "../../api/api";
 
-// interface ObjectState {}
+// interface ObjectState {} 
 
 // const initialState: ObjectState = {};
 
