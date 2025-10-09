@@ -134,7 +134,7 @@ const authSlice = createSlice({
         state.userInfo.role = action.payload.role;
         state.isAuthenticated = true;
       })
-      .addCase(authUser.rejected, (state) => {
+      .addCase(authUser.rejected, () => {
         console.log("authUser.rejected");
 
         // state.loading = false;

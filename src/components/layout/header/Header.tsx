@@ -10,7 +10,7 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { userInfo, isAuthenticated } = useAppSelector((state) => state.auth);
+  const { userInfo } = useAppSelector((state) => state.auth);
 
   const logountHandle = () => {
     dispatch(logout());
