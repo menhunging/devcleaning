@@ -1,0 +1,45 @@
+@use "./values" as *;
+@use "./mixins" as *;
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.caption {
+  font-family: $fontMain;
+  font-weight: 500;
+}
+
+h1,
+.caption--h1 {
+}
+
+h2,
+.caption--h2 {
+  font-size: 28px;
+  line-height: 30px;
+  font-weight: 400;
+
+  @include responsive1549 {
+  }
+}
+
+h3,
+.caption--h3 {
+  font-size: 22px;
+  line-height: 24px;
+
+  @include responsive1549 {
+  }
+}
+
+h4,
+.caption--h4 {
+  font-size: 18px;
+  line-height: 20px;
+
+  @include responsive1549 {
+  }
+}

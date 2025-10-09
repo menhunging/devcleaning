@@ -1,67 +1,145 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../api/api";
 
+interface AuthMessage {
+  login: string;
+  role: string;
+  email: string;
+  token?: string;
+}
+
 interface AuthState {
-  token: string | null;
   loading: boolean;
   error: string | null;
   isAuthenticated: boolean;
+  userInfo: AuthMessage;
+}
+
+interface AuthResponse {
+  // типы для ответа auth
+  success: boolean;
+  message: AuthMessage | string; // если ошибка то у нас строка в message
 }
 
 const initialState: AuthState = {
-  token: localStorage.getItem("tokenCLEANING"),
   loading: false,
   error: null,
   isAuthenticated: !!localStorage.getItem("tokenCLEANING"),
+  userInfo: {
+    login: "",
+    role: "",
+    email: "",
+  },
 };
 
-export const loginUser = createAsyncThunk(
-  "auth/loginUser",
-  async (payload: { login: string; password: string }, thunkAPI) => {
-    try {
-      const response = payload.login === "admin" ? "ok" : "not";
-      // const response = await api.get("users/");
-      // console.log(response.data);
+export const loginUser = createAsyncThunk<
+  AuthMessage, // возвращаемое значение при fulfilled
+  { login: string; password: string }, // аргументы
+  { rejectValue: string } // тип ошибки при rejected
+>("auth/loginUser", async (payload, thunkAPI) => {
+  try {
+    const response = await api.post<AuthResponse>("auth/", payload);
 
-      // const response = await api.post("auth/", payload);
-      // const token = response.data.token;
-      // localStorage.setItem("tokenCLEANING", token);
-      localStorage.setItem("tokenCLEANING", "OK");
-      return response;
-    } catch (err: any) {
-      console.log("auth error slice:", err);
+    const { success, message } = response.data;
+
+    if (!success || typeof message === "string") {
       return thunkAPI.rejectWithValue(
-        err.response?.data?.message || "Login failed"
+        typeof message === "string" ? message : "Ошибка авторизации"
       );
     }
+
+    if (message.token) {
+      localStorage.setItem("tokenCLEANING", message.token);
+    }
+
+    return message;
+  } catch (err: any) {
+    const error = err as { response?: { data?: { message?: string } } };
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Ошибка авторизации"
+    );
   }
-);
+});
+
+export const authUser = createAsyncThunk<
+  AuthMessage,
+  void,
+  { rejectValue: string }
+>("auth/authUser", async (_, thunkAPI) => {
+  const token = localStorage.getItem("tokenCLEANING");
+
+  if (!token) return thunkAPI.rejectWithValue("Нет токена");
+
+  try {
+    const response = await api.get<AuthResponse>("auth/me");
+
+    const { success, message } = response.data;
+
+    if (!success || typeof message === "string") {
+      return thunkAPI.rejectWithValue(
+        typeof message === "string" ? message : "Ошибка авторизации"
+      );
+    }
+
+    return message;
+  } catch (err) {
+    const error = err as { response?: { data?: { message?: string } } };
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Ошибка при проверке токена"
+    );
+  }
+});
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
     logout(state) {
-      state.token = null;
       state.isAuthenticated = false;
+      state.error = null;
+      state.userInfo = {
+        login: "",
+        role: "",
+        email: "",
+      };
       localStorage.removeItem("tokenCLEANING");
     },
   },
   extraReducers: (builder) => {
     builder
+      // loginUser
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        // state.token = action.payload;
+        state.userInfo.login = action.payload.login;
+        state.userInfo.email = action.payload.email;
+        state.userInfo.role = action.payload.role;
         state.isAuthenticated = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
         state.isAuthenticated = false;
+      })
+      // authUser
+      .addCase(authUser.fulfilled, (state, action) => {
+        console.log("authUser.fulfilled");
+
+        state.loading = false;
+        state.userInfo.login = action.payload.login;
+        state.userInfo.email = action.payload.email;
+        state.userInfo.role = action.payload.role;
+        state.isAuthenticated = true;
+      })
+      .addCase(authUser.rejected, (state) => {
+        console.log("authUser.rejected");
+
+        // state.loading = false;
+        // state.isAuthenticated = false;
+        // localStorage.removeItem("tokenCLEANING");
       });
   },
 });

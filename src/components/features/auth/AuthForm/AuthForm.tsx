@@ -8,6 +8,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ loading, authHandle }) => {
   const [login, setLogin] = useState("admin");
   const [password, setPassword] = useState("12345");
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     authHandle(login, password);
@@ -28,13 +30,18 @@ const AuthForm: React.FC<AuthFormProps> = ({ loading, authHandle }) => {
 
       <div className="input-item">
         <input
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="Пароль"
           name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+
+        <span
+          className={showPassword ? "icon-eye active" : "icon-eye"}
+          onClick={() => setShowPassword((prev) => !prev)}
+        ></span>
       </div>
 
       <button className="btn btn--white" type="submit" disabled={loading}>

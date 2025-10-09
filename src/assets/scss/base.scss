@@ -5,15 +5,67 @@ body {
   font-family: $fontMain;
   font-size: 16px;
   line-height: 18px;
+  width: 100%;
+  max-width: 2560px;
+
+  @include responsive1699 {
+    font-size: 14px;
+    line-height: 16px;
+  }
+
+  @include responsive1439 {
+    font-size: 12px;
+    line-height: 14px;
+  }
 }
 
 .site-wrapper {
   padding: 25px 50px;
+  width: 100%;
+
+  @include responsive1699 {
+    padding: 15px;
+  }
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
+  min-width: 1200px;
+}
+
+.main {
+  padding: 50px 0;
+}
+
+picture {
+  position: relative;
+  display: block;
+
+  img {
+    position: relative;
+  }
+}
+
+.picture-block {
+  position: relative;
+
+  picture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
 }
 
 .input-item {
@@ -21,6 +73,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  position: relative;
 
   input {
     font-weight: 600;
@@ -35,6 +88,10 @@ body {
     padding: 0 15px;
     border-radius: 10px;
 
+    &[name="password"] {
+      padding-right: 35px;
+    }
+
     &::placeholder {
       color: $colorWhite-a3;
     }
@@ -42,5 +99,47 @@ body {
 
   .error {
     color: $colorRed;
+  }
+
+  .icon-eye {
+    cursor: pointer;
+    width: 25px;
+    height: 100%;
+    background-size: 15px;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+    right: 12px;
+    bottom: 0;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='14' height='9' viewBox='0 0 14 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M13.2298 3.83C13.3957 4.01375 13.4875 4.25248 13.4875 4.5C13.4875 4.74752 13.3957 4.98625 13.2298 5.17C12.1798 6.3 9.78985 8.5 6.99985 8.5C4.20985 8.5 1.81985 6.3 0.769846 5.17C0.604006 4.98625 0.512207 4.74752 0.512207 4.5C0.512207 4.25248 0.604006 4.01375 0.769846 3.83C1.81985 2.7 4.20985 0.5 6.99985 0.5C9.78985 0.5 12.1798 2.7 13.2298 3.83Z' stroke='%236F7583' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M6.99976 6.5C8.10433 6.5 8.99976 5.60457 8.99976 4.5C8.99976 3.39543 8.10433 2.5 6.99976 2.5C5.89519 2.5 4.99976 3.39543 4.99976 4.5C4.99976 5.60457 5.89519 6.5 6.99976 6.5Z' stroke='%236F7583' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e ");
+
+    &.active {
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='14' height='12' viewBox='0 0 14 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.29 4.40002C12.67 4.74002 12.99 5.07002 13.23 5.33002C13.3958 5.51378 13.4876 5.7525 13.4876 6.00002C13.4876 6.24755 13.3958 6.48627 13.23 6.67002C12.18 7.80002 9.78998 10 6.99998 10H6.59998' stroke='%23959595' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M3.86997 9.13C2.7116 8.48125 1.66494 7.65067 0.769968 6.67C0.604128 6.48625 0.512329 6.24752 0.512329 6C0.512329 5.75248 0.604128 5.51375 0.769968 5.33C1.81997 4.2 4.20997 2 6.99997 2C8.09974 2.02299 9.17608 2.32216 10.13 2.87' stroke='%23959595' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M12.5 0.5L1.5 11.5' stroke='%23959595' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M5.59 7.41C5.21441 7.03665 5.00223 6.52958 5 6C5 5.46957 5.21071 4.96086 5.58579 4.58579C5.96086 4.21071 6.46957 4 7 4C7.52958 4.00223 8.03665 4.21441 8.41 4.59' stroke='%23959595' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M8.74 7C8.56198 7.3043 8.3067 7.55614 8 7.73' stroke='%23959595' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e ");
+    }
+  }
+}
+
+.page {
+  width: 100%;
+
+  .page__head {
+    width: 100%;
+
+    .caption {
+      margin: 0 auto;
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  .page__controls {
+    width: 100%;
+    margin-top: 50px;
+  }
+
+  .page__body {
+    width: 100%;
+    margin-top: 50px;
   }
 }

@@ -1,19 +1,19 @@
 import axios from "axios";
+import type { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 
-const api = axios.create({
-  baseURL: "https://jsonplaceholder.typicode.com/",
-  //   baseURL: "https://api-clining.fourodev.ru/api/",
+const api: AxiosInstance = axios.create({
+  baseURL: "https://api-clining.fourodev.ru/api/",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-export default api;
+api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const token = localStorage.getItem("tokenCLEANING");
+  if (token && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
-// api.interceptors.request.use((config) => {
-//   const token = localStorage.getItem("token");
-//   if (token) {
-//     config.headers.Authorization = `Bearer ${token}`;
-//   }
-//   return config;
-// });
+export default api;

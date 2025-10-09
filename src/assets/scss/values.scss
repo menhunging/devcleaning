@@ -26,9 +26,11 @@ $colorDark: #2b2a2a !default;
 
 $colorGray: #f3f6f8 !default;
 $colorGrayLight: #6f7583 !default;
+$colorGrayDark: #e7ebee !default;
 
 $colorGreen: #019875 !default;
 $colorGreenLight: #99d6c8 !default;
+$colorGreenBtn: #d3f8ef !default;
 
 $colorRed: rgba(204, 35, 42, 1) !default;
 
@@ -36,6 +38,7 @@ $responsive1799: "1799px" !default;
 $responsive1699: "1699px" !default;
 $responsive1549: "1549px" !default;
 $responsive1439: "1439px" !default;
+$responsive1279: "1279px" !default;
 $responsive1199: "1199px" !default;
 $responsive1023: "1023px" !default;
 $responsive767: "767px" !default;
@@ -89,6 +92,12 @@ $responsive389: "389px" !default;
 
 @mixin responsive1439 {
   @media (max-width: $responsive1439) {
+    @content;
+  }
+}
+
+@mixin responsive1279 {
+  @media (max-width: $responsive1279) {
     @content;
   }
 }

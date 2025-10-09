@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import { logout } from "@/store/slices/authSlice";
@@ -10,9 +10,7 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { loading, error, isAuthenticated } = useAppSelector(
-    (state) => state.auth
-  );
+  const { userInfo, isAuthenticated } = useAppSelector((state) => state.auth);
 
   const logountHandle = () => {
     dispatch(logout());
@@ -24,37 +22,54 @@ const Header: React.FC = () => {
       <Link to="/" className="header__logo">
         <img src={logo} alt="Logo" />
       </Link>
+
       <nav className="menu">
-        <Link to="/" className="menu__link">
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            `menu__link menu__link--object ${isActive ? "active" : ""}`
+          }
+        >
           Объекты
-        </Link>
-        <Link to="/" className="menu__link">
+        </NavLink>
+        <NavLink to="/catalog" className="menu__link menu__link--catalog">
           Каталоги
-        </Link>
-        <Link to="/" className="menu__link">
+        </NavLink>
+        <Link to="/" className="menu__link menu__link--planer">
           Планер
         </Link>
-        <Link to="/" className="menu__link">
+        <Link to="/" className="menu__link menu__link--dashboard">
           Дашборд
         </Link>
-        <Link to="/" className="menu__link">
+        <Link to="/" className="menu__link menu__link--message">
           Обращения
         </Link>
-        <Link to="/" className="menu__link">
+        <Link to="/" className="menu__link menu__link--docs">
           Рабочие документы
         </Link>
-        <Link to="/" className="menu__link">
+        <Link to="/" className="menu__link menu__link--insp">
           Инспектор
         </Link>
-        <Link to="/" className="menu__link">
+        <Link to="/" className="menu__link menu__link--educat">
           Обучение
         </Link>
       </nav>
 
       <div className="header-controls">
-        <span className="link-logout" onClick={logountHandle}>
-          Выход
-        </span>
+        <div className="header-user-info">
+          <span className="header-user-info__name">{userInfo.login}</span>
+          <span className="header-user-info__project">intercleaning</span>
+        </div>
+
+        <div className="header-controls__menu">
+          <ul>
+            <li>
+              <span className="link-logout" onClick={logountHandle}>
+                Выход
+              </span>
+            </li>
+          </ul>
+        </div>
       </div>
     </header>
   );
