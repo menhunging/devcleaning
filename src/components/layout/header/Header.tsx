@@ -58,7 +58,7 @@ const Header: React.FC = () => {
       <div className="header-controls">
         <div className="header-user-info">
           <span className="header-user-info__name">{userInfo.login}</span>
-          <span className="header-user-info__project">intercleaning</span>
+          <span className="header-user-info__project">intercleaning 1</span>
         </div>
 
         <div className="header-controls__menu">
