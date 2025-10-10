@@ -45,12 +45,11 @@ jobs:
         script: |
           sudo systemctl reload nginx
 
-    # ✅ (опционально) Запуск /var/www/deploy.sh на сервере
-    # - name: 🚀 Run deploy.sh on server
-    #   uses: appleboy/ssh-action@v0.1.10
-    #   with:
-    #     host: ${{ secrets.HOST }}
-    #     username: ${{ secrets.USERNAME }}
-    #     key: ${{ secrets.SSH_KEY }}
-    #     script: |
-    #       /var/www/deploy.sh
+      - name: 🚀 Run deploy.sh on server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            /var/www/deploy.sh
