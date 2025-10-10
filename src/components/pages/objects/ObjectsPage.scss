@@ -45,7 +45,7 @@
     }
 
     @include before {
-      background-color: $colorGrayLight;
+      background-color: $colorGrayLight-a1;
       width: 1px;
       height: 100%;
       left: -28px;
@@ -68,7 +68,7 @@
 }
 
 .object-item__bl {
-  color: $colorGrayLight;
+  color: $colorGrayLight-a1;
   display: flex;
   align-items: flex-end;
   gap: 10px;

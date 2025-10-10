@@ -18,17 +18,29 @@
   letter-spacing: 0em;
   text-align: center;
   padding: 10px;
-  border-radius: 30px;
+  border-radius: 12px;
   font-variant-ligatures: none;
 
   &--white {
     background-color: $colorWhite;
     color: $colorBlack;
+
+    @include hover {
+      background-color: $colorWhite-a8;
+    }
   }
 
-  &--green {
+  &--gray {
+  }
+
+  &--greenLight {
     background-color: $colorGreenBtn;
     color: $colorGreen;
+    border-radius: 30px;
+
+    @include hover {
+      background-color: $colorGreenBtnHover;
+    }
   }
 
   &--add {
@@ -38,12 +50,10 @@
     background-repeat: no-repeat;
   }
 
-  @include hover {
-    // transform: scale(0.9);
-  }
-
   &:disabled {
-    opacity: 0.33;
+    opacity: 0.5;
     pointer-events: none;
+    background-color: $colorGrayLight-a1;
+    color: $colorWhite;
   }
 }

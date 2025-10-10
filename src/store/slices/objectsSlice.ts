@@ -1,62 +1,63 @@
-// import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-// import api from "../../api/api";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import api from "../../api/api";
 
-// interface ObjectState {} 
+import type {
+  ObjectItem,
+  ObjectsResponse,
+  ObjectsState,
+} from "@/types/objects";
 
-// const initialState: ObjectState = {};
+export const initialState: ObjectsState = {
+  loading: false,
+  error: null,
+  DATA: [],
+};
 
-// export const getObject = createAsyncThunk<
-//   AuthMessage, // возвращаемое значение при fulfilled
-//   { login: string; password: string }, // аргументы
-//   { rejectValue: string } // тип ошибки при rejected
-// >("auth/loginUser", async (payload, thunkAPI) => {
-//   try {
-//     const response = await api.post<AuthResponse>("auth/", payload);
+export const getObjects = createAsyncThunk<
+  ObjectItem[],
+  void,
+  { rejectValue: string }
+>("objects/getObjects", async (_, thunkAPI) => {
+  try {
+    const response = await api.post<ObjectsResponse>("get_objects/");
 
-//     const { success, message } = response.data;
+    const { success, DATA, message } = response.data;
 
-//     if (!success || typeof message === "string") {
-//       return thunkAPI.rejectWithValue(
-//         typeof message === "string" ? message : "Ошибка"
-//       );
-//     }
+    if (!success) {
+      return thunkAPI.rejectWithValue(
+        message || "Ошибка при получении объектов"
+      );
+    }
 
-//     // if (message.token) {
-//     //   localStorage.setItem("tokenCLEANING", message.token);
-//     // }
+    return DATA;
+  } catch (err: any) {
+    const error = err as { response?: { data?: { message?: string } } };
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Ошибка при получении всех обьектов"
+    );
+  }
+});
 
-//     return message;
-//   } catch (err: any) {
-//     const error = err as { response?: { data?: { message?: string } } };
-//     return thunkAPI.rejectWithValue(
-//       error.response?.data?.message || "Ошибка авторизации"
-//     );
-//   }
-// });
+const objectsSlice = createSlice({
+  name: "objects",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      // getObjects
+      .addCase(getObjects.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getObjects.fulfilled, (state, action) => {
+        state.loading = false;
+        state.DATA = action.payload;
+      })
+      .addCase(getObjects.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+  },
+});
 
-// const authSlice = createSlice({
-//   name: "auth",
-//   initialState,
-//   reducers: {
-//     logout(state) {
-//       state.error = null;
-//     },
-//   },
-//   extraReducers: (builder) => {
-//     builder
-//       // loginUser
-//       .addCase(loginUser.pending, (state) => {
-//         state.loading = true;
-//         state.error = null;
-//       })
-//       .addCase(loginUser.fulfilled, (state, action) => {
-//         state.loading = false;
-//       })
-//       .addCase(loginUser.rejected, (state, action) => {
-//         state.loading = false;
-//       });
-//   },
-// });
-
-// export const { logout } = authSlice.actions;
-// export default authSlice.reducer;
+export default objectsSlice.reducer;

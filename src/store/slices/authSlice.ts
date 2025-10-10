@@ -1,25 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../api/api";
 
-interface AuthMessage {
-  login: string;
-  role: string;
-  email: string;
-  token?: string;
-}
-
-interface AuthState {
-  loading: boolean;
-  error: string | null;
-  isAuthenticated: boolean;
-  userInfo: AuthMessage;
-}
-
-interface AuthResponse {
-  // типы для ответа auth
-  success: boolean;
-  message: AuthMessage | string; // если ошибка то у нас строка в message
-}
+import type { AuthMessage, AuthResponse, AuthState } from "@/types/auth";
 
 const initialState: AuthState = {
   loading: false,
@@ -66,13 +48,8 @@ export const authUser = createAsyncThunk<
   void,
   { rejectValue: string }
 >("auth/authUser", async (_, thunkAPI) => {
-  const token = localStorage.getItem("tokenCLEANING");
-
-  if (!token) return thunkAPI.rejectWithValue("Нет токена");
-
   try {
-    const response = await api.get<AuthResponse>("auth/me");
-
+    const response = await api.post<AuthResponse>("me/");
     const { success, message } = response.data;
 
     if (!success || typeof message === "string") {
@@ -125,21 +102,22 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
       })
       // authUser
+      .addCase(authUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(authUser.fulfilled, (state, action) => {
-        console.log("authUser.fulfilled");
-
         state.loading = false;
         state.userInfo.login = action.payload.login;
         state.userInfo.email = action.payload.email;
         state.userInfo.role = action.payload.role;
         state.isAuthenticated = true;
       })
-      .addCase(authUser.rejected, () => {
-        console.log("authUser.rejected");
-
-        // state.loading = false;
-        // state.isAuthenticated = false;
-        // localStorage.removeItem("tokenCLEANING");
+      .addCase(authUser.rejected, (state, action) => {
+        state.error = action.payload as string;
+        state.loading = false;
+        state.isAuthenticated = false;
+        localStorage.removeItem("tokenCLEANING");
       });
   },
 });

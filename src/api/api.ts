@@ -2,7 +2,8 @@ import axios from "axios";
 import type { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 
 const api: AxiosInstance = axios.create({
-  baseURL: "https://api-clining.fourodev.ru/api/",
+  baseURL: import.meta.env.VITE_API_BASE_URL_API,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },

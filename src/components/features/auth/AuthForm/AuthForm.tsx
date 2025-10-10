@@ -15,6 +15,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ loading, authHandle }) => {
     authHandle(login, password);
   };
 
+  const btnDisabled = loading || !login || !password;
+
   return (
     <form onSubmit={handleSubmit} className="authForm" autoComplete="off">
       <div className="input-item">
@@ -44,7 +46,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ loading, authHandle }) => {
         ></span>
       </div>
 
-      <button className="btn btn--white" type="submit" disabled={loading}>
+      <button className="btn btn--white" type="submit" disabled={btnDisabled}>
         {loading ? "Вход..." : "Войти"}
       </button>
     </form>
