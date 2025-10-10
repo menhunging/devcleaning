@@ -9,29 +9,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: 📥 Checkout code
       uses: actions/checkout@v3
 
-    - name: Install dependencies
+    - name: 📦 Install dependencies
       run: npm ci
 
-    - name: Build project
+    - name: 🛠️ Build project
       run: npm run build
 
-    - name: Deploy via SCP
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        source: "dist/*"
-        target: "/var/www/dist"
-
-    - name: Restart Nginx
+    - name: 🧹 Clean old dist on server
       uses: appleboy/ssh-action@v0.1.10
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          sudo systemctl restart nginx
+          rm -rf /var/www/dist
+
+    - name: 🚚 Deploy dist via SCP
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        source: "dist/**"
+        target: "/var/www/"
+
+    - name: 🔁 Restart Nginx
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          sudo systemctl reload nginx
+
+    # ✅ (опционально) Запуск /var/www/deploy.sh на сервере
+    # - name: 🚀 Run deploy.sh on server
+    #   uses: appleboy/ssh-action@v0.1.10
+    #   with:
+    #     host: ${{ secrets.HOST }}
+    #     username: ${{ secrets.USERNAME }}
+    #     key: ${{ secrets.SSH_KEY }}
+    #     script: |
+    #       /var/www/deploy.sh
