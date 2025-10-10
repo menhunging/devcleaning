@@ -9,41 +9,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 📥 Checkout code
-      uses: actions/checkout@v3
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
 
-    - name: 📦 Install dependencies
-      run: npm ci
+      - name: 📦 Install dependencies
+        run: npm ci
 
-    - name: 🛠️ Build project
-      run: npm run build
+      - name: 🛠️ Build project
+        run: npm run build
 
-    - name: 🧹 Clean old dist on server
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-          rm -rf /var/www/dist
+      - name: 🧹 Clean old dist on server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            rm -rf /var/www/dist
 
-    - name: 🚚 Deploy dist via SCP
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        source: "dist/**"
-        target: "/var/www/"
+      - name: 🚚 Deploy dist via SCP
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "dist/**"
+          target: "/var/www/"
 
-    - name: 🔁 Restart Nginx
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-          sudo systemctl reload nginx
+      - name: 🔁 Restart Nginx
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            sudo systemctl reload nginx
 
       - name: 🚀 Run deploy.sh on server
         uses: appleboy/ssh-action@v0.1.10
@@ -52,4 +52,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            /var/www/deploy.sh
+            bash /var/www/deploy.sh
