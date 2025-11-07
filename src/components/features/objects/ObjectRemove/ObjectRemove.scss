@@ -1,0 +1,25 @@
+.popup-delete {
+  width: 490px;
+  padding: 40px 0;
+
+  .btn{
+    min-width: 120px;
+  }
+}
+
+.popup-delete__title {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 20px;
+  text-align: center;
+  display: block;
+}
+
+.popup-delete__content {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+  display: block;
+  text-align: center;
+  margin: 40px 0;
+}

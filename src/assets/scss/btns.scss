@@ -21,6 +21,16 @@
   border-radius: 12px;
   font-variant-ligatures: none;
 
+  &--transparent {
+    background-color: transparent;
+    color: $colorGrayLight-a1;
+
+    @include hover {
+      background-color: $colorGrayLight-a1;
+      color: $colorWhite;
+    }
+  }
+
   &--white {
     background-color: $colorWhite;
     color: $colorBlack;
@@ -43,6 +53,15 @@
     }
   }
 
+  &--green {
+    background-color: $colorGreen;
+    color: $colorWhite;
+
+    @include hover {
+      background-color: $colorGreenHover;
+    }
+  }
+
   &--add {
     padding-left: 30px;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M4.6 0.4C4.6 0.179087 4.77909 0 5 0C5.22091 0 5.4 0.179086 5.4 0.4V4.58808L9.58824 4.58808C9.81565 4.58808 10 4.77243 10 4.99984C10 5.22725 9.81565 5.41161 9.58823 5.41161L5.4 5.41161V9.6C5.4 9.82091 5.22091 10 5 10C4.77909 10 4.6 9.82091 4.6 9.6V5.41161L0.411764 5.41161C0.184353 5.41161 7.82791e-09 5.22725 1.74841e-08 4.99984C2.71403e-08 4.77243 0.184354 4.58808 0.411765 4.58808H4.6V0.4Z' fill='%23019875'/%3e%3c/svg%3e ");
@@ -55,5 +74,24 @@
     pointer-events: none;
     background-color: $colorGrayLight-a1;
     color: $colorWhite;
+  }
+}
+
+.btn-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+
+  &.btn-controls--left {
+    justify-content: flex-start;
+  }
+
+  &.btn-controls--center {
+    justify-content: center;
+  }
+
+  &.btn-controls--right {
+    justify-content: flex-end;
   }
 }

@@ -1,7 +1,7 @@
 // slices
 
 export interface ObjectItem {
-  id: number;
+  id: string;
   name: string;
   photo: string;
   adress: string;
@@ -23,6 +23,20 @@ export interface ObjectsState {
   loading: boolean;
   error: string | null;
   DATA: ObjectItem[];
+}
+
+// типа для добавление одного обьекта
+
+export interface ObjectNew {
+  name: string;
+  address: string;
+  contacts: string;
+  photo?: string;
+}
+
+export interface ObjectNewResponse {
+  success: boolean;
+  message?: string;
 }
 
 // /slices

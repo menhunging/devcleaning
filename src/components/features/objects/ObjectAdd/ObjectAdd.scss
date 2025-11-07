@@ -1,0 +1,32 @@
+.popup-add-object {
+  width: 780px;
+}
+
+.popup-add-object__title {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 20px;
+  display: block;
+  text-align: center;
+}
+
+.popup-add-object__form {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 20px;
+
+  .popup-add-object__col {
+    width: calc(50% - 10px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .input-item {
+  }
+
+  .btn-controls {
+    width: 100%;
+  }
+}

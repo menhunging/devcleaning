@@ -36,6 +36,34 @@ export const getObjectById = createAsyncThunk<
   }
 });
 
+export const updateObject = createAsyncThunk<
+  boolean,
+  {
+    id: string;
+    name: string;
+    address: string;
+    contacts: string;
+    photo?: string;
+  },
+  { rejectValue: string }
+>("object/updateObject", async (payload, thunkAPI) => {
+  try {
+    const response = await api.post("edit_object/", payload);
+
+    const { success, message } = response.data;
+
+    if (!success) {
+      return thunkAPI.rejectWithValue(
+        message || "Ошибка при обновлении обьекта"
+      );
+    }
+
+    return success;
+  } catch (err: any) {
+    return thunkAPI.rejectWithValue("Ошибка при обновлении обьекта");
+  }
+});
+
 const objectSlice = createSlice({
   name: "object",
   initialState,
@@ -48,6 +76,9 @@ const objectSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
+      // getObjectById
+
       .addCase(getObjectById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -57,6 +88,20 @@ const objectSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(getObjectById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Ошибка";
+      })
+
+      // updateObject
+
+      .addCase(updateObject.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateObject.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(updateObject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Ошибка";
       });
