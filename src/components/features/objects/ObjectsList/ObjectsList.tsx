@@ -1,5 +1,6 @@
 // import testImageJpg from "@/assets/img/test-images.jpg";
-// import testImageWebp from "@/assets/img/test-images.webp"; 
+// import testImageWebp from "@/assets/img/test-images.webp";
+import { Link } from "react-router-dom";
 
 import { getFullPhotoUrl } from "@/utils/getFullPhotoUrl";
 
@@ -21,14 +22,14 @@ const ObjectsList: React.FC<ObjectsListProps> = ({ objects }) => {
           photo,
           //   adress,
           //   contacts,
-          zones,
-          tasks,
-          users,
+          zones_count,
+          tasks_count,
+          users_count,
           //   manager,
         } = object;
 
         return (
-          <div className="object-item" key={id}>
+          <Link to={`/${id}`} className="object-item" key={id}>
             <div className="picture-block">
               <picture>
                 {/* <source type="image/webp" srcSet={testImageWebp} /> */}
@@ -41,24 +42,24 @@ const ObjectsList: React.FC<ObjectsListProps> = ({ objects }) => {
                 <li>
                   <span className="object-item__bl">
                     <span>зоны</span>
-                    <strong>{zones}</strong>
+                    <strong>{zones_count}</strong>
                   </span>
                 </li>
                 <li>
                   <span className="object-item__bl">
                     <span>задания:</span>
-                    <strong>{tasks}</strong>
+                    <strong>{tasks_count}</strong>
                   </span>
                 </li>
                 <li>
                   <span className="object-item__bl">
                     <span>сотрудники:</span>
-                    <strong>{users}</strong>
+                    <strong>{users_count}</strong>
                   </span>
                 </li>
               </ul>
             </div>
-          </div>
+          </Link>
         );
       })}
     </div>

@@ -34,6 +34,7 @@
 
 .authPage__body {
   margin: auto;
+  position: relative;
 }
 
 .authPage__caption {
@@ -46,5 +47,27 @@
 
   & + * {
     margin-top: 56px;
+  }
+}
+
+.authError {
+  position: fixed;
+  bottom: -50px;
+  left: 50%;
+  width: 100%;
+  max-width: 463px;
+  display: flex;
+  justify-content: center;
+  font-size: 18px;
+  padding: 10px;
+  color: $colorRed;
+  background-color: $colorBlack-a5;
+  backdrop-filter: blur(20px);
+  border-radius: 30px;
+  transform: translateX(-50%);
+  transition: bottom 0.3s;
+
+  &.isVisible {
+    bottom: 20px;
   }
 }

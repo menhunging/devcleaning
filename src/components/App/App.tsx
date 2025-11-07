@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import Layout from "../layout/Layout";
 import ObjectsPage from "@/components/pages/objects/ObjectsPage";
+import ObjectPage from "../pages/object/ObjectPage";
 import AuthPage from "@/components/pages/auth/AuthPage";
 
 import ProtectedRoute from "@/components/shared/routes/ProtectedRoute";
@@ -24,6 +25,7 @@ const App: React.FC = () => {
 
   const protectedRoutes = [
     { path: "/", element: <ObjectsPage /> },
+    { path: "/:id", element: <ObjectPage /> },
     { path: "/catalog", element: <CatalogPage /> },
   ];
 

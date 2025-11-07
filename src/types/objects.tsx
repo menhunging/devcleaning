@@ -6,9 +6,9 @@ export interface ObjectItem {
   photo: string;
   adress: string;
   contacts: string;
-  zones: number;
-  tasks: number;
-  users: number;
+  zones_count: number;
+  tasks_count: number;
+  users_count: number;
   manager: number;
 }
 

@@ -9,7 +9,7 @@ import "./ObjectsPage.scss";
 
 const ObjectsPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { DATA } = useAppSelector((state) => state.objects);
+  const { loading, DATA } = useAppSelector((state) => state.objects);
 
   useEffect(() => {
     dispatch(getObjects());

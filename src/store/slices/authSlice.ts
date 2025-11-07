@@ -86,38 +86,38 @@ const authSlice = createSlice({
     builder
       // loginUser
       .addCase(loginUser.pending, (state) => {
-        state.loading = true;
         state.error = null;
+        state.loading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.loading = false;
         state.userInfo.login = action.payload.login;
         state.userInfo.email = action.payload.email;
         state.userInfo.role = action.payload.role;
         state.isAuthenticated = true;
+        state.loading = false;
       })
       .addCase(loginUser.rejected, (state, action) => {
-        state.loading = false;
         state.error = action.payload as string;
         state.isAuthenticated = false;
+        state.loading = false;
       })
       // authUser
       .addCase(authUser.pending, (state) => {
-        state.loading = true;
         state.error = null;
+        state.loading = true;
       })
       .addCase(authUser.fulfilled, (state, action) => {
-        state.loading = false;
         state.userInfo.login = action.payload.login;
         state.userInfo.email = action.payload.email;
         state.userInfo.role = action.payload.role;
         state.isAuthenticated = true;
+        state.loading = false;
       })
       .addCase(authUser.rejected, (state, action) => {
         state.error = action.payload as string;
-        state.loading = false;
         state.isAuthenticated = false;
         localStorage.removeItem("tokenCLEANING");
+        state.loading = false;
       });
   },
 });

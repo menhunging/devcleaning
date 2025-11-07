@@ -37,7 +37,9 @@ const AuthPage: React.FC = () => {
       <div className="authPage__body">
         <span className="authPage__caption">Вход</span>
         <AuthForm loading={loading} authHandle={authHandle} />
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        <span className={error ? "authError isVisible" : "authError"}>
+          {error}
+        </span>
       </div>
     </div>
   );

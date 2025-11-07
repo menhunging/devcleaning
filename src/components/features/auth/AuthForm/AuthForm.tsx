@@ -5,8 +5,8 @@ import type { AuthFormProps } from "@/types/auth";
 import "./AuthForm.scss";
 
 const AuthForm: React.FC<AuthFormProps> = ({ loading, authHandle }) => {
-  const [login, setLogin] = useState("admin");
-  const [password, setPassword] = useState("12345");
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
 
