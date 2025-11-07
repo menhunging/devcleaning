@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../api/api";
 
-import type { AuthMessage, AuthResponse, AuthState } from "@/types/auth";
+import type { AuthMessage, AuthResponse, AuthState } from "@/types/auth/auth";
 
 const initialState: AuthState = {
   loading: false,

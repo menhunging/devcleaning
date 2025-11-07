@@ -1,32 +1,12 @@
-import { deleteObject } from "@/store/slices/objectsSlice";
-import { useAppDispatch } from "@/store/store";
+import type { objectRemove } from "@/types/objects/objectsForm";
 
 import "./ObjectRemove.scss";
 
-interface objectRemove {
-  id: string;
-  loading: boolean;
-  onSuccess: () => void;
-  onClose: () => void;
-}
-
 const ObjectRemove: React.FC<objectRemove> = ({
-  id,
   loading,
   onSuccess,
   onClose,
 }) => {
-  const dispatch = useAppDispatch();
-
-  const handleDelete = async () => {
-    const result = await dispatch(deleteObject(id));
-    if (deleteObject.fulfilled.match(result)) {
-      onSuccess();
-    } else {
-      console.log(result.payload);
-    }
-  };
-
   return (
     <div className="popup-delete">
       <span className="popup-delete__title">Удалить</span>
@@ -39,7 +19,7 @@ const ObjectRemove: React.FC<objectRemove> = ({
         <button className="btn btn--transparent" onClick={onClose}>
           Отмена
         </button>
-        <button className="btn btn--green" onClick={handleDelete}>
+        <button className="btn btn--green" onClick={onSuccess}>
           {loading ? "Удаление..." : "Да"}
         </button>
       </div>

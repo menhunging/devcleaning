@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store.ts";
 import { useNavigate } from "react-router-dom";
 
-import type { AuthHandleFn } from "@/types/auth";
+import type { AuthHandleFn } from "@/types/auth/auth";
 
 import { loginUser } from "@/store/slices/authSlice.ts";
 import AuthForm from "@/components/features/auth/AuthForm/AuthForm";

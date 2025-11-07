@@ -1,0 +1,40 @@
+.skeleton {
+  animation: pulse 1.5s infinite ease-in-out;
+  background-color: $colorGray;
+}
+
+.skeleton__image {
+  width: 100%;
+  height: 123px;
+  background-color: $colorGrayDark;
+}
+
+.skeleton__line {
+  height: 18px;
+  background-color: $colorGrayDark;
+  border-radius: 4px;
+}
+
+.skeleton__title {
+  width: 100%;
+}
+
+.skeleton__info {
+  width: 30%;
+
+  &::before {
+    display: none;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    background-color: $colorGray;
+  }
+  50% {
+    background-color: $colorGrayDark;
+  }
+  100% {
+    background-color: $colorGray;
+  }
+}

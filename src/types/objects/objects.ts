@@ -25,16 +25,17 @@ export interface ObjectsState {
   DATA: ObjectItem[];
 }
 
-// типа для добавление одного обьекта
+// типы для добавление одного обьекта
 
-export interface ObjectNew {
+export interface ObjectForm {
+  id: string;
   name: string;
   address: string;
   contacts: string;
   photo?: string;
 }
 
-export interface ObjectNewResponse {
+export interface ObjectFormResponse {
   success: boolean;
   message?: string;
 }

@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useNavigate, useParams } from "react-router-dom";
+import type { formDataObject } from "@/types/objects/objectsForm";
 
-import { getObjectById } from "@/store/slices/objectSlice";
+import {
+  deleteObject,
+  getObjectById,
+  updateObject,
+} from "@/store/slices/objectSlice";
 
-import ObjectRemove from "@/components/features/objects/ObjectRemove/ObjectRemove";
 import Modal from "@/components/shared/ui/Modal/Modal";
-import ObjectAdd from "@/components/features/objects/ObjectAdd/ObjectAdd";
+import ObjectForm from "@/components/features/objects/ObjectForm/ObjectForm";
+import ObjectRemove from "@/components/features/objects/ObjectRemove/ObjectRemove";
 
-// import "./ObjectsPage.scss";
+import "./ObjectPage.scss";
 
 const ObjectPage: React.FC = () => {
   const navigate = useNavigate();
@@ -20,18 +25,33 @@ const ObjectPage: React.FC = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isRemoveModalOpen, setRemoveModalOpen] = useState(false);
 
-  const handleUpdateSuccess = () => {
+  const handleUpdateSuccess = async (formData: formDataObject) => {
     // если редактирование обьекта происходит успешно
-    setEditModalOpen(false);
-    if (id) {
-      dispatch(getObjectById(id));
+
+    const result = await dispatch(updateObject(formData));
+    if (updateObject.fulfilled.match(result)) {
+      setEditModalOpen(false);
+
+      if (id) {
+        dispatch(getObjectById(id));
+      }
+    } else {
+      console.log(result.payload);
     }
   };
 
-  const handleRemoveSuccess = () => {
+  const handleRemoveSuccess = async () => {
     // если удаление обьекта происходит успешно
-    setRemoveModalOpen(false);
-    navigate("/");
+
+    if (obj) {
+      const result = await dispatch(deleteObject(obj.id));
+      if (deleteObject.fulfilled.match(result)) {
+        setRemoveModalOpen(false);
+        navigate("/");
+      } else {
+        console.log(result.payload);
+      }
+    }
   };
 
   useEffect(() => {
@@ -75,7 +95,7 @@ const ObjectPage: React.FC = () => {
         {/* попап на редактирование обьекта */}
 
         <Modal isOpen={isEditModalOpen} onClose={() => setEditModalOpen(false)}>
-          <ObjectAdd
+          <ObjectForm
             mode="edit"
             initialData={{
               id: obj.id,
@@ -97,7 +117,6 @@ const ObjectPage: React.FC = () => {
           onClose={() => setRemoveModalOpen(false)}
         >
           <ObjectRemove
-            id={obj.id}
             loading={loading}
             onSuccess={handleRemoveSuccess}
             onClose={() => setRemoveModalOpen(false)}

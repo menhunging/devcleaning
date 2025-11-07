@@ -1,24 +1,31 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
+import type { formDataObject } from "@/types/objects/objectsForm";
 
-import { getObjects } from "@/store/slices/objectsSlice";
+import { addObject, getObjects } from "@/store/slices/objectsSlice";
 
 import ObjectsList from "@/components/features/objects/ObjectsList/ObjectsList";
-import ObjectAdd from "@/components/features/objects/ObjectAdd/ObjectAdd";
+import ObjectForm from "@/components/features/objects/ObjectForm/ObjectForm";
 
 import "./ObjectsPage.scss";
 import Modal from "@/components/shared/ui/Modal/Modal";
 
 const ObjectsPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { loading, DATA } = useAppSelector((state) => state.objects);
+  const { loading, DATA: objects } = useAppSelector((state) => state.objects);
 
   const [isAddModalOpen, setAddModalOpen] = useState(false);
 
-  const handleObjectAddSuccess = () => {
+  const handleObjectAddSuccess = async (formData: formDataObject) => {
     // если добавление обьекта происходит успешно
-    setAddModalOpen(false);
-    dispatch(getObjects());
+
+    const result = await dispatch(addObject(formData));
+    if (addObject.fulfilled.match(result)) {
+      setAddModalOpen(false);
+      dispatch(getObjects());
+    } else {
+      console.log(result.payload);
+    }
   };
 
   useEffect(() => {
@@ -39,13 +46,13 @@ const ObjectsPage: React.FC = () => {
         </span>
       </div>
       <div className="page__body">
-        <ObjectsList objects={DATA} />
+        <ObjectsList loading={loading} objects={objects} />
       </div>
 
       {/* попап на добавление обьекта */}
 
       <Modal isOpen={isAddModalOpen} onClose={() => setAddModalOpen(false)}>
-        <ObjectAdd
+        <ObjectForm
           loading={loading}
           onSuccess={handleObjectAddSuccess}
           onClose={() => setAddModalOpen(false)}

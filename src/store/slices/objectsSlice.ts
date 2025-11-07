@@ -5,9 +5,9 @@ import type {
   ObjectItem,
   ObjectsResponse,
   ObjectsState,
-  ObjectNew,
-  ObjectNewResponse,
-} from "@/types/objects";
+  ObjectForm,
+  ObjectFormResponse,
+} from "@/types/objects/objects";
 
 export const initialState: ObjectsState = {
   loading: false,
@@ -42,11 +42,11 @@ export const getObjects = createAsyncThunk<
 
 export const addObject = createAsyncThunk<
   boolean,
-  ObjectNew,
+  ObjectForm,
   { rejectValue: string }
 >("objects/addObject", async (payload, thunkAPI) => {
   try {
-    const response = await api.post<ObjectNewResponse>("add_object/", payload);
+    const response = await api.post<ObjectFormResponse>("add_object/", payload);
 
     const { success, message } = response.data;
 
@@ -61,31 +61,6 @@ export const addObject = createAsyncThunk<
     const error = err as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
       error.response?.data?.message || "Ошибка при добавлении обьекта"
-    );
-  }
-});
-
-export const deleteObject = createAsyncThunk<
-  boolean,
-  string,
-  { rejectValue: string }
->("objects/deleteObject", async (id, thunkAPI) => {
-  try {
-    console.log("id", id);
-
-    const response = await api.post("delete_object/", { id: id });
-
-    const { success, message } = response.data;
-
-    if (!success) {
-      return thunkAPI.rejectWithValue(message || "Ошибка при удалении объекта");
-    }
-
-    return success;
-  } catch (err: any) {
-    const error = err as { response?: { data?: { message?: string } } };
-    return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Ошибка при удалении объекта"
     );
   }
 });
@@ -119,19 +94,6 @@ const objectsSlice = createSlice({
         state.loading = false;
       })
       .addCase(addObject.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
-
-      // deleteObject
-      .addCase(deleteObject.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(deleteObject.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(deleteObject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

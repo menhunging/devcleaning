@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import type { AuthFormProps } from "@/types/auth";
+import type { AuthFormProps } from "@/types/auth/auth";
 
 import "./AuthForm.scss";
 

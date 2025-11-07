@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "@/api/api";
-import type { ObjectItem } from "@/types/objects";
+import type { ObjectForm, ObjectItem } from "@/types/objects/objects";
 
 interface ObjectState {
   loading: boolean;
@@ -38,13 +38,7 @@ export const getObjectById = createAsyncThunk<
 
 export const updateObject = createAsyncThunk<
   boolean,
-  {
-    id: string;
-    name: string;
-    address: string;
-    contacts: string;
-    photo?: string;
-  },
+  ObjectForm,
   { rejectValue: string }
 >("object/updateObject", async (payload, thunkAPI) => {
   try {
@@ -64,6 +58,29 @@ export const updateObject = createAsyncThunk<
   }
 });
 
+export const deleteObject = createAsyncThunk<
+  boolean,
+  string,
+  { rejectValue: string }
+>("object/deleteObject", async (id, thunkAPI) => {
+  try {
+    const response = await api.post("delete_object/", { id: id });
+
+    const { success, message } = response.data;
+
+    if (!success) {
+      return thunkAPI.rejectWithValue(message || "Ошибка при удалении объекта");
+    }
+
+    return success;
+  } catch (err: any) {
+    const error = err as { response?: { data?: { message?: string } } };
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Ошибка при удалении объекта"
+    );
+  }
+});
+
 const objectSlice = createSlice({
   name: "object",
   initialState,
@@ -78,7 +95,6 @@ const objectSlice = createSlice({
     builder
 
       // getObjectById
-
       .addCase(getObjectById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -93,7 +109,6 @@ const objectSlice = createSlice({
       })
 
       // updateObject
-
       .addCase(updateObject.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -104,6 +119,19 @@ const objectSlice = createSlice({
       .addCase(updateObject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Ошибка";
+      })
+
+      // deleteObject
+      .addCase(deleteObject.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteObject.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(deleteObject.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

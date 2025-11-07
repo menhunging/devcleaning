@@ -4,29 +4,33 @@ import { Link } from "react-router-dom";
 
 import { getFullPhotoUrl } from "@/utils/getFullPhotoUrl";
 
-import type { ObjectItem } from "@/types/objects";
+import type { ObjectItem } from "@/types/objects/objects";
+
+import ObjectSkeleton from "./ObjectsListSkeleton";
 
 import "./ObjectsList.scss";
 
 interface ObjectsListProps {
   objects: ObjectItem[];
+  loading?: boolean;
 }
 
-const ObjectsList: React.FC<ObjectsListProps> = ({ objects }) => {
+const ObjectsList: React.FC<ObjectsListProps> = ({ loading, objects }) => {
+  if (loading) {
+    return (
+      <div className="object-list">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <ObjectSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="object-list">
       {objects.map((object) => {
-        const {
-          id,
-          name,
-          photo,
-          //   adress,
-          //   contacts,
-          zones_count,
-          tasks_count,
-          users_count,
-          //   manager,
-        } = object;
+        const { id, name, photo, zones_count, tasks_count, users_count } =
+          object;
 
         return (
           <Link to={`/${id}`} className="object-item" key={id}>
