@@ -1,10 +1,11 @@
 import { useState } from "react";
 
 import type { ObjectFormProps } from "@/types/objects/objectsForm";
+import { getFullPhotoUrl } from "@/utils/getFullPhotoUrl";
 
 import "./ObjectForm.scss";
 
-// import api from "@/api/api";
+import { useFileUpload } from "@/hook/useFileUpload";
 
 const ObjectForm: React.FC<ObjectFormProps> = ({
   mode = "add",
@@ -21,32 +22,19 @@ const ObjectForm: React.FC<ObjectFormProps> = ({
     photo: initialData?.photo || "",
   });
 
+  const { uploadFiles, fileLoad } = useFileUpload();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (!file) return;
-
-  //   TODO сделать loading foto. Кнопку disabled пока фото грузиться. Думаю надо просто через useState
-  //   и btnDisabled добавить его просто и все
-
-  //   const formDataUpload = new FormData();
-  //   formDataUpload.append("file", file);
-
-  //   try {
-  //     const response = await api.post("/addfoto", formDataUpload, {
-  //       headers: { "Content-Type": "multipart/form-data" },
-  //     });
-
-  //     const photoUrl = response.data.url;
-  //     setFormData((prev) => ({ ...prev, photo: photoUrl }));
-  //   } catch (error) {
-  //     console.error("Ошибка загрузки фото", error);
-  //   }
-  // };
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const result = await uploadFiles(e.target.files);
+    if (result.success) {
+      setFormData((prev) => ({ ...prev, photo: result.message.DATA[0] }));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +42,7 @@ const ObjectForm: React.FC<ObjectFormProps> = ({
   };
 
   const { name, address, contacts } = formData;
-  const btnDisabled = loading || !name || !address || !contacts;
+  const btnDisabled = loading || !name || !address || !contacts || fileLoad;
 
   return (
     <div className="popup-add-object">
@@ -98,24 +86,29 @@ const ObjectForm: React.FC<ObjectFormProps> = ({
           </div>
         </div>
 
-        <div className="popup-add-object__col">
+        <div className="popup-add-object__col popup-add-object__col--media">
           <div className="input-item">
-            <label>Фото (URL)</label>
-
             <input
-              type="text"
-              id="photo"
-              name="photo"
-              value={formData.photo}
-              onChange={handleChange}
-            />
-
-            {/* <input
               type="file"
               id="photoUpload"
-              accept="image/*"
+              accept=".jpg,.jpeg,.png"
               onChange={handleFileUpload}
-            /> */}
+            />
+
+            {formData.photo ? (
+              <>
+                <div className="foto-preview">
+                  <img src={getFullPhotoUrl(formData.photo)} alt="" />
+                </div>
+                <label htmlFor="photoUpload">
+                  {fileLoad ? "Загрузка..." : "✎ Изменить фото"}
+                </label>
+              </>
+            ) : (
+              <label htmlFor="photoUpload">
+                {fileLoad ? "Загрузка..." : "+ Добавить фото"}
+              </label>
+            )}
           </div>
         </div>
 

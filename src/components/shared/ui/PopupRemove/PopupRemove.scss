@@ -2,8 +2,16 @@
   width: 490px;
   padding: 40px 0;
 
-  .btn{
+  .btn {
     min-width: 120px;
+  }
+
+  .btn--transparent {
+    color: $colorRed;
+
+    @include hover {
+      color: $colorWhite;
+    }
   }
 }
 
@@ -13,10 +21,11 @@
   line-height: 20px;
   text-align: center;
   display: block;
+  font-weight: 500;
 }
 
 .popup-delete__content {
-  font-weight: 500;
+  font-weight: 400;
   font-size: 16px;
   line-height: 18px;
   display: block;

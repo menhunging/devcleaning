@@ -1,0 +1,61 @@
+.table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+.table__header {
+  display: grid;
+  grid-template-columns:
+    2fr /* ФИО */
+    1fr /* Роль */
+    2fr /* Объект */
+    2fr /* Команда */
+    1fr /* Логин */
+    1.5fr /* Телефон */
+    2fr /* Почта */
+    1fr /* Активность */
+    1fr /* Статус */
+    1fr; /* Пустой */
+  background-color: #f5f5f5;
+  font-weight: 600;
+  position: sticky; /* 👈 фиксируем */
+  top: 0;
+  z-index: 2;
+}
+
+.table__body {
+  max-height: 400px; /* 👈 ограничиваем высоту */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.table__row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr 2fr 1fr 1.5fr 2fr 1fr 1fr 1fr;
+}
+
+.table__cell {
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
+
+  &:last-child {
+    justify-content: flex-end;
+    align-items: center;
+    display: flex;
+    gap: 15px;
+  }
+}
+
+.table__row:last-child .table__cell {
+  border-bottom: none;
+}
+
+.table__cell:last-child {
+  border-right: none;
+}

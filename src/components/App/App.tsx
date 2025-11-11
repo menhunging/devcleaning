@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 
+import { fetchUsers } from "@/store/slices/usersSlice";
 import { authUser } from "@/store/slices/authSlice.ts";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
@@ -20,6 +21,7 @@ const App: React.FC = () => {
   useEffect(() => {
     if (isAuthenticated) {
       dispatch(authUser());
+      dispatch(fetchUsers())
     }
   }, []);
 

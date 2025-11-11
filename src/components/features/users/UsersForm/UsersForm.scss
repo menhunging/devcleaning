@@ -1,0 +1,18 @@
+.users-popup {
+  width: 490px;
+}
+
+.users-popup__title {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 20px;
+  text-align: center;
+  display: block;
+}
+
+.users-popup__form {
+  margin-top: 35px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

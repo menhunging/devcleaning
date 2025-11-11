@@ -1,8 +1,8 @@
 import type { objectRemove } from "@/types/objects/objectsForm";
 
-import "./ObjectRemove.scss";
+import "./PopupRemove.scss";
 
-const ObjectRemove: React.FC<objectRemove> = ({
+const PopupRemove: React.FC<objectRemove> = ({
   loading,
   onSuccess,
   onClose,
@@ -27,4 +27,4 @@ const ObjectRemove: React.FC<objectRemove> = ({
   );
 };
 
-export default ObjectRemove;
+export default PopupRemove;

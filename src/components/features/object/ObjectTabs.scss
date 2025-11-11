@@ -1,0 +1,36 @@
+.objectTabs {
+  margin-top: 35px;
+}
+
+.objectTabs__nav {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-bottom: 15px;
+}
+
+.objectTabs__btn {
+  background: transparent;
+  border: none;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  color: $colorGrayLight-a2;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+  font-size: 18px;
+  line-height: 22px;
+
+  @include hover {
+    color: $colorDark;
+  }
+
+  &.is-active {
+    text-decoration-color: $colorBlack;
+    color: $colorDark;
+  }
+}
+
+.objectTabs__panel {
+  padding: 8px 0;
+}

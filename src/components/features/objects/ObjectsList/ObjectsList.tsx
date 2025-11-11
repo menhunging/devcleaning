@@ -1,5 +1,3 @@
-// import testImageJpg from "@/assets/img/test-images.jpg";
-// import testImageWebp from "@/assets/img/test-images.webp";
 import { Link } from "react-router-dom";
 
 import { getFullPhotoUrl } from "@/utils/getFullPhotoUrl";
@@ -36,7 +34,6 @@ const ObjectsList: React.FC<ObjectsListProps> = ({ loading, objects }) => {
           <Link to={`/${id}`} className="object-item" key={id}>
             <div className="picture-block">
               <picture>
-                {/* <source type="image/webp" srcSet={testImageWebp} /> */}
                 <img src={getFullPhotoUrl(photo)} alt={name} />
               </picture>
             </div>

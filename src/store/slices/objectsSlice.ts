@@ -50,6 +50,8 @@ export const addObject = createAsyncThunk<
 
     const { success, message } = response.data;
 
+    console.log("response.data", response.data);
+
     if (!success) {
       return thunkAPI.rejectWithValue(
         message || "Ошибка при добавлении обьекта"

@@ -5,12 +5,16 @@ import type { TypedUseSelectorHook } from "react-redux";
 import authReducer from "./slices/authSlice";
 import objectsReducer from "./slices/objectsSlice";
 import objectReducer from "./slices/objectSlice";
+import zonesReducer from "./slices/zonesSlice";
+import usersReducer from "./slices/usersSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     objects: objectsReducer,
     object: objectReducer,
+    zones: zonesReducer,
+    users: usersReducer,
   },
 });
 

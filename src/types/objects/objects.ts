@@ -1,5 +1,7 @@
 // slices
 
+import type { zone } from "../zones/zones";
+
 export interface ObjectItem {
   id: string;
   name: string;
@@ -10,6 +12,7 @@ export interface ObjectItem {
   tasks_count: number;
   users_count: number;
   manager: number;
+  zones: zone[];
 }
 
 export interface ObjectsResponse {
