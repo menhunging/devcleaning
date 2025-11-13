@@ -1,9 +1,13 @@
 import testImageJpg from "@/assets/img/test-images.jpg";
 
 import { useState } from "react";
-import "./ObjectTabs.scss";
+
+import type { ObjectItem } from "@/types/objects/objects";
+
 import SwiperSlider from "@/components/shared/ui/Swiper/SwiperSlider";
 import Zones from "../Zones/Zones/Zones";
+
+import "./ObjectTabs.scss";
 
 const images = [
   testImageJpg,
@@ -19,12 +23,15 @@ const images = [
   testImageJpg,
 ];
 
-const ObjectTabs = () => {
+interface ObjectTabsProps {
+  obj: ObjectItem | null;
+}
+
+const ObjectTabs = ({ obj }: ObjectTabsProps) => {
   const [activeTab, setActiveTab] = useState<"objects" | "zones">("objects");
 
   return (
     <div className="objectTabs">
-      {/* Навигация */}
       <div className="objectTabs__nav">
         <button
           className={`objectTabs__btn ${
@@ -44,7 +51,6 @@ const ObjectTabs = () => {
         </button>
       </div>
 
-      {/* Контент */}
       {activeTab === "objects" && (
         <div className="objectTabs__panel">
           <div className="object-page__list">
@@ -82,13 +88,15 @@ const ObjectTabs = () => {
 
             <div className="object-page__item">
               <span className="object-page__caption">
-                Сотрудники по объекту
+                Сотрудники по объекту:
               </span>
 
               <ul className="object-user__list">
-                <li>Длинноеимя Длиннаяфамилия</li>
-                <li>Длинноеимя Длиннаяфамилия</li>
-                <li>Длинноеимя Длиннаяфамилия</li>
+                {obj?.users.map((user) => (
+                  <li key={user.id_user}>
+                    {`${user.user_name} ${user.surname}`}
+                  </li>
+                ))}
               </ul>
             </div>
 

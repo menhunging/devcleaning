@@ -81,6 +81,31 @@ export const deleteObject = createAsyncThunk<
   }
 });
 
+export const updateManagerObject = createAsyncThunk<
+  boolean,
+  { id: string; id_user: number },
+  { rejectValue: string }
+>("object/updateManagerObject", async (payload, thunkAPI) => {
+  try {
+    const response = await api.post("add_object_user/", payload);
+
+    const { success, message } = response.data;
+
+    if (!success) {
+      return thunkAPI.rejectWithValue(
+        message || "Ошибка при обновлении менеджера"
+      );
+    }
+
+    return success;
+  } catch (err: any) {
+    const error = err as { response?: { data?: { message?: string } } };
+    return thunkAPI.rejectWithValue(
+      error.response?.data?.message || "Ошибка при обновлении менеджера"
+    );
+  }
+});
+
 const objectSlice = createSlice({
   name: "object",
   initialState,
@@ -130,6 +155,19 @@ const objectSlice = createSlice({
         state.loading = false;
       })
       .addCase(deleteObject.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // updateManagerObject
+      .addCase(updateManagerObject.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateManagerObject.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(updateManagerObject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

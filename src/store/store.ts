@@ -7,6 +7,7 @@ import objectsReducer from "./slices/objectsSlice";
 import objectReducer from "./slices/objectSlice";
 import zonesReducer from "./slices/zonesSlice";
 import usersReducer from "./slices/usersSlice";
+import teamsReducer from "./slices/teamsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     object: objectReducer,
     zones: zonesReducer,
     users: usersReducer,
+    teams: teamsReducer,
   },
 });
 

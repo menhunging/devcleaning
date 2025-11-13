@@ -1,27 +1,29 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../api/api";
 import type {
-  Users,
-  UsersState,
-  UsersResponse,
-  UserFormData,
-} from "@/types/users/users";
+  Teams,
+  TeamsResponse,
+  TeamsState,
+  TeamsFormData,
+} from "@/types/teams/teams";
 
-const initialState: UsersState = {
+const initialState: TeamsState = {
   loading: false,
   error: null,
   DATA: [],
 };
 
-export const fetchUsers = createAsyncThunk<
-  Users[],
+export const fetchTeams = createAsyncThunk<
+  Teams[],
   void,
   { rejectValue: string }
->("users/fetchUsers", async (_, thunkAPI) => {
+>("teams/fetchTeams", async (_, thunkAPI) => {
   try {
-    const response = await api.post<UsersResponse>("get_users_all/");
+    const response = await api.post<TeamsResponse>("get_teams_all/");
 
     const { success, DATA, message } = response.data;
+
+    console.log("fetchTeams DATA", DATA);
 
     if (!success || typeof message === "string") {
       return thunkAPI.rejectWithValue(
@@ -31,7 +33,7 @@ export const fetchUsers = createAsyncThunk<
       );
     }
 
-    return DATA as Users[];
+    return DATA as Teams[];
   } catch (err) {
     const error = err as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
@@ -40,23 +42,19 @@ export const fetchUsers = createAsyncThunk<
   }
 });
 
-export const addUser = createAsyncThunk<
+export const addTeam = createAsyncThunk<
   boolean,
-  UserFormData,
+  TeamsFormData,
   { rejectValue: string }
->("users/addUser", async (payload, thunkAPI) => {
+>("teams/addTeam", async (payload, thunkAPI) => {
   try {
-    const response = await api.post<UsersResponse>("add_user/", payload);
-
-    console.log("payload", payload);
+    const response = await api.post<TeamsResponse>("add_team/", payload);
 
     const { success, message } = response.data;
 
     if (!success || typeof message === "string") {
       return thunkAPI.rejectWithValue(
-        typeof message === "string"
-          ? message
-          : "Ошибка при добавлении пользователя"
+        typeof message === "string" ? message : "Ошибка при добавлении команды"
       );
     }
 
@@ -64,18 +62,18 @@ export const addUser = createAsyncThunk<
   } catch (err) {
     const error = err as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Ошибка при добавлении пользователя"
+      error.response?.data?.message || "Ошибка при добавлении команды"
     );
   }
 });
 
-export const updateUser = createAsyncThunk<
+export const updateTeam = createAsyncThunk<
   boolean,
-  UserFormData,
+  TeamsFormData,
   { rejectValue: string }
->("users/updateUser", async (payload, thunkAPI) => {
+>("teams/updateTeam", async (payload, thunkAPI) => {
   try {
-    const response = await api.post<UsersResponse>("edit_user/", payload);
+    const response = await api.post<TeamsResponse>("edit_team/", payload);
 
     const { success, message } = response.data;
 
@@ -83,7 +81,7 @@ export const updateUser = createAsyncThunk<
       return thunkAPI.rejectWithValue(
         typeof message === "string"
           ? message
-          : "Ошибка при редактировании пользователя"
+          : "Ошибка при редактировании команды"
       );
     }
 
@@ -91,26 +89,24 @@ export const updateUser = createAsyncThunk<
   } catch (err) {
     const error = err as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Ошибка при редактировании пользователя"
+      error.response?.data?.message || "Ошибка при редактировании команды"
     );
   }
 });
 
-export const deleteUser = createAsyncThunk<
+export const deleteTeam = createAsyncThunk<
   boolean,
   number | undefined,
   { rejectValue: string }
->("users/deleteUser", async (id, thunkAPI) => {
+>("teams/deleteTeam", async (id, thunkAPI) => {
   try {
-    const response = await api.post("edit_user/", { id: id });
+    const response = await api.post("delete_team/", { id: id });
 
     const { success, message } = response.data;
 
     if (!success || typeof message === "string") {
       return thunkAPI.rejectWithValue(
-        typeof message === "string"
-          ? message
-          : "Ошибка при удалении пользователя"
+        typeof message === "string" ? message : "Ошибка при удалении команды"
       );
     }
 
@@ -118,70 +114,70 @@ export const deleteUser = createAsyncThunk<
   } catch (err) {
     const error = err as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Ошибка при удалении пользователя"
+      error.response?.data?.message || "Ошибка при удалении команды"
     );
   }
 });
 
-const usersSlice = createSlice({
-  name: "users",
+const teamsSlice = createSlice({
+  name: "teams",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // fetchUsers
-      .addCase(fetchUsers.pending, (state) => {
+      // fetchTeams
+      .addCase(fetchTeams.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchUsers.fulfilled, (state, action) => {
+      .addCase(fetchTeams.fulfilled, (state, action) => {
         state.DATA = action.payload;
         state.loading = false;
       })
-      .addCase(fetchUsers.rejected, (state, action) => {
+      .addCase(fetchTeams.rejected, (state, action) => {
         state.error = action.payload as string;
         state.loading = false;
       })
 
-      // addUser
-      .addCase(addUser.pending, (state) => {
+      // addTeam
+      .addCase(addTeam.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(addUser.fulfilled, (state) => {
+      .addCase(addTeam.fulfilled, (state) => {
         state.loading = false;
       })
-      .addCase(addUser.rejected, (state, action) => {
+      .addCase(addTeam.rejected, (state, action) => {
         state.error = action.payload as string;
         state.loading = false;
       })
 
-      // updateUser
-      .addCase(updateUser.pending, (state) => {
+      // updateTeam
+      .addCase(updateTeam.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateUser.fulfilled, (state) => {
+      .addCase(updateTeam.fulfilled, (state) => {
         state.loading = false;
       })
-      .addCase(updateUser.rejected, (state, action) => {
+      .addCase(updateTeam.rejected, (state, action) => {
         state.error = action.payload as string;
         state.loading = false;
       })
 
-      // deleteUser
-      .addCase(deleteUser.pending, (state) => {
+      // deleteTeam
+      .addCase(deleteTeam.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteUser.fulfilled, (state) => {
+      .addCase(deleteTeam.fulfilled, (state) => {
         state.loading = false;
       })
-      .addCase(deleteUser.rejected, (state, action) => {
+      .addCase(deleteTeam.rejected, (state, action) => {
         state.error = action.payload as string;
         state.loading = false;
       });
   },
 });
 
-export default usersSlice.reducer;
+export default teamsSlice.reducer;

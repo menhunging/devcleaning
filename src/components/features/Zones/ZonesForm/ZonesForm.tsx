@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 
-import type { MultiValue } from "react-select";
+import type { SingleValue } from "react-select";
 import type { Option } from "@/types/ui/select/select";
+import type { Users } from "@/types/users/users";
 
-import SelectUIMulti from "@/components/shared/ui/Select/SelectUIMulti/SelectUIMulti";
+import SelectUI from "@/components/shared/ui/Select/SelectUI/SelectUI";
 
 import "./ZonesForm.scss";
 
@@ -19,6 +20,7 @@ interface ZonesForm {
     qr_zone: string;
   } | null;
   loading?: boolean;
+  users: Users[];
   onSuccess: (object: {
     id: string;
     id_zone: string;
@@ -36,6 +38,7 @@ const ZonesForm: React.FC<ZonesForm> = ({
   mode = "add",
   id_object,
   initialData,
+  users,
   loading,
   onSuccess,
   onClose,
@@ -51,52 +54,28 @@ const ZonesForm: React.FC<ZonesForm> = ({
     qr: initialData?.qr_zone || "",
   });
 
-  const options: Option[] = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla1", label: "Vanilla1" },
-    { value: "vanilla2", label: "Vanilla2" },
-    { value: "vanilla3", label: "Vanilla3" },
-    { value: "vanilla4", label: "Vanilla4" },
-    { value: "vanilla5", label: "Vanilla5" },
-    { value: "vanilla6", label: "Vanilla6" },
-    { value: "vanilla7", label: "Vanilla7" },
-    { value: "vanilla8", label: "Vanilla8" },
-    { value: "vanilla9", label: "Vanilla9" },
-    { value: "vanilla10", label: "Vanilla10" },
-    { value: "Иванов Иван", label: "Иванов Иван" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-    { value: "vanilla", label: "Vanilla" },
-  ];
+  const options: Option[] = (users || [])
+    .filter((user) => user.role === 2) // оставляем только с ролью 2
+    .map((user) => ({
+      value: String(user.id),
+      label: user.name,
+    }));
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSelectChange = (selected: MultiValue<Option>) => {
+  const handleSelectChange = (selected: SingleValue<Option>) => {
     setFormData((prev) => ({
       ...prev,
-      user_id_zone: selected ? selected.map((opt) => opt.value).join(",") : "",
+      user_id_zone: selected ? selected.value : "",
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(formData);
     onSuccess(formData);
   };
 
@@ -137,17 +116,9 @@ const ZonesForm: React.FC<ZonesForm> = ({
           <div className="selectWrap">
             <label htmlFor="address">Ответственный</label>
             <div className="selectWrap__wrap">
-              <SelectUIMulti options={options} onChange={handleSelectChange} />
+              <SelectUI options={options} onChange={handleSelectChange} />
             </div>
           </div>
-
-          {/* <input
-            type="text"
-            id="user_id_zone"
-            name="user_id_zone"
-            value={formData.user_id_zone}
-            onChange={handleChange}
-          /> */}
         </div>
 
         <div className="input-item">
@@ -155,7 +126,7 @@ const ZonesForm: React.FC<ZonesForm> = ({
 
           <div className="checkList">
             <div className="checkItem">
-              <input type="radio" id="rad1" checked />
+              <input type="radio" id="rad1" defaultChecked />
               <label htmlFor="rad1">QR код</label>
             </div>
           </div>

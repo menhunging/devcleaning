@@ -6,6 +6,7 @@ export interface Users {
   name: string;
   surname: string;
   phone: string;
+  object: [];
   team: [];
 }
 export interface UsersState {

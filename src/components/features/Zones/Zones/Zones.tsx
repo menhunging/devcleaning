@@ -20,7 +20,7 @@ const Zones: React.FC = () => {
   const [currentZone, setCurrentZone] = useState<zone | null>(null);
 
   const dispatch = useAppDispatch();
-  // const { userInfo } = useAppSelector((state) => state.auth);
+  const { DATA: users } = useAppSelector((state) => state.users);
   const { data: obj } = useAppSelector((state) => state.object);
   const { loading } = useAppSelector((state) => state.zones);
 
@@ -113,17 +113,12 @@ const Zones: React.FC = () => {
                   <span className="zoneItem__name">{zone.name_zone}</span>
 
                   {zone.user_id_zone ? (
-                    <span className="zoneItem__res">Имя менеджера</span>
+                    <span className="zoneItem__res">{zone.user_id_zone}</span>
                   ) : (
                     <>
-                      <div className="zoneItem__select">
-                        <select name="" id="">
-                          <option value="">Длинноеимя Длиннаяфамилия</option>
-                          <option value="">Длинноеимя Длиннаяфамилия</option>
-                          <option value="">Длинноеимя Длиннаяфамилия</option>
-                        </select>
-                      </div>
-                      <span className="zoneItem__res">назначить</span>
+                      <span className="zoneItem__res">
+                        Ответственный не назначен
+                      </span>
                     </>
                   )}
 
@@ -164,6 +159,7 @@ const Zones: React.FC = () => {
           mode={isUpdateModalOpen ? "edit" : "add"}
           initialData={currentZone ? currentZone : null}
           loading={loading}
+          users={users}
           onSuccess={isUpdateModalOpen ? handleUpdateSuccess : handleAddSuccess}
           onClose={onCloseAddModal}
         />

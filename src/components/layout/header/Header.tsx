@@ -32,25 +32,39 @@ const Header: React.FC = () => {
         >
           Объекты
         </NavLink>
-        <NavLink to="/catalog" className="menu__link menu__link--catalog">
+        <NavLink
+          to="/catalog"
+          className={({ isActive }) =>
+            `menu__link menu__link--catalog ${isActive ? "active" : ""}`
+          }
+        >
           Каталоги
         </NavLink>
-        <Link to="/" className="menu__link menu__link--planer">
+        <NavLink
+          to="/planer"
+          className={({ isActive }) =>
+            `menu__link menu__link--planer ${isActive ? "active" : ""}`
+          }
+        >
           Планер
-        </Link>
-        <Link to="/" className="menu__link menu__link--dashboard">
+        </NavLink>
+        {/* TODO потом удаляем этот класс isTempDisabled , просто пока скрываем, потому что не делали в первом этапе */}
+        <Link
+          to="/"
+          className="menu__link menu__link--dashboard isTempDisabled"
+        >
           Дашборд
         </Link>
-        <Link to="/" className="menu__link menu__link--message">
+        <Link to="/" className="menu__link menu__link--message isTempDisabled">
           Обращения
         </Link>
-        <Link to="/" className="menu__link menu__link--docs">
+        <Link to="/" className="menu__link menu__link--docs isTempDisabled">
           Рабочие документы
         </Link>
-        <Link to="/" className="menu__link menu__link--insp">
+        <Link to="/" className="menu__link menu__link--insp isTempDisabled">
           Инспектор
         </Link>
-        <Link to="/" className="menu__link menu__link--educat">
+        <Link to="/" className="menu__link menu__link--educat isTempDisabled">
           Обучение
         </Link>
       </nav>

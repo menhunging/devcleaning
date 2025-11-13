@@ -31,12 +31,17 @@ const ObjectsList: React.FC<ObjectsListProps> = ({ loading, objects }) => {
           object;
 
         return (
-          <Link to={`/${id}`} className="object-item" key={id}>
-            <div className="picture-block">
-              <picture>
-                <img src={getFullPhotoUrl(photo)} alt={name} />
-              </picture>
-            </div>
+          <Link to={`/object/${id}`} className="object-item" key={id}>
+            {photo ? (
+              <div className="picture-block">
+                <picture>
+                  <img src={getFullPhotoUrl(photo)} alt={name} />
+                </picture>
+              </div>
+            ) : (
+              <div className="not-foto">🖼️ Фото не загружено</div>
+            )}
+
             <div className="object-item__content">
               <span className="object-item__name caption--h4">{name}</span>
               <ul className="object-item__info">

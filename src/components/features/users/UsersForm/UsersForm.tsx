@@ -1,8 +1,11 @@
 import { useState } from "react";
 
+import type { ObjectItem } from "@/types/objects/objects";
 import type { MultiValue, SingleValue } from "react-select";
 import type { Option, OptionRole } from "@/types/ui/select/select";
 import type { UserFormData } from "@/types/users/users";
+
+import { getOptionForObjects } from "@/utils/getOptionForObjects";
 
 import SelectUI from "@/components/shared/ui/Select/SelectUI/SelectUI";
 import SelectUIMulti from "@/components/shared/ui/Select/SelectUIMulti/SelectUIMulti";
@@ -13,6 +16,7 @@ interface UsersFormProps {
   mode?: "add" | "edit";
   initialData?: UserFormData | null;
   loading?: boolean;
+  objects?: ObjectItem[];
   onSuccess: (object: UserFormData) => void;
   onClose: () => void;
 }
@@ -21,6 +25,7 @@ const UsersForm: React.FC<UsersFormProps> = ({
   mode = "add",
   initialData,
   loading,
+  objects,
   onSuccess,
   onClose,
 }) => {
@@ -85,7 +90,10 @@ const UsersForm: React.FC<UsersFormProps> = ({
   ) => {
     setFormData((prev) => ({
       ...prev,
-      [filed]: selected ? selected.map((opt) => opt.value).join(",") : "",
+      [filed]: selected
+        ? selected.map((opt) => ({ id: opt.value, name: opt.label }))
+        : [],
+      // [filed]: selected ? selected.map((opt) => opt.value).join(",") : "",
     }));
   };
 
@@ -184,7 +192,7 @@ const UsersForm: React.FC<UsersFormProps> = ({
             <label htmlFor="address">Объект</label>
             <div className="selectWrap__wrap">
               <SelectUIMulti
-                options={options}
+                options={getOptionForObjects(objects) || []}
                 onChange={(event) => {
                   handleSelectChange("object", event);
                 }}

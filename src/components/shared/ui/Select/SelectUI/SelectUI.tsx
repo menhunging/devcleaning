@@ -2,6 +2,8 @@ import Select, { components, type SingleValue } from "react-select";
 import { styles } from "./SelectUI.styles";
 import type { Option, OptionRole } from "@/types/ui/select/select";
 
+import "./SelectUI.scss";
+
 interface SelectUIProps {
   options: Option[] | OptionRole[];
   placeholder?: string;
@@ -43,6 +45,7 @@ const SelectUI: React.FC<SelectUIProps> = ({
   onChange,
 }) => (
   <Select
+    classNamePrefix="selectUI"
     options={options}
     styles={styles}
     value={value}

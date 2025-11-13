@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 
-import { fetchUsers } from "@/store/slices/usersSlice";
 import { authUser } from "@/store/slices/authSlice.ts";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
@@ -11,7 +10,9 @@ import ObjectPage from "../pages/object/ObjectPage";
 import AuthPage from "@/components/pages/auth/AuthPage";
 
 import ProtectedRoute from "@/components/shared/routes/ProtectedRoute";
-import CatalogPage from "../pages/catalog/Catalog";
+import CatalogsPage from "../pages/catalog/CatalogsPage";
+import NotFoundPage from "../pages/notPage/NotFoundPage";
+import PlannerPage from "../pages/planner/PlannerPage";
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -21,14 +22,14 @@ const App: React.FC = () => {
   useEffect(() => {
     if (isAuthenticated) {
       dispatch(authUser());
-      dispatch(fetchUsers())
     }
   }, []);
 
   const protectedRoutes = [
     { path: "/", element: <ObjectsPage /> },
-    { path: "/:id", element: <ObjectPage /> },
-    { path: "/catalog", element: <CatalogPage /> },
+    { path: "/object/:id", element: <ObjectPage /> },
+    { path: "/catalog", element: <CatalogsPage /> },
+    { path: "/planer", element: <PlannerPage /> },
   ];
 
   return (
@@ -45,6 +46,7 @@ const App: React.FC = () => {
         />
       ))}
       <Route path="/auth" element={<AuthPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

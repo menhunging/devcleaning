@@ -4,7 +4,8 @@ import { styles } from "./SelectUIMulti.styles";
 import type { Option } from "@/types/ui/select/select";
 
 interface SelectUIProps {
-  options: Option[];
+  options: Option[] | undefined;
+  value?: Option[] | undefined;
   onChange: (values: MultiValue<Option>) => void;
 }
 
@@ -53,10 +54,15 @@ const CheckboxOption = (props: any) => {
   );
 };
 
-const SelectUIMulti: React.FC<SelectUIProps> = ({ options, onChange }) => (
+const SelectUIMulti: React.FC<SelectUIProps> = ({
+  options,
+  value,
+  onChange,
+}) => (
   <Select
     options={options}
     styles={styles}
+    value={value}
     components={{ DropdownIndicator, Option: CheckboxOption }}
     isMulti
     placeholder="Выбрать"

@@ -13,6 +13,16 @@ export interface ObjectItem {
   users_count: number;
   manager: number;
   zones: zone[];
+  users: [
+    {
+      id_user: number;
+      role: number;
+      user_name: string;
+      surname: string;
+      id_object_user: number;
+    }
+  ];
+  user_manager: {};
 }
 
 export interface ObjectsResponse {

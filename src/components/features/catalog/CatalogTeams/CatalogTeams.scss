@@ -1,0 +1,74 @@
+.teams-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  margin-top: 30px;
+
+  @include responsive1439 {
+    gap: 15px;
+  }
+}
+
+.teams-list__item {
+  background-color: $colorHover;
+  border-radius: 14px;
+  padding: 15px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.teams-list__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.teams-list__title {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 20px;
+  color: $colorGreen;
+}
+
+.teams-list__controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.teams-list__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  width: 100%;
+}
+
+.teams-list__count {
+  font-weight: 500;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 20px;
+  width: 100%;
+
+  .count {
+    font-size: 35px;
+    line-height: 35px;
+  }
+}
+
+.teams-list__object {
+}
+
+.teams-list__desc {
+  color: $colorGrayLight-a1;
+  font-size: 14px;
+  line-height: 16px;
+}

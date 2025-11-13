@@ -1,0 +1,54 @@
+.skeleton {
+  animation: pulse 1.5s infinite ease-in-out;
+  background-color: $colorGray;
+}
+
+.skeleton__line {
+  display: inline-block;
+  height: 16px;
+  background-color: $colorGrayDark;
+  border-radius: 4px;
+}
+
+.skeleton__title {
+  width: 40%;
+  height: 20px;
+}
+
+.skeleton__icon {
+  width: 20px;
+  height: 20px;
+  margin-left: 8px;
+}
+
+.skeleton__object {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.skeleton__desc {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.skeleton__count {
+  width: 40px;
+  height: 20px;
+}
+
+.skeleton__text {
+  width: 40%;
+  height: 14px;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: $colorGray;
+  }
+  50% {
+    background-color: $colorGrayDark;
+  }
+  100% {
+    background-color: $colorGray;
+  }
+}
