@@ -10,11 +10,11 @@ export const styles: StylesConfig = {
     minHeight: "20px",
     cursor: "pointer",
   }),
-  option: (provided) => ({
+  option: (provided, state) => ({
     ...provided,
     borderRadius: "12px",
-    backgroundColor: "#fff",
-    color: "#1C1C1C", // или любой цвет текста
+    backgroundColor: state.isSelected ? "#019875" : "#fff", // цвет выбранного
+    color: state.isSelected ? "#fff" : "#1C1C1C",
     cursor: "pointer",
     "&:hover": {
       backgroundColor: "#019875",

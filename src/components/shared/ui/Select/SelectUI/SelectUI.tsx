@@ -51,9 +51,10 @@ const SelectUI: React.FC<SelectUIProps> = ({
     value={value}
     components={{ DropdownIndicator }}
     placeholder={placeholder ? placeholder : "Не назначен"}
+    // closeMenuOnSelect={false}
     onChange={(selected) => {
-      const value = (selected as SingleValue<Option>) || null;
-      onChange?.(value);
+      const valueLocal = (selected as SingleValue<Option>) || null;
+      onChange?.(valueLocal);
     }}
   />
 );

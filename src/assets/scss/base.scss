@@ -339,6 +339,7 @@ picture {
 
     &.isSelected {
       color: $colorBlack;
+      
       &::before {
         background-color: #a7eada;
         border-color: #a7eada;

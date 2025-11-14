@@ -21,6 +21,7 @@ import {
 import "./CatalogUsers.scss";
 
 const CatalogUsers: React.FC = () => {
+  const { DATA: teams } = useAppSelector((state) => state.teams);
   const { DATA: objects } = useAppSelector((state) => state.objects);
   const { DATA, loading } = useAppSelector((state) => state.users);
   const dispatch = useAppDispatch();
@@ -127,9 +128,7 @@ const CatalogUsers: React.FC = () => {
                   <div className="table__cell">{getRoleName(user.role)}</div>
 
                   <div className="table__cell">
-                    {user.object && user.object.length > 0
-                      ? user.object.map((t: any) => t.name).join(", ")
-                      : "-"}
+                    {user.object ? user.object.name : "-"}
                   </div>
 
                   <div className="table__cell">
@@ -173,6 +172,7 @@ const CatalogUsers: React.FC = () => {
           mode={isUpdateModalOpen ? "edit" : "add"}
           initialData={currentUser ? currentUser : null}
           objects={objects}
+          teams={teams}
           onSuccess={isUpdateModalOpen ? handleUpdateSuccess : handleAddSuccess}
           onClose={onCloseAddModal}
         />

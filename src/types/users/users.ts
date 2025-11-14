@@ -6,7 +6,11 @@ export interface Users {
   name: string;
   surname: string;
   phone: string;
-  object: [];
+  object: {
+    id_object_user: number;
+    id: number;
+    name: string;
+  };
   team: [];
 }
 export interface UsersState {
@@ -30,6 +34,10 @@ export interface UserFormData {
   name: string;
   surname: string;
   phone: string;
-  object?: []; // уберем потом ?
+  object: {
+    id_object_user?: number;
+    id?: number;
+    name?: string;
+  };
   teams?: []; // уберем потом ?
 }
