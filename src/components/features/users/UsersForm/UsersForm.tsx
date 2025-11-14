@@ -73,9 +73,11 @@ const UsersForm: React.FC<UsersFormProps> = ({
     field: "object" | "teams" | "role",
     selected: SingleValue<Option>
   ) => {
+    console.log("handleSelectSingleChange", selected);
+
     setFormData((prev) => ({
       ...prev,
-      [field]: selected ? { id: Number(selected.value) } : "",
+      [field]: selected ? { id: Number(selected.value), name:selected.label  } : "",
     }));
   };
 

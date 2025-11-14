@@ -16,6 +16,8 @@ export const mergedUsers = (
     const match = users?.find((u) => u.id === num.id_user);
     return {
       ...num,
+      id_user: num.id_user,
+      name: match ? match.name : "",
       login: match ? match.login : "",
       role: match ? match.role : 3,
       surname: match ? match.surname : "",

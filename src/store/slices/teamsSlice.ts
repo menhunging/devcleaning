@@ -23,7 +23,7 @@ export const fetchTeams = createAsyncThunk<
 
     const { success, DATA, message } = response.data;
 
-    console.log("fetchTeams DATA", DATA);
+    console.log("TEAMS fetchTeams DATA", DATA);
 
     if (!success || typeof message === "string") {
       return thunkAPI.rejectWithValue(

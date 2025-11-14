@@ -125,7 +125,7 @@ const CatalogUsers: React.FC = () => {
               {DATA.map((user) => (
                 <div className="table__row" key={user.id}>
                   <div className="table__cell">{`${user.surname} ${user.name}`}</div>
-                  <div className="table__cell">{getRoleName(user.role)}</div>
+                  <div className="table__cell"><span className="table--users__role">{getRoleName(user.role)}</span></div>
 
                   <div className="table__cell">
                     {user.object ? user.object.name : "-"}
@@ -136,11 +136,14 @@ const CatalogUsers: React.FC = () => {
                       ? user.team.map((t: any) => t.name).join(", ")
                       : "-"}
                   </div>
-                  <div className="table__cell">{user.login}</div>
-                  <div className="table__cell">{user.phone || "-"}</div>
+                  <div className="table__cell"><span className="table--users__login">{user.login}</span></div>
+                  <div className="table__cell">{user.phone || "+79999999999"}</div>
                   <div className="table__cell">{user.email}</div>
-                  <div className="table__cell">-</div>
-                  <div className="table__cell">OK</div>
+                  <div className="table__cell"><span className="activity">23.07.25 | 08:30</span></div>
+                  <div className="table__cell">
+                    <span className="status status--active">Активен</span>
+                    {/* <span className="status status--notactive">Не активен</span> */}
+                  </div>
                   <div className="table__cell">
                     <div className="icons-controls">
                       <span

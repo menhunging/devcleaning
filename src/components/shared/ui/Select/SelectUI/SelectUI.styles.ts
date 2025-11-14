@@ -14,11 +14,11 @@ export const styles: StylesConfig = {
     ...provided,
     borderRadius: "12px",
     backgroundColor: state.isSelected ? "#019875" : "#fff", // цвет выбранного
-    color: state.isSelected ? "#fff" : "#1C1C1C",
+    color: state.isSelected ? "#fff" : "#6F7583",
     cursor: "pointer",
     "&:hover": {
-      backgroundColor: "#019875",
-      color: "#fff",
+      // backgroundColor: "#019875",
+      color: state.isSelected ? "#fff" : "#1C1C1C",
     },
   }),
   menu: (provided) => ({

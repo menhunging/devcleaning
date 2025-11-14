@@ -23,6 +23,9 @@ export const fetchUsers = createAsyncThunk<
 
     const { success, DATA, message } = response.data;
 
+    console.log("USERS fetchUsers DATA",DATA);
+    
+
     if (!success || typeof message === "string") {
       return thunkAPI.rejectWithValue(
         typeof message === "string"

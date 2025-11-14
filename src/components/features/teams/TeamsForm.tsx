@@ -79,8 +79,6 @@ const TeamsForm: React.FC<TeamsFormProps> = ({
     // объединяем с полными данными из users
     const merged = mergedUsers(newUsers, users);
 
-    console.log("users", users);
-
     setFormData((prev) => ({
       ...prev,
       id_user: newUsersIDs,
@@ -97,10 +95,12 @@ const TeamsForm: React.FC<TeamsFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("formData", formData);
+
     onSuccess(formData);
   };
 
-  let btnDisabled = loading || !formData.name || !formData.description;
+  let btnDisabled = loading || !formData.name;
 
   return (
     <div className="users-popup">
@@ -158,7 +158,7 @@ const TeamsForm: React.FC<TeamsFormProps> = ({
                 options={options}
                 value={formData.users.map((user) => ({
                   value: String(user.id_user),
-                  label: `${user.name}`,
+                  label: `${user.name} ${user.surname}`,
                 }))}
                 onChange={handleSelectChange}
               />

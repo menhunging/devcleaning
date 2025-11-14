@@ -47,6 +47,8 @@
   align-items: flex-start;
   gap: 15px;
   width: 100%;
+  flex: 1;
+  justify-content: space-between;
 }
 
 .teams-list__count {

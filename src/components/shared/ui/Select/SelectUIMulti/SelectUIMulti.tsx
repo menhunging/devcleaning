@@ -9,6 +9,27 @@ interface SelectUIProps {
   onChange: (values: MultiValue<Option>) => void;
 }
 
+const CustomMultiValueRemove = (props: any) => {
+  return (
+    <components.MultiValueRemove {...props}>
+      <span>
+        <svg
+          width="10"
+          height="10"
+          viewBox="0 0 10 10"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0.76923 10L0 9.23077L4.23077 5L0 0.76923L0.76923 0L5 4.23077L9.23077 0L10 0.76923L5.76923 5L10 9.23077L9.23077 10L5 5.76923L0.76923 10Z"
+            fill="#1C1C1C"
+          />
+        </svg>
+      </span>
+    </components.MultiValueRemove>
+  );
+};
+
 const DropdownIndicator = (props: any) => {
   const { menuIsOpen } = props.selectProps;
 
@@ -63,7 +84,11 @@ const SelectUIMulti: React.FC<SelectUIProps> = ({
     options={options}
     styles={styles}
     value={value}
-    components={{ DropdownIndicator, Option: CheckboxOption }}
+    components={{
+      DropdownIndicator,
+      Option: CheckboxOption,
+      MultiValueRemove: CustomMultiValueRemove,
+    }}
     isMulti
     placeholder="Выбрать"
     closeMenuOnSelect={false}

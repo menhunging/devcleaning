@@ -329,6 +329,7 @@ picture {
 }
 
 .optionSelectMulti {
+  
   .optionSelectMulti__name {
     font-weight: 500;
     font-size: 14px;
@@ -336,10 +337,11 @@ picture {
     display: flex;
     align-items: center;
     gap: 5px;
+    padding-right: 50px;
 
     &.isSelected {
       color: $colorBlack;
-      
+
       &::before {
         background-color: #a7eada;
         border-color: #a7eada;
@@ -424,6 +426,7 @@ picture {
     display: table-cell;
     vertical-align: middle;
     background-color: #f8f8fa;
+    font-weight: 600;
 
     &:first-child {
       border-top-left-radius: 10px;
@@ -445,6 +448,10 @@ picture {
     border-right: none;
     width: 65px;
   }
+
+  .activity {
+    white-space: nowrap;
+  }
 }
 
 .icons-controls {
@@ -457,4 +464,32 @@ picture {
 .isTempDisabled {
   opacity: 0.3;
   pointer-events: none;
+}
+
+.status {
+  font-weight: 600;
+  position: relative;
+  padding-left: 20px;
+  white-space: nowrap;
+
+  @include before {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+  }
+
+  &--active {
+    &::before {
+      background-color: #5c7ff3;
+    }
+  }
+
+  &--not-active {
+    &::before {
+      background-color: #686868;
+    }
+  }
 }

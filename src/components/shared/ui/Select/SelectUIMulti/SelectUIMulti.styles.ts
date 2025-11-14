@@ -8,6 +8,7 @@ export const styles: StylesConfig = {
     border: "none",
     boxShadow: "none",
     minHeight: "0px",
+    color: "#6F7583",
     gap: "0px",
     cursor: "pointer",
   }),
@@ -33,7 +34,7 @@ export const styles: StylesConfig = {
     ...provided,
     backgroundColor: "#fff",
     borderRadius: "12px",
-    minWidth: "200px",
+    minWidth: "350px",
     width: "100%",
     boxShadow: "2px 3px 8px 0px #0000000D",
     /*кастомизация скроллбара */
@@ -89,10 +90,9 @@ export const styles: StylesConfig = {
     ...provided,
     color: "#1C1C1C", // цвет крестика удаления
     cursor: "pointer",
+    transition: "0.3s",
     ":hover": {
-      backgroundColor: "#EE3B3B", // фон при наведении на крестик
-      color: "#fff",
-      borderRadius: "20px;",
+      transform: "scale(1.2)",
     },
   }),
 };
