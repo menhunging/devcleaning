@@ -5,9 +5,9 @@ import type { Option, OptionRole } from "@/types/ui/select/select";
 import "./SelectUI.scss";
 
 interface SelectUIProps {
-  options: Option[] | OptionRole[];
+  options: Option[] | OptionRole[] | undefined;
   placeholder?: string;
-  value?: Option | OptionRole | null;
+  value?: Option | OptionRole | null | undefined;
   onChange: (values: SingleValue<Option>) => void;
 }
 

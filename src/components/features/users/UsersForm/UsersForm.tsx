@@ -1,18 +1,18 @@
 import { useState } from "react";
 
 import type { ObjectItem } from "@/types/objects/objects";
-import type { MultiValue, SingleValue } from "react-select";
+import type { SingleValue, MultiValue } from "react-select";
 import type { Option, OptionRole } from "@/types/ui/select/select";
 import type { UserFormData } from "@/types/users/users";
 import type { Teams } from "@/types/teams/teams";
 
 import { getOptionForObjects } from "@/utils/getOptionForObjects";
-import { getOptionForTeams } from "@/utils/getOptionForTeams";
 
 import SelectUI from "@/components/shared/ui/Select/SelectUI/SelectUI";
-import SelectUIMulti from "@/components/shared/ui/Select/SelectUIMulti/SelectUIMulti";
+// import SelectUIMulti from "@/components/shared/ui/Select/SelectUIMulti/SelectUIMulti";
 
 import "./UsersForm.scss";
+import SelectUIMulti from "@/components/shared/ui/Select/SelectUIMulti/SelectUIMulti";
 
 interface UsersFormProps {
   mode?: "add" | "edit";
@@ -29,7 +29,7 @@ const UsersForm: React.FC<UsersFormProps> = ({
   initialData,
   loading,
   objects,
-  teams,
+  // teams,
   onSuccess,
   onClose,
 }) => {
@@ -42,7 +42,7 @@ const UsersForm: React.FC<UsersFormProps> = ({
     name: initialData?.name || "",
     surname: initialData?.surname || "",
     phone: initialData?.phone || "",
-    object: initialData?.object || {},
+    id_object: initialData?.id_object || [],
     teams: initialData?.teams || [],
   });
 
@@ -51,39 +51,66 @@ const UsersForm: React.FC<UsersFormProps> = ({
     { value: 3, label: "Сотрудник" },
   ];
 
+  const optionsObjects = getOptionForObjects(objects) || [];
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSelectChange = (
-    filed: "object" | "teams" | "role",
-    selected: MultiValue<Option>
-  ) => {
+  const handleSelectRoleChange = (selected: SingleValue<Option>) => {
+    // change for Roles
     setFormData((prev) => ({
       ...prev,
-      [filed]: selected
-        ? selected.map((opt) => ({ id: opt.value, name: opt.label }))
-        : [],
-      // [filed]: selected ? selected.map((opt) => opt.value).join(",") : "",
+      role: selected ? Number(selected.value) : undefined,
     }));
   };
 
-  const handleSelectSingleChange = (
-    field: "object" | "teams" | "role",
-    selected: SingleValue<Option>
-  ) => {
-    console.log("handleSelectSingleChange", selected);
+  const handleSelectObjManagerChange = (selected: MultiValue<Option>) => {
+    // change for Objects MANAGER
 
     setFormData((prev) => ({
       ...prev,
-      [field]: selected ? { id: Number(selected.value), name:selected.label  } : "",
+      id_object: selected.map((opt) => opt.value).join(","),
     }));
   };
+
+  const handleSelectObjUserChange = (selected: SingleValue<Option>) => {
+    // change for Objects USERS
+
+    setFormData((prev) => ({
+      ...prev,
+      id_object: selected ? Number(selected.value) : [],
+    }));
+  };
+
+  // const handleSelectTeamsChange = (selected: MultiValue<Option>) => {
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     teams: selected
+  //       ? selected.map((opt) => ({ id: opt.value, name: opt.label }))
+  //       : [],
+  //     // [filed]: selected ? selected.map((opt) => opt.value).join(",") : "",
+  //   }));
+  // };
+
+  // const handleSelectSingleChange = (
+  //   field: "object" | "teams" | "role",
+  //   selected: SingleValue<Option>
+  // ) => {
+  //   console.log("handleSelectSingleChange", selected);
+
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [field]: selected
+  //       ? { id: Number(selected.value), name: selected.label }
+  //       : "",
+  //   }));
+  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
+    console.log("handleSubmit formData -- ", formData);
     onSuccess(formData);
   };
 
@@ -163,23 +190,6 @@ const UsersForm: React.FC<UsersFormProps> = ({
 
         <div className="input-item">
           <div className="selectWrap">
-            <label htmlFor="address">Объект</label>
-            <div className="selectWrap__wrap">
-              <SelectUI
-                options={getOptionForObjects(objects) || []}
-                value={getOptionForObjects(objects)?.find(
-                  (opt) => opt.value === String(formData.object.id)
-                )}
-                onChange={(event) => {
-                  handleSelectSingleChange("object", event);
-                }}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="input-item">
-          <div className="selectWrap">
             <label htmlFor="address">Роль</label>
             <div className="selectWrap__wrap">
               <SelectUI
@@ -190,7 +200,7 @@ const UsersForm: React.FC<UsersFormProps> = ({
                 }
                 placeholder={"Выбрать"}
                 onChange={(event) => {
-                  handleSelectSingleChange("role", event);
+                  handleSelectRoleChange(event);
                 }}
               />
             </div>
@@ -199,17 +209,53 @@ const UsersForm: React.FC<UsersFormProps> = ({
 
         <div className="input-item">
           <div className="selectWrap">
+            <label htmlFor="address">Объект</label>
+
+            {formData.role === 2 ? (
+              <div className="selectWrap__wrap">
+                <SelectUIMulti
+                  options={optionsObjects}
+                  // value={optionsObjects.find(
+                  //   (opt) => opt.value === String(formData.id_object)
+                  // )}
+                  // value={optionsObjects.map((opt) => ({
+                  //   value: String(opt.value),
+                  //   label: String(opt.label),
+                  // }))}
+                  onChange={(event) => {
+                    handleSelectObjManagerChange(event);
+                  }}
+                />
+              </div>
+            ) : (
+              <div className="selectWrap__wrap">
+                <SelectUI
+                  options={optionsObjects}
+                  value={optionsObjects.find(
+                    (opt) => opt.value === String(formData.id_object)
+                  )}
+                  onChange={(event) => {
+                    handleSelectObjUserChange(event);
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* <div className="input-item">
+          <div className="selectWrap">
             <label htmlFor="address">Команды</label>
             <div className="selectWrap__wrap">
               <SelectUIMulti
                 options={getOptionForTeams(teams)}
                 onChange={(event) => {
-                  handleSelectChange("teams", event);
+                  handleSelectTeamsChange(event);
                 }}
               />
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="btn-controls btn-controls--right">
           <button

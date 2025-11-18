@@ -28,7 +28,7 @@ export interface TeamsFormData {
   id_user: string;
   users:
     | {
-        id_user: number;
+        id_user: string | number;
         login: string;
         name: string;
         role: number;

@@ -5,13 +5,15 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { fetchUsers } from "@/store/slices/usersSlice";
+
 import type { formDataObject } from "@/types/objects/objectsForm";
 import type { SingleValue } from "react-select";
 
 import {
   deleteObject,
   getObjectById,
-  // updateManagerObject,
+  updateManagerObject,
   updateObject,
 } from "@/store/slices/objectSlice";
 
@@ -23,23 +25,31 @@ import ObjectTabs from "@/components/features/object/ObjectTabs";
 import SelectUI from "@/components/shared/ui/Select/SelectUI/SelectUI";
 
 import "./ObjectPage.scss";
-import { fetchUsers } from "@/store/slices/usersSlice";
+import { getObjects } from "@/store/slices/objectsSlice";
 
 const ObjectPage: React.FC = () => {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const { DATA: users } = useAppSelector((state) => state.users);
   const { loading, data: obj } = useAppSelector((state) => state.object);
 
   const { id } = useParams<{ id: string }>();
 
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isRemoveModalOpen, setRemoveModalOpen] = useState(false);
 
-  const options: Option[] = (users || []).map((user) => ({
-    value: String(user.id), // тут id
-    label: user.name,
-  }));
+  const options: Option[] = users
+    .filter((user) => user.role === 2) // оставляем только с ролью 2
+    .map((user) => ({
+      value: String(user.id),
+      label: `${user.name} ${user.surname}`,
+    }));
+
+  const optionDefaultValue: Option | null =
+    options.find(
+      (option) => option.value === String(obj?.user_manager?.id_user)
+    ) || null;
 
   const handleUpdateSuccess = async (formData: formDataObject) => {
     // если редактирование обьекта происходит успешно
@@ -48,54 +58,42 @@ const ObjectPage: React.FC = () => {
 
     const result = await dispatch(updateObject(formData));
     if (updateObject.fulfilled.match(result)) {
-      if (id) {
-        dispatch(getObjectById(id));
+      if (obj) {
+        dispatch(getObjectById(obj.id));
       }
     } else {
-      console.log(result.payload);
+      console.log("handleUpdateSuccess", result.payload);
     }
   };
 
   const handleRemoveSuccess = async () => {
     // если удаление обьекта происходит успешно
 
-    setRemoveModalOpen(false);
-
     if (obj) {
-      dispatch(deleteObject(obj.id));
-      navigate("/");
-      // if (deleteObject.fulfilled.match(result)) {
-      //   debugger
-
-      // } else {
-      //   console.log(result.payload);
-      // }
+      const result = await dispatch(deleteObject(obj.id));
+      if (deleteObject.fulfilled.match(result)) {
+        setRemoveModalOpen(false);
+        dispatch(getObjects());
+        navigate("/");
+      }
     }
   };
 
-  const changeManager = (selected: SingleValue<Option>) => {
-    console.log(selected);
-
+  const changeManager = async (selected: SingleValue<Option>) => {
     if (selected && obj) {
       const payload = {
-        id_object: obj.id,
-        // id_object_user: obj.user_manager.id_object_user,
+        id_object: Number(obj.id),
         id_user: Number(selected.value),
       };
 
-      console.log("selected.label", selected.label);
-      console.log("payload", payload);
+      const result = await dispatch(updateManagerObject(payload));
 
-      // dispatch(updateManagerObject(payload));
+      if (updateManagerObject.fulfilled.match(result)) {
+        if (obj.id) {
+          dispatch(getObjectById(obj.id));
+        }
+      }
     }
-
-    // if (selected && obj?.user_manager?.id_object_user) {
-    // }
-
-    // setFormData((prev) => ({
-    //   ...prev,
-    //   id_object: selected ? selected.value : "",
-    // }));
   };
 
   useEffect(() => {
@@ -113,7 +111,7 @@ const ObjectPage: React.FC = () => {
             <div className="skeleton-object__caption"></div>
           ) : (
             <h2 className="caption caption--h2">
-              `${obj.name} ---- id: ${obj.id}`
+              {obj.name} ---- id: {obj.id}
             </h2>
           )}
 
@@ -207,7 +205,7 @@ const ObjectPage: React.FC = () => {
                         </li>
                         <li>
                           <span>сотрудники:</span>
-                          <strong>{obj.users_count}</strong>
+                          <strong>{obj.users_count | 0}</strong>
                         </li>
                       </ul>
                     </div>
@@ -215,7 +213,11 @@ const ObjectPage: React.FC = () => {
                     <div className="object-manager">
                       <span className="object-manager__title">Менеджер:</span>
                       <div className="object-manager__managers">
-                        <SelectUI options={options} onChange={changeManager} />
+                        <SelectUI
+                          options={options}
+                          value={optionDefaultValue}
+                          onChange={changeManager}
+                        />
                       </div>
                     </div>
                   </div>

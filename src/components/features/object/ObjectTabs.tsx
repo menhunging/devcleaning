@@ -56,33 +56,35 @@ const ObjectTabs = ({ obj }: ObjectTabsProps) => {
           <div className="object-page__list">
             <div className="object-page__item">
               <span className="object-page__caption">
-                Команды по объекту <span className="object-page__desc">3</span>
+                Команды по объекту
+                <span className="object-page__desc">
+                  {obj?.teams?.length ?? 0}
+                </span>
               </span>
 
               <div className="object-comands">
-                <div className="object-comands__item">
-                  <span className="object-comands__name">УГПХ-1</span>
+                {obj?.teams && obj.teams.length > 0 ? (
+                  obj.teams.map((objItem) => (
+                    <div className="object-comands__item" key={objItem.id}>
+                      <span className="object-comands__name">
+                        {objItem.name}
+                      </span>
 
-                  <span className="object-comands__count">
-                    5 <span className="object-comands__all">/ 5</span>
-                  </span>
-                </div>
-
-                <div className="object-comands__item">
-                  <span className="object-comands__name">УГПХ-1</span>
-
-                  <span className="object-comands__count">
-                    2 <span className="object-comands__all">/ 2</span>
-                  </span>
-                </div>
-
-                <div className="object-comands__item">
-                  <span className="object-comands__name">УГПХ-1</span>
-
-                  <span className="object-comands__count">
-                    3 <span className="object-comands__all">/ 3</span>
-                  </span>
-                </div>
+                      <span className="object-comands__count">
+                        {objItem.users.length > 0 && (
+                          <>
+                            {objItem.users.length}
+                            <span className="object-comands__all">
+                              / {objItem.users.length}
+                            </span>
+                          </>
+                        )}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="empty-text">Здесь ничего нет </div>
+                )}
               </div>
             </div>
 
@@ -92,11 +94,15 @@ const ObjectTabs = ({ obj }: ObjectTabsProps) => {
               </span>
 
               <ul className="object-user__list">
-                {obj?.users.map((user) => (
-                  <li key={user.id_user}>
-                    {`${user.user_name} ${user.surname}`}
-                  </li>
-                ))}
+                {!obj?.users?.length ? (
+                  <div className="empty-text">Здесь ничего нет </div>
+                ) : (
+                  obj?.users?.map((user, index) => (
+                    <li key={`${user.id_user}-${index}`}>
+                      {`${user.name} ${user.surname}`}
+                    </li>
+                  ))
+                )}
               </ul>
             </div>
 

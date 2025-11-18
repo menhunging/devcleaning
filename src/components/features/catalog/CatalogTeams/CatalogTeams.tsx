@@ -139,8 +139,6 @@ const CatalogTeams: React.FC = () => {
                           <span
                             className="icon-change"
                             onClick={() => {
-                              console.log("team,initialData", team);
-
                               setCurrentTeam(team);
                               onOpenModal("edit");
                             }}
@@ -162,7 +160,9 @@ const CatalogTeams: React.FC = () => {
                         </span>
 
                         <div className="teams-list__count">
-                          <span className="count">{team.users?.length}</span>
+                          <span className="count">
+                            {team.users ? team.users.length : 0}
+                          </span>
                           <span>сотрудники</span>
                         </div>
                       </div>

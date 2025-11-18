@@ -1,17 +1,10 @@
+import type { Users } from "../users/users";
+
 export interface zone {
-  id_object: string;
-  user_id_zone: string;
-
-  // 2 одинаковых поля, с бэка такая херня
-  id: string;
   id_zone: string;
-
-  // 2 одинаковых поля, с бэка такая херня
+  id_object: string;
+  user_id_zone: string | number;
   name_zone: string;
-  name: string;
-
-  // 2 одинаковых поля, с бэка такая херня
-  qr_zone: string;
   qr: string;
 }
 
@@ -24,4 +17,26 @@ export interface zoneState {
 export interface zoneResponse {
   success: boolean;
   message?: string;
+}
+
+export interface ZonesFormProps {
+  mode?: "add" | "edit";
+  id_object: string;
+  initialData?: {
+    id_zone: string;
+    id_object: string;
+    name_zone: string;
+    user_id_zone: string | number;
+    qr: string;
+  } | null;
+  loading?: boolean;
+  users: Users[];
+  onSuccess: (object: {
+    id_zone: string;
+    id_object: string;
+    user_id_zone: string | number;
+    name_zone: string;
+    qr: string;
+  }) => void;
+  onClose: () => void;
 }

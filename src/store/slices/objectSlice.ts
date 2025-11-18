@@ -83,15 +83,18 @@ export const deleteObject = createAsyncThunk<
 
 export const updateManagerObject = createAsyncThunk<
   boolean,
-  { id: string; id_user: number },
+  {
+    id_user: number;
+    id_object: number;
+  },
   { rejectValue: string }
 >("object/updateManagerObject", async (payload, thunkAPI) => {
   try {
-    const response = await api.post("add_object_user/", payload);
+    const response = await api.post("add_edit_object_manager/", payload);
 
     const { success, message } = response.data;
 
-    if (!success) {
+    if (!response.data) {
       return thunkAPI.rejectWithValue(
         message || "Ошибка при обновлении менеджера"
       );

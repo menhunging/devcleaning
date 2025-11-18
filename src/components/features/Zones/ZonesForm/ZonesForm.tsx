@@ -1,40 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import type { SingleValue } from "react-select";
 import type { Option } from "@/types/ui/select/select";
-import type { Users } from "@/types/users/users";
+import type { ZonesFormProps } from "@/types/zones/zones";
 
 import SelectUI from "@/components/shared/ui/Select/SelectUI/SelectUI";
 
 import "./ZonesForm.scss";
 
-interface ZonesForm {
-  mode?: "add" | "edit";
-  id_object: string;
-  initialData?: {
-    id: string;
-    id_zone: string;
-    id_object: string;
-    name_zone: string;
-    user_id_zone: string;
-    qr_zone: string;
-  } | null;
-  loading?: boolean;
-  users: Users[];
-  onSuccess: (object: {
-    id: string;
-    id_zone: string;
-    id_object: string;
-    user_id_zone: string;
-    name_zone: string;
-    name: string;
-    qr_zone: string;
-    qr: string;
-  }) => void;
-  onClose: () => void;
-}
-
-const ZonesForm: React.FC<ZonesForm> = ({
+const ZonesForm: React.FC<ZonesFormProps> = ({
   mode = "add",
   id_object,
   initialData,
@@ -43,23 +17,39 @@ const ZonesForm: React.FC<ZonesForm> = ({
   onSuccess,
   onClose,
 }) => {
-  const [formData, setFormData] = useState({
-    id: initialData?.id_zone || "",
+  const initFormData = (
+    initialData?: ZonesFormProps["initialData"],
+    id_object?: string
+  ) => ({
     id_zone: initialData?.id_zone || "",
-    id_object: initialData?.id_object || id_object,
+    id_object: initialData?.id_object || id_object || "",
     user_id_zone: initialData?.user_id_zone || "",
     name_zone: initialData?.name_zone || "",
-    name: initialData?.name_zone || "",
-    qr_zone: initialData?.name_zone || "",
-    qr: initialData?.qr_zone || "",
+    qr: initialData?.qr || "",
   });
 
-  const options: Option[] = (users || [])
-    .filter((user) => user.role === 2) // оставляем только с ролью 2
-    .map((user) => ({
-      value: String(user.id),
-      label: user.name,
-    }));
+  const [formData, setFormData] = useState(
+    initFormData(initialData, id_object)
+  );
+
+  const options = useMemo<Option[]>(
+    () =>
+      (users || [])
+        .filter((user) => user.role === 2) // только с role 2
+        .map((user) => ({
+          value: String(user.id),
+          label: `${user.name} ${user.surname}`,
+        })),
+    [users]
+  );
+
+  const optionDefaultValue = useMemo<Option | null>(
+    () =>
+      options.find(
+        (option) => option.value === String(formData.user_id_zone)
+      ) || null,
+    [options, formData.user_id_zone]
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -75,23 +65,13 @@ const ZonesForm: React.FC<ZonesForm> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
     onSuccess(formData);
   };
 
-  const btnDisabled = loading || !formData.name;
+  const btnDisabled = loading || !formData.name_zone;
 
   useEffect(() => {
-    setFormData({
-      id: initialData?.id_zone || "",
-      id_zone: initialData?.id_zone || "",
-      id_object: initialData?.id_object || id_object,
-      user_id_zone: initialData?.user_id_zone || "",
-      name_zone: initialData?.name_zone || "",
-      name: initialData?.name_zone || "",
-      qr_zone: initialData?.name_zone || "",
-      qr: initialData?.qr_zone || "",
-    });
+    setFormData(initFormData(initialData, id_object));
   }, [initialData, id_object]);
 
   return (
@@ -105,9 +85,9 @@ const ZonesForm: React.FC<ZonesForm> = ({
           <label htmlFor="name">Название</label>
           <input
             type="text"
-            id="name"
-            name="name"
-            value={formData.name}
+            id="name_zone"
+            name="name_zone"
+            value={formData.name_zone}
             onChange={handleChange}
           />
         </div>
@@ -116,7 +96,11 @@ const ZonesForm: React.FC<ZonesForm> = ({
           <div className="selectWrap">
             <label htmlFor="address">Ответственный</label>
             <div className="selectWrap__wrap">
-              <SelectUI options={options} onChange={handleSelectChange} />
+              <SelectUI
+                options={options}
+                value={optionDefaultValue}
+                onChange={handleSelectChange}
+              />
             </div>
           </div>
         </div>

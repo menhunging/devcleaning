@@ -11,8 +11,9 @@ import "./ObjectsPage.scss";
 import Modal from "@/components/shared/ui/Modal/Modal";
 
 const ObjectsPage: React.FC = () => {
-  const dispatch = useAppDispatch();
   const { loading, DATA: objects } = useAppSelector((state) => state.objects);
+
+  const dispatch = useAppDispatch();
 
   const [isAddModalOpen, setAddModalOpen] = useState(false);
 

@@ -15,9 +15,9 @@ import NotFoundPage from "../pages/notPage/NotFoundPage";
 import PlannerPage from "../pages/planner/PlannerPage";
 
 const App: React.FC = () => {
-  const dispatch = useAppDispatch();
-
   const { isAuthenticated } = useAppSelector((state) => state.auth);
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (isAuthenticated) {

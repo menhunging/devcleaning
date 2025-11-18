@@ -20,7 +20,8 @@ interface TeamsFormProps {
   objects?: ObjectItem[];
   users?:
     | {
-        id: number;
+        id: string | number;
+        id_object: string | number;
         login: string;
         name: string;
         role: number;
@@ -50,12 +51,18 @@ const TeamsForm: React.FC<TeamsFormProps> = ({
     users: initialData?.users || [], // тут id_user
   });
 
-  const options: Option[] = (users || [])
-    .filter((user) => user.role === 3) // оставляем только с ролью 3
+  const optionsUsers: Option[] = (users || [])
+    .filter(
+      (user) =>
+        user.role === 3 &&
+        (!formData.id_object || user.id_object === Number(formData.id_object))
+    )
     .map((user) => ({
       value: String(user.id),
       label: `${user.name} ${user.surname}`,
     }));
+
+  const optionsObjects = getOptionForObjects(objects) || [];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -90,13 +97,13 @@ const TeamsForm: React.FC<TeamsFormProps> = ({
     setFormData((prev) => ({
       ...prev,
       id_object: selected ? selected.value : "",
+      users: [],
+      id_user: "",
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("formData", formData);
-
     onSuccess(formData);
   };
 
@@ -136,12 +143,10 @@ const TeamsForm: React.FC<TeamsFormProps> = ({
             <label htmlFor="address">Объект</label>
             <div className="selectWrap__wrap">
               <SelectUI
-                options={getOptionForObjects(objects) || []}
-                value={
-                  getOptionForObjects(objects)?.find(
-                    (opt) => Number(opt.value) === Number(formData.id_object)
-                  ) || null
-                }
+                options={optionsObjects}
+                value={optionsObjects.find(
+                  (opt) => opt.value === String(formData.id_object)
+                )}
                 onChange={(event) => {
                   handleSelectSingleChange(event);
                 }}
@@ -150,12 +155,19 @@ const TeamsForm: React.FC<TeamsFormProps> = ({
           </div>
         </div>
 
-        <div className="input-item">
+        <div
+          className={
+            formData.id_object
+              ? "input-item"
+              : "input-item input-item--disabled"
+          }
+        >
           <div className="selectWrap">
             <label htmlFor="address">Сотрудники</label>
             <div className="selectWrap__wrap">
               <SelectUIMulti
-                options={options}
+                options={optionsUsers}
+                notOptionsPlaceholder="В выбранном вами обьекте нет сотрудников"
                 value={formData.users.map((user) => ({
                   value: String(user.id_user),
                   label: `${user.name} ${user.surname}`,

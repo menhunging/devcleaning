@@ -3,6 +3,7 @@ import api from "../../api/api";
 
 import type { zone, zoneResponse, zoneState } from "@/types/zones/zones";
 
+// зоны в самом обьекте, поэтому их нет как отдельных сущностей в state
 export const initialState: zoneState = {
   loading: false,
   error: null,

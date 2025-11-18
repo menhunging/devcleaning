@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
+import type { UserFormData } from "@/types/users/users";
+
+import { getFormateDate } from "@/utils/getFormateDate";
+import { getObjectNameByID } from "@/utils/getObjectNameByID";
+
 import Modal from "@/components/shared/ui/Modal/Modal";
 import UsersForm from "@/components/features/users/UsersForm/UsersForm";
 import TableUsersSkeleton from "./TableUsersSkeleton/TableUsersSkeleton";
@@ -8,8 +13,6 @@ import { getRoleName } from "@/utils/getFoleName";
 // import PopupRemove from "@/components/shared/ui/PopupRemove/PopupRemove";
 
 import { getObjects } from "@/store/slices/objectsSlice";
-
-import type { UserFormData } from "@/types/users/users";
 
 import {
   addUser,
@@ -23,7 +26,7 @@ import "./CatalogUsers.scss";
 const CatalogUsers: React.FC = () => {
   const { DATA: teams } = useAppSelector((state) => state.teams);
   const { DATA: objects } = useAppSelector((state) => state.objects);
-  const { DATA, loading } = useAppSelector((state) => state.users);
+  const { DATA: users, loading } = useAppSelector((state) => state.users);
   const dispatch = useAppDispatch();
 
   const [isAddModalOpen, setAddModalOpen] = useState(false);
@@ -122,13 +125,19 @@ const CatalogUsers: React.FC = () => {
             </div>
 
             <div className="table__body">
-              {DATA.map((user) => (
+              {users.map((user) => (
                 <div className="table__row" key={user.id}>
                   <div className="table__cell">{`${user.surname} ${user.name}`}</div>
-                  <div className="table__cell"><span className="table--users__role">{getRoleName(user.role)}</span></div>
+                  <div className="table__cell">
+                    <span className="table--users__role">
+                      {getRoleName(user.role)}
+                    </span>
+                  </div>
 
                   <div className="table__cell">
-                    {user.object ? user.object.name : "-"}
+                    {user.id_object
+                      ? getObjectNameByID(objects, user.id_object)
+                      : "-"}
                   </div>
 
                   <div className="table__cell">
@@ -136,10 +145,18 @@ const CatalogUsers: React.FC = () => {
                       ? user.team.map((t: any) => t.name).join(", ")
                       : "-"}
                   </div>
-                  <div className="table__cell"><span className="table--users__login">{user.login}</span></div>
-                  <div className="table__cell">{user.phone || "+79999999999"}</div>
+                  <div className="table__cell">
+                    <span className="table--users__login">{user.login}</span>
+                  </div>
+                  <div className="table__cell">
+                    {user.phone || "+79999999999"}
+                  </div>
                   <div className="table__cell">{user.email}</div>
-                  <div className="table__cell"><span className="activity">23.07.25 | 08:30</span></div>
+                  <div className="table__cell">
+                    <span className="activity">
+                      {getFormateDate(user.last_active_date)}
+                    </span>
+                  </div>
                   <div className="table__cell">
                     <span className="status status--active">Активен</span>
                     {/* <span className="status status--notactive">Не активен</span> */}

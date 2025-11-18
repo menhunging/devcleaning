@@ -6,6 +6,7 @@ import type { Option } from "@/types/ui/select/select";
 interface SelectUIProps {
   options: Option[] | undefined;
   value?: Option[] | undefined;
+  notOptionsPlaceholder?: string;
   onChange: (values: MultiValue<Option>) => void;
 }
 
@@ -78,6 +79,7 @@ const CheckboxOption = (props: any) => {
 const SelectUIMulti: React.FC<SelectUIProps> = ({
   options,
   value,
+  notOptionsPlaceholder,
   onChange,
 }) => (
   <Select
@@ -89,6 +91,9 @@ const SelectUIMulti: React.FC<SelectUIProps> = ({
       Option: CheckboxOption,
       MultiValueRemove: CustomMultiValueRemove,
     }}
+    noOptionsMessage={() =>
+      notOptionsPlaceholder ? String(notOptionsPlaceholder) : "Здесь ничего нет"
+    }
     isMulti
     placeholder="Выбрать"
     closeMenuOnSelect={false}

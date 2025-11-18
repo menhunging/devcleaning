@@ -6,6 +6,8 @@ export interface Users {
   name: string;
   surname: string;
   phone: string;
+  last_active_date: string;
+  id_object: string | number;
   object: {
     id_object_user: number;
     id: number;
@@ -34,10 +36,11 @@ export interface UserFormData {
   name: string;
   surname: string;
   phone: string;
-  object: {
-    id_object_user?: number;
-    id?: number;
-    name?: string;
-  };
+  id_object: string | number | [];
+  // object: {
+  //   id_object_user?: number;
+  //   id?: number;
+  //   name?: string;
+  // };
   teams?: []; // уберем потом ?
 }

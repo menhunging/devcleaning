@@ -1,10 +1,8 @@
-// руки оторвать
-
 export const mergedUsers = (
   newUsers: { id_user: number; name: string }[],
   users:
     | {
-        id: number;
+        id: string | number;
         login: string;
         name: string;
         role: number;

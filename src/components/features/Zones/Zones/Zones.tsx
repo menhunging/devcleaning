@@ -3,33 +3,41 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import type { zone } from "@/types/zones/zones";
 
-import "./Zones.scss";
+import { getFullQRUrl } from "@/utils/getFullQRUrl";
 
-import PopupRemove from "@/components/shared/ui/PopupRemove/PopupRemove";
 import { getObjectById } from "@/store/slices/objectSlice";
 import { addZone, deleteZone, updateZone } from "@/store/slices/zonesSlice";
 
+import PopupRemove from "@/components/shared/ui/PopupRemove/PopupRemove";
 import Modal from "@/components/shared/ui/Modal/Modal";
 import ZonesForm from "../ZonesForm/ZonesForm";
 
+import "./Zones.scss";
+
 const Zones: React.FC = () => {
+  const { DATA: users } = useAppSelector((state) => state.users);
+  const { data: obj } = useAppSelector((state) => state.object);
+  const { loading } = useAppSelector((state) => state.zones);
+
+  const dispatch = useAppDispatch();
+
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const [currentZone, setCurrentZone] = useState<zone | null>(null);
 
-  const dispatch = useAppDispatch();
-  const { DATA: users } = useAppSelector((state) => state.users);
-  const { data: obj } = useAppSelector((state) => state.object);
-  const { loading } = useAppSelector((state) => state.zones);
+  function getNameUserByID(id: string | number) {
+    const user = users.find((u) => Number(u.id) === Number(id));
+    return user ? `${user.name} ${user.surname}` : null;
+  }
 
   const handleAddSuccess = async (FormData: zone) => {
     // обработчик если успешно добавление зоны
 
     if (obj) {
       FormData.id_object = obj.id;
-      FormData.qr = "test"; // пока не передаем никакой qr
+      FormData.qr = "https://fouro.ru/"; // пока не передаем никакой qr
 
       const result = await dispatch(addZone(FormData));
 
@@ -48,7 +56,6 @@ const Zones: React.FC = () => {
 
     if (obj) {
       FormData.id_object = obj.id;
-      FormData.qr = "test"; // пока не передаем никакой qr
 
       const result = await dispatch(updateZone(FormData));
       if (updateZone.fulfilled.match(result)) {
@@ -109,11 +116,14 @@ const Zones: React.FC = () => {
           <div className="zoneList">
             {obj.zones.map((zone) => {
               return (
-                <div className="zoneItem" key={zone.id_zone}>
+                <div className="zoneItem" key={zone.name_zone}>
                   <span className="zoneItem__name">{zone.name_zone}</span>
 
                   {zone.user_id_zone ? (
-                    <span className="zoneItem__res">{zone.user_id_zone}</span>
+                    <span className="zoneItem__res">
+                      <span className="desc">Ответственный: </span>
+                      {getNameUserByID(zone.user_id_zone)}
+                    </span>
                   ) : (
                     <>
                       <span className="zoneItem__res">
@@ -122,9 +132,13 @@ const Zones: React.FC = () => {
                     </>
                   )}
 
-                  <span className="zoneItem__qr" data-qr={zone.qr_zone}>
+                  <a
+                    href={getFullQRUrl(zone.qr)}
+                    className="zoneItem__qr"
+                    download={getFullQRUrl(zone.qr)}
+                  >
                     Скачать QR
-                  </span>
+                  </a>
 
                   <div className="zoneItem__controls">
                     <span

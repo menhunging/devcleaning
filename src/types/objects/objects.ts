@@ -17,12 +17,33 @@ export interface ObjectItem {
     {
       id_user: number;
       role: number;
-      user_name: string;
+      user_name?: string;
+      name?: string; // вот так с бэка приходит. Иногда почему то user_name иногда name
       surname: string;
       id_object_user: number;
     }
   ];
-  user_manager: {};
+  user_manager: {
+    id_user: number;
+    id_object_user: number;
+    role: number;
+    user_name: string;
+    surname: string;
+  };
+  teams: [
+    {
+      id: number;
+      description: string;
+      name: string;
+      users: [
+        {
+          id_user: number;
+          name_user: string;
+          surname_user: string;
+        }
+      ];
+    }
+  ];
 }
 
 export interface ObjectsResponse {

@@ -148,6 +148,11 @@ picture {
     //   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='14' height='12' viewBox='0 0 14 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.29 4.40002C12.67 4.74002 12.99 5.07002 13.23 5.33002C13.3958 5.51378 13.4876 5.7525 13.4876 6.00002C13.4876 6.24755 13.3958 6.48627 13.23 6.67002C12.18 7.80002 9.78998 10 6.99998 10H6.59998' stroke='%23959595' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M3.86997 9.13C2.7116 8.48125 1.66494 7.65067 0.769968 6.67C0.604128 6.48625 0.512329 6.24752 0.512329 6C0.512329 5.75248 0.604128 5.51375 0.769968 5.33C1.81997 4.2 4.20997 2 6.99997 2C8.09974 2.02299 9.17608 2.32216 10.13 2.87' stroke='%23959595' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M12.5 0.5L1.5 11.5' stroke='%23959595' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M5.59 7.41C5.21441 7.03665 5.00223 6.52958 5 6C5 5.46957 5.21071 4.96086 5.58579 4.58579C5.96086 4.21071 6.46957 4 7 4C7.52958 4.00223 8.03665 4.21441 8.41 4.59' stroke='%23959595' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M8.74 7C8.56198 7.3043 8.3067 7.55614 8 7.73' stroke='%23959595' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e ");
     // }
   }
+
+  &.input-item--disabled {
+    opacity: 0.33;
+    pointer-events: none;
+  }
 }
 
 .page {
@@ -329,7 +334,6 @@ picture {
 }
 
 .optionSelectMulti {
-  
   .optionSelectMulti__name {
     font-weight: 500;
     font-size: 14px;
