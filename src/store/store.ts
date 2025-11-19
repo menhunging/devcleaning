@@ -8,6 +8,7 @@ import objectReducer from "./slices/objectSlice";
 import zonesReducer from "./slices/zonesSlice";
 import usersReducer from "./slices/usersSlice";
 import teamsReducer from "./slices/teamsSlice";
+import plannerReducer from "./slices/plannerSlice";
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     zones: zonesReducer,
     users: usersReducer,
     teams: teamsReducer,
+    planner: plannerReducer,
   },
 });
 
