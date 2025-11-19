@@ -51,6 +51,8 @@ const TeamsForm: React.FC<TeamsFormProps> = ({
     users: initialData?.users || [], // тут id_user
   });
 
+  const optionsObjects = getOptionForObjects(objects) || [];
+
   const optionsUsers: Option[] = (users || [])
     .filter(
       (user) =>
@@ -61,8 +63,6 @@ const TeamsForm: React.FC<TeamsFormProps> = ({
       value: String(user.id),
       label: `${user.name} ${user.surname}`,
     }));
-
-  const optionsObjects = getOptionForObjects(objects) || [];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

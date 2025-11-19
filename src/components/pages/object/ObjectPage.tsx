@@ -226,7 +226,7 @@ const ObjectPage: React.FC = () => {
             </div>
           </div>
 
-          <ObjectTabs obj={obj} />
+          <ObjectTabs loading={loading} obj={obj} />
         </div>
 
         {/* попап на редактирование обьекта */}

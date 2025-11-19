@@ -9,10 +9,9 @@ import type { Teams } from "@/types/teams/teams";
 import { getOptionForObjects } from "@/utils/getOptionForObjects";
 
 import SelectUI from "@/components/shared/ui/Select/SelectUI/SelectUI";
-// import SelectUIMulti from "@/components/shared/ui/Select/SelectUIMulti/SelectUIMulti";
+import SelectUIMulti from "@/components/shared/ui/Select/SelectUIMulti/SelectUIMulti";
 
 import "./UsersForm.scss";
-import SelectUIMulti from "@/components/shared/ui/Select/SelectUIMulti/SelectUIMulti";
 
 interface UsersFormProps {
   mode?: "add" | "edit";
@@ -29,7 +28,7 @@ const UsersForm: React.FC<UsersFormProps> = ({
   initialData,
   loading,
   objects,
-  // teams,
+  teams,
   onSuccess,
   onClose,
 }) => {
@@ -42,8 +41,9 @@ const UsersForm: React.FC<UsersFormProps> = ({
     name: initialData?.name || "",
     surname: initialData?.surname || "",
     phone: initialData?.phone || "",
-    id_object: initialData?.id_object || [],
-    teams: initialData?.teams || [],
+    id_object: initialData?.id_object || [], // все id обьектов юзера
+    id_teams: initialData?.id_teams || "", // все id команд юзера
+    team: initialData?.team || [], // команды целиком именно юзера
   });
 
   const optionsRole: OptionRole[] = [
@@ -53,7 +53,17 @@ const UsersForm: React.FC<UsersFormProps> = ({
 
   const optionsObjects = getOptionForObjects(objects) || [];
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const optionsTeams =
+    teams
+      ?.filter(
+        (teamItem) => String(teamItem.id_object) === String(formData.id_object)
+      )
+      .map((teamItem) => ({
+        value: String(teamItem.id),
+        label: teamItem.name,
+      })) || [];
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -80,37 +90,37 @@ const UsersForm: React.FC<UsersFormProps> = ({
 
     setFormData((prev) => ({
       ...prev,
+      id_teams: "",
+      team: [],
       id_object: selected ? Number(selected.value) : [],
     }));
   };
 
-  // const handleSelectTeamsChange = (selected: MultiValue<Option>) => {
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     teams: selected
-  //       ? selected.map((opt) => ({ id: opt.value, name: opt.label }))
-  //       : [],
-  //     // [filed]: selected ? selected.map((opt) => opt.value).join(",") : "",
-  //   }));
-  // };
+  const handleSelectTeamsChange = (selected: MultiValue<Option>) => {
+    // change for Teams
+    const ids = selected.map((opt) => opt.value).join(",");
 
-  // const handleSelectSingleChange = (
-  //   field: "object" | "teams" | "role",
-  //   selected: SingleValue<Option>
-  // ) => {
-  //   console.log("handleSelectSingleChange", selected);
+    const fullTeams =
+      selected.map((opt) => {
+        const team = teams?.find((t) => t.id === Number(opt.value));
 
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [field]: selected
-  //       ? { id: Number(selected.value), name: selected.label }
-  //       : "",
-  //   }));
-  // };
+        return {
+          id_team: team?.id ?? Number(opt.value),
+          id_team_user: 0, // любое число ставим, просто чтобы обновить initState
+          id_user: formData.id ?? 0,
+          name: team?.name ?? opt.label,
+        };
+      }) || [];
+
+    setFormData((prev) => ({
+      ...prev,
+      id_teams: ids,
+      team: fullTeams,
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("handleSubmit formData -- ", formData);
     onSuccess(formData);
   };
 
@@ -140,7 +150,7 @@ const UsersForm: React.FC<UsersFormProps> = ({
             id="name"
             name="name"
             value={formData.name}
-            onChange={handleChange}
+            onChange={handleInputChange}
           />
         </div>
 
@@ -151,7 +161,7 @@ const UsersForm: React.FC<UsersFormProps> = ({
             id="surname"
             name="surname"
             value={formData.surname}
-            onChange={handleChange}
+            onChange={handleInputChange}
           />
         </div>
 
@@ -162,7 +172,18 @@ const UsersForm: React.FC<UsersFormProps> = ({
             id="email"
             name="email"
             value={formData.email}
-            onChange={handleChange}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        <div className="input-item">
+          <label htmlFor="name">Телефон</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            value={formData.phone}
+            onChange={handleInputChange}
           />
         </div>
 
@@ -173,7 +194,7 @@ const UsersForm: React.FC<UsersFormProps> = ({
             id="login"
             name="login"
             value={formData.login}
-            onChange={handleChange}
+            onChange={handleInputChange}
           />
         </div>
 
@@ -184,7 +205,7 @@ const UsersForm: React.FC<UsersFormProps> = ({
             id="password"
             name="password"
             value={formData.password}
-            onChange={handleChange}
+            onChange={handleInputChange}
           />
         </div>
 
@@ -243,19 +264,25 @@ const UsersForm: React.FC<UsersFormProps> = ({
           </div>
         </div>
 
-        {/* <div className="input-item">
-          <div className="selectWrap">
-            <label htmlFor="address">Команды</label>
-            <div className="selectWrap__wrap">
-              <SelectUIMulti
-                options={getOptionForTeams(teams)}
-                onChange={(event) => {
-                  handleSelectTeamsChange(event);
-                }}
-              />
+        {formData.role === 3 && (
+          <div className="input-item">
+            <div className="selectWrap">
+              <label htmlFor="address">Команды</label>
+              <div className="selectWrap__wrap">
+                <SelectUIMulti
+                  options={optionsTeams}
+                  value={formData.team.map((team) => ({
+                    value: String(team.id_team),
+                    label: String(team.name),
+                  }))}
+                  onChange={(event) => {
+                    handleSelectTeamsChange(event);
+                  }}
+                />
+              </div>
             </div>
           </div>
-        </div> */}
+        )}
 
         <div className="btn-controls btn-controls--right">
           <button

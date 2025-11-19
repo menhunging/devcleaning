@@ -1,4 +1,4 @@
-import type { Users } from "../users/users";
+import type { ObjectItem } from "../objects/objects";
 
 export interface zone {
   id_zone: string;
@@ -30,7 +30,7 @@ export interface ZonesFormProps {
     qr: string;
   } | null;
   loading?: boolean;
-  users: Users[];
+  users?: ObjectItem["users"];
   onSuccess: (object: {
     id_zone: string;
     id_object: string;

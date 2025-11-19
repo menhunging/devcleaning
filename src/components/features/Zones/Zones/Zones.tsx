@@ -173,7 +173,7 @@ const Zones: React.FC = () => {
           mode={isUpdateModalOpen ? "edit" : "add"}
           initialData={currentZone ? currentZone : null}
           loading={loading}
-          users={users}
+          users={obj?.users}
           onSuccess={isUpdateModalOpen ? handleUpdateSuccess : handleAddSuccess}
           onClose={onCloseAddModal}
         />

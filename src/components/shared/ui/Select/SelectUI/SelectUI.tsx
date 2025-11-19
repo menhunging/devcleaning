@@ -8,6 +8,7 @@ interface SelectUIProps {
   options: Option[] | OptionRole[] | undefined;
   placeholder?: string;
   value?: Option | OptionRole | null | undefined;
+  notOptionsPlaceholder?: string;
   onChange: (values: SingleValue<Option>) => void;
 }
 
@@ -42,6 +43,7 @@ const SelectUI: React.FC<SelectUIProps> = ({
   options,
   placeholder,
   value,
+  notOptionsPlaceholder,
   onChange,
 }) => (
   <Select
@@ -51,6 +53,9 @@ const SelectUI: React.FC<SelectUIProps> = ({
     value={value}
     components={{ DropdownIndicator }}
     placeholder={placeholder ? placeholder : "Не назначен"}
+    noOptionsMessage={() =>
+      notOptionsPlaceholder ? String(notOptionsPlaceholder) : "Здесь ничего нет"
+    }
     // closeMenuOnSelect={false}
     onChange={(selected) => {
       const valueLocal = (selected as SingleValue<Option>) || null;

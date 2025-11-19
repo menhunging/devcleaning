@@ -42,5 +42,11 @@ export interface UserFormData {
   //   id?: number;
   //   name?: string;
   // };
-  teams?: []; // уберем потом ?
+  id_teams?: string;
+  team?: {
+    id_team_user: string | number;
+    id_user: string | number;
+    id_team: string | number;
+    name: string | number;
+  }[];
 }

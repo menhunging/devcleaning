@@ -94,14 +94,6 @@ const CatalogTeams: React.FC = () => {
     setAddModalOpen(false);
   };
 
-  // useEffect(() => {
-  //   dispatch(fetchTeams());
-
-  //   if (!objects.length) {
-  //     dispatch(getObjects());
-  //   }
-  // }, []);
-
   return (
     <>
       <div className="page__controls">

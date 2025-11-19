@@ -5,10 +5,10 @@ import CatalogUsers from "@/components/features/catalog/CatalogUsers/CatalogUser
 import CatalogTeams from "@/components/features/catalog/CatalogTeams/CatalogTeams";
 
 import { fetchTeams } from "@/store/slices/teamsSlice";
+import { fetchUsers } from "@/store/slices/usersSlice";
 import { getObjects } from "@/store/slices/objectsSlice";
 
 import "./CatalogsPage.scss";
-import { fetchUsers } from "@/store/slices/usersSlice";
 
 const CatalogPage: React.FC = () => {
   const { loading: loadUsers, DATA: users } = useAppSelector(
@@ -17,7 +17,7 @@ const CatalogPage: React.FC = () => {
   const { loading: loadTeams, DATA: teams } = useAppSelector(
     (state) => state.teams
   );
-  const { DATA: objects } = useAppSelector((state) => state.objects);
+
   const dispatch = useAppDispatch();
 
   const tabs = [
@@ -42,11 +42,8 @@ const CatalogPage: React.FC = () => {
   useEffect(() => {
     dispatch(fetchUsers());
     dispatch(fetchTeams());
-
-    if (!objects.length) {
-      dispatch(getObjects());
-    }
-  }, []);
+    dispatch(getObjects());
+  }, [dispatch]);
 
   return (
     <>

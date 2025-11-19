@@ -35,7 +35,7 @@ const ZonesForm: React.FC<ZonesFormProps> = ({
   const options = useMemo<Option[]>(
     () =>
       (users || [])
-        .filter((user) => user.role === 2) // только с role 2
+        .filter((user) => user.role === 3) // только с role 3
         .map((user) => ({
           value: String(user.id),
           label: `${user.name} ${user.surname}`,
@@ -59,7 +59,7 @@ const ZonesForm: React.FC<ZonesFormProps> = ({
   const handleSelectChange = (selected: SingleValue<Option>) => {
     setFormData((prev) => ({
       ...prev,
-      user_id_zone: selected ? selected.value : "",
+      user_id_zone: selected ? String(selected.value) : "",
     }));
   };
 
@@ -99,6 +99,7 @@ const ZonesForm: React.FC<ZonesFormProps> = ({
               <SelectUI
                 options={options}
                 value={optionDefaultValue}
+                notOptionsPlaceholder="Нет сотрудников"
                 onChange={handleSelectChange}
               />
             </div>

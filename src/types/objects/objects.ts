@@ -13,11 +13,25 @@ export interface ObjectItem {
   users_count: number;
   manager: number;
   zones: zone[];
+  appeal: [
+    {
+      id: 1;
+      message: string;
+      contact_name: string;
+      result: number;
+      like_a: number;
+      status_success: number;
+      id_zone: number;
+      date_create: string;
+      name_zone: string;
+    }
+  ];
   users: [
     {
       id_user: number;
       role: number;
       user_name?: string;
+      id?: string; // вот так с бэка приходит. Иногда почему то user_name иногда name
       name?: string; // вот так с бэка приходит. Иногда почему то user_name иногда name
       surname: string;
       id_object_user: number;

@@ -13,6 +13,7 @@ import { getRoleName } from "@/utils/getFoleName";
 // import PopupRemove from "@/components/shared/ui/PopupRemove/PopupRemove";
 
 import { getObjects } from "@/store/slices/objectsSlice";
+import { fetchTeams } from "@/store/slices/teamsSlice";
 
 import {
   addUser,
@@ -46,6 +47,7 @@ const CatalogUsers: React.FC = () => {
     if (addUser.fulfilled.match(result)) {
       setCurrentUser(null);
       dispatch(fetchUsers());
+      dispatch(fetchTeams());
     }
   };
 
@@ -60,6 +62,7 @@ const CatalogUsers: React.FC = () => {
     if (updateUser.fulfilled.match(result)) {
       setCurrentUser(null);
       dispatch(fetchUsers());
+      dispatch(fetchTeams());
     }
   };
 
@@ -148,10 +151,8 @@ const CatalogUsers: React.FC = () => {
                   <div className="table__cell">
                     <span className="table--users__login">{user.login}</span>
                   </div>
-                  <div className="table__cell">
-                    {user.phone || "+79999999999"}
-                  </div>
-                  <div className="table__cell">{user.email}</div>
+                  <div className="table__cell">{user.phone || "-"}</div>
+                  <div className="table__cell">{user.email || "-"}</div>
                   <div className="table__cell">
                     <span className="activity">
                       {getFormateDate(user.last_active_date)}

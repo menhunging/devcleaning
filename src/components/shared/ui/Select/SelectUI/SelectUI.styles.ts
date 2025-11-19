@@ -33,7 +33,7 @@ export const styles: StylesConfig = {
     ...provided,
     backgroundColor: "#fff",
     borderRadius: "12px",
-    minWidth: "200px",
+    minWidth: "250px",
     padding: "0px",
     boxShadow: "2px 3px 8px 0px #0000000D",
   }),
