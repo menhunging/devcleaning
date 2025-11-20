@@ -9,6 +9,7 @@ import zonesReducer from "./slices/zonesSlice";
 import usersReducer from "./slices/usersSlice";
 import teamsReducer from "./slices/teamsSlice";
 import plannerReducer from "./slices/plannerSlice";
+import appealsReducer from "./slices/appealsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     users: usersReducer,
     teams: teamsReducer,
     planner: plannerReducer,
+    appeals: appealsReducer,
   },
 });
 

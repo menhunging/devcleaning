@@ -1,0 +1,22 @@
+.table {
+  &.table--appeals {
+    .table__header {
+      .table__cell {
+        white-space: nowrap;
+      }
+    }
+
+    .table__cell {
+      &:first-child,
+      &:nth-child(2),
+      &:nth-child(3) {
+        white-space: nowrap;
+      }
+
+      &:nth-last-child(2) {
+        max-width: 125px;
+      }
+    }
+  }
+}
+

@@ -55,9 +55,14 @@ const Header: React.FC = () => {
         >
           Дашборд
         </Link>
-        <Link to="/" className="menu__link menu__link--message isTempDisabled">
+        <NavLink
+          to="/appeals"
+          className={({ isActive }) =>
+            `menu__link menu__link--message ${isActive ? "active" : ""}`
+          }
+        >
           Обращения
-        </Link>
+        </NavLink>
         <Link to="/" className="menu__link menu__link--docs isTempDisabled">
           Рабочие документы
         </Link>

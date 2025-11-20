@@ -1,0 +1,42 @@
+.skeleton__line {
+  display: block;
+  height: 14px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  margin: 4px 0;
+  animation: pulseAppeals 1.5s infinite;
+}
+
+.skeleton__text {
+  width: 80%;
+}
+.skeleton__date {
+  width: 60%;
+}
+.skeleton__time {
+  width: 40%;
+}
+.skeleton__number {
+  width: 30%;
+}
+.skeleton__status {
+  width: 50%;
+}
+.skeleton__icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+@keyframes pulseAppeals {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
