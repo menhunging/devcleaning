@@ -10,15 +10,14 @@ import { getObjectById } from "@/store/slices/objectSlice";
 import Modal from "@/components/shared/ui/Modal/Modal";
 import SelectUI from "@/components/shared/ui/Select/SelectUI/SelectUI";
 import { usePlannerOptions } from "@/hook/usePlannerOptions/usePlannerOptions";
-
-import { ru } from "date-fns/locale";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import TimePickerStartEnd from "@/components/shared/ui/DatePicker/TimePickerStartEnd/TimePickerStartEnd";
+import DatePickerStart from "@/components/shared/ui/DatePicker/DatePickerStart/DatePickerStart";
 
 import "./PlannerPopup.scss";
 
 interface PlannerPopupProps {
   mode?: "add" | "edit";
+  loading: boolean;
   initialData?: Planner | null;
   isOpen: boolean;
   handleModalClose: () => void;
@@ -27,6 +26,7 @@ interface PlannerPopupProps {
 
 const PlannerPopup: React.FC<PlannerPopupProps> = ({
   mode,
+  loading,
   initialData,
   isOpen,
   handleModalClose,
@@ -47,7 +47,7 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
     name_user: initialData?.name_user || "",
     surname_user: initialData?.surname_user || "",
 
-    status: initialData?.status || null,
+    status: initialData?.status || 0,
     name_status: initialData?.name_status || "",
 
     id_team: initialData?.id_team || "",
@@ -133,11 +133,15 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
   };
 
   const btnDisabled =
+    loading ||
     !formData.name ||
     !formData.id_object ||
     !formData.id_zone ||
     !(formData.id_team || formData.id_user) ||
-    !formData.description;
+    !formData.description ||
+    !formData.date_start ||
+    !formData.time_start ||
+    !formData.time_end;
 
   useEffect(() => {
     setFormData(initFormData(initialData));
@@ -296,57 +300,20 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
           <div className="popup-planer__col">
             <div className="input-date">
               <label htmlFor="date_start">Дата выполнения:</label>
-              <div className="blockDatePicker">
-                <DatePicker
-                  className="datepicker-input"
-                  selected={
-                    formData.date_start ? new Date(formData.date_start) : null
-                  }
-                  onChange={(date: Date | null) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      date_start: date ? date.toISOString().split("T")[0] : "",
-                    }))
-                  }
-                  dateFormat="dd.MM.yyyy"
-                  placeholderText="Выбрать дни"
-                  locale={ru}
-                />
-              </div>
+
+              {!formData.date_start && (
+                <span className="input-date__title">Выбрать день</span>
+              )}
+
+              <DatePickerStart formData={formData} setFormData={setFormData} />
             </div>
 
             <div className="input-date">
               <label htmlFor="date_start">Время выполнения:</label>
-              <div className="blockDatePicker">
-                <DatePicker
-                  id="time_start"
-                  className="datepicker-input"
-                  selected={
-                    formData.time_start
-                      ? new Date(`1970-01-01T${formData.time_start}:00`)
-                      : null
-                  }
-                  onChange={(date: Date | null) => {
-                    if (date) {
-                      const formatted = date.toLocaleTimeString("ru-RU", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      });
-                      setFormData((prev) => ({
-                        ...prev,
-                        time_start: formatted, // делаем вот такой форма 00:00
-                      }));
-                    }
-                  }}
-                  showTimeSelect
-                  showTimeSelectOnly
-                  timeFormat="HH:mm"
-                  timeIntervals={5}
-                  dateFormat="HH:mm"
-                  locale={ru}
-                  placeholderText="Выберите время"
-                />
-              </div>
+              <TimePickerStartEnd
+                formData={formData}
+                setFormData={setFormData}
+              />
             </div>
           </div>
           <div className="btn-controls btn-controls--right">
@@ -362,12 +329,11 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
               className="btn btn--green"
               disabled={btnDisabled}
             >
-              Применить
-              {/* {loading
-                  ? "Сохранение..."
-                  : mode === "edit"
-                  ? "Применить"
-                  : "Применить"} */}
+              {loading
+                ? "Сохранение..."
+                : mode === "edit"
+                ? "Сохранить изменения"
+                : "Применить"}
             </button>
           </div>
         </form>

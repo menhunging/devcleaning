@@ -4,16 +4,25 @@ import "./PopupRemove.scss";
 
 const PopupRemove: React.FC<objectRemove> = ({
   loading,
+  mode = "delete",
   onSuccess,
   onClose,
 }) => {
+  const titles: Record<string, string> = {
+    deactivate: "Изменить статус",
+    delete: "Удалить",
+  };
+
+  const messages: Record<string, string> = {
+    deactivate: "Вы уверены что хотите деактивировать сотрудника?",
+    delete: "Вы уверены что хотите удалить?",
+  };
+
   return (
     <div className="popup-delete">
-      <span className="popup-delete__title">Удалить</span>
+      <span className="popup-delete__title">{titles[mode]}</span>
 
-      <div className="popup-delete__content">
-        <p>Вы уверены что хотите удалить?</p>
-      </div>
+      <div className="popup-delete__content">{messages[mode]}</div>
 
       <div className="btn-controls btn-controls--center">
         <button className="btn btn--transparent" onClick={onClose}>

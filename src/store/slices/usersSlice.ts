@@ -23,8 +23,6 @@ export const fetchUsers = createAsyncThunk<
 
     const { success, DATA, message } = response.data;
 
-    console.log("USERS fetchUsers DATA", DATA);
-
     if (!success || typeof message === "string") {
       return thunkAPI.rejectWithValue(
         typeof message === "string"
@@ -104,9 +102,12 @@ export const deleteUser = createAsyncThunk<
   { rejectValue: string }
 >("users/deleteUser", async (id, thunkAPI) => {
   try {
-    const response = await api.post("edit_user/", { id: id });
+    // TODO. передалем на другой endpoint
+    const response = await api.post("edit_user/", { id: id, active: 0 });
 
     const { success, message } = response.data;
+
+    console.log(response.data);
 
     if (!success || typeof message === "string") {
       return thunkAPI.rejectWithValue(
@@ -116,7 +117,7 @@ export const deleteUser = createAsyncThunk<
       );
     }
 
-    return success;
+    return response.data;
   } catch (err) {
     const error = err as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(

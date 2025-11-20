@@ -7,12 +7,21 @@ import PlannerPopup from "@/components/features/planner/PlannerPopup";
 
 import { getObjects } from "@/store/slices/objectsSlice";
 import { fetchUsers } from "@/store/slices/usersSlice";
-import { addPlanner, getPlanner } from "@/store/slices/plannerSlice";
+import {
+  addPlanner,
+  changeStatus,
+  getPlanner,
+  updatePlanner,
+} from "@/store/slices/plannerSlice";
+
+import { useFormatedDate } from "@/utils/forPlanner/useFormatedDate";
+import { normalizeTime } from "@/utils/forPlanner/normalizeTime";
+import { Switcher } from "@/components/shared/ui/Switcher/Switcher";
 
 import "./PlannerPage.scss";
 
 const PlannerPage: React.FC = () => {
-  const { DATA: planners } = useAppSelector((state) => state.planner);
+  const { loading, DATA: planners } = useAppSelector((state) => state.planner);
   const dispatch = useAppDispatch();
 
   const [currentPlanner, setCurrentPlanner] = useState<Planner | null>(null);
@@ -35,8 +44,7 @@ const PlannerPage: React.FC = () => {
     setAddModalOpen(false);
   };
 
-  const handleSubmit = async (formData: Planner) => {
-    console.log("formData", formData);
+  const handleAddTask = async (formData: Planner) => {
     const result = await dispatch(
       addPlanner({
         ...formData,
@@ -46,6 +54,16 @@ const PlannerPage: React.FC = () => {
 
     if (addPlanner.fulfilled.match(result)) {
       OnCloseModal();
+      dispatch(getPlanner());
+    }
+  };
+
+  const handleUpdateTask = async (formData: Planner) => {
+    const result = await dispatch(updatePlanner(formData));
+
+    if (updatePlanner.fulfilled.match(result)) {
+      OnCloseModal();
+      dispatch(getPlanner());
     }
   };
 
@@ -78,11 +96,13 @@ const PlannerPage: React.FC = () => {
         {planners?.length ? (
           <div className="table table--planner">
             <div className="table__header">
+              <div className="table__cell">Название</div>
               <div className="table__cell">Объект</div>
               <div className="table__cell">Зона</div>
               <div className="table__cell">Задание</div>
               <div className="table__cell">Исполнитель</div>
               <div className="table__cell">Команда</div>
+              <div className="table__cell">Дата начала</div>
               <div className="table__cell">Время начала</div>
               <div className="table__cell">Длительность</div>
               <div className="table__cell">Статус</div>
@@ -93,21 +113,38 @@ const PlannerPage: React.FC = () => {
               {planners.map((plannerItem) => {
                 return (
                   <div className="table__row" key={plannerItem.id}>
+                    <div className="table__cell">{plannerItem.name}</div>
                     <div className="table__cell">{plannerItem.name_object}</div>
                     <div className="table__cell">{plannerItem.name_zone}</div>
 
                     <div className="table__cell">{plannerItem.description}</div>
 
                     <div className="table__cell">
-                      {plannerItem.name_user} {plannerItem.surname_user}
+                      {plannerItem.name_user
+                        ? `${plannerItem.name_user} ${plannerItem.surname_user}`
+                        : "-"}
                     </div>
                     <div className="table__cell">
                       {plannerItem.name_team || "-"}
                     </div>
-                    <div className="table__cell">{plannerItem.time_start}</div>
+                    <div className="table__cell">
+                      {useFormatedDate(plannerItem.date_start)}
+                    </div>
+                    <div className="table__cell">
+                      {normalizeTime(plannerItem.time_start)}
+                    </div>
                     <div className="table__cell">-</div>
                     <div className="table__cell">
-                      {plannerItem.status === 1 ? "Активно" : "Остановлено"}
+                      <Switcher
+                        status={plannerItem.status}
+                        dispatch={() => {
+                          {
+                            dispatch(
+                              changeStatus({ id: String(plannerItem.id) })
+                            );
+                          }
+                        }}
+                      />
                     </div>
                     <div className="table__cell">
                       <div className="icons-controls">
@@ -133,7 +170,9 @@ const PlannerPage: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="empty-text">Здесь ничего нет</div>
+          <div className="empty-text">
+            {!loading ? "Здесь ничего нет" : "Загрузка..."}
+          </div>
         )}
       </div>
 
@@ -141,10 +180,11 @@ const PlannerPage: React.FC = () => {
 
       <PlannerPopup
         mode={isUpdateModalOpen ? "edit" : "add"}
+        loading={loading}
         initialData={currentPlanner ? currentPlanner : null}
         isOpen={isAddModalOpen}
         handleModalClose={OnCloseModal}
-        onSubmit={handleSubmit}
+        onSubmit={isUpdateModalOpen ? handleUpdateTask : handleAddTask}
       />
     </div>
   );

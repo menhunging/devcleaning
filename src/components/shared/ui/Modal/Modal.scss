@@ -3,38 +3,41 @@
     opacity: 0;
   }
 
-  .modal__content {
+  .modal__wrapper {
     opacity: 0;
     transform: translateY(-100px);
   }
 }
+
 .modal-enter-active {
   .modal__overlay {
     opacity: 1;
   }
 
-  .modal__content {
+  .modal__wrapper {
     opacity: 1;
     transform: translateY(0);
     transition: opacity 300ms ease, transform 300ms ease;
   }
 }
+
 .modal-exit {
   .modal__overlay {
     opacity: 1;
   }
 
-  .modal__content {
+  .modal__wrapper {
     opacity: 1;
     transform: translateY(0);
   }
 }
+
 .modal-exit-active {
   .modal__overlay {
     opacity: 0;
   }
 
-  .modal__content {
+  .modal__wrapper {
     opacity: 0;
     transform: translateY(-100px);
     transition: opacity 300ms ease, transform 300ms ease;
@@ -72,6 +75,23 @@
   width: 100%;
   height: 100%;
   transition: all 0.3s;
+}
+
+.modal__wrapper {
+  max-height: 100vh;
+  overflow: auto;
+  padding: 20px 40px;
+  scrollbar-width: none;
+  scrollbar-color: transparent transparent;
+}
+
+.modal__wrapper::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+.modal__wrapper::-webkit-scrollbar-thumb {
+  background: transparent;
 }
 
 .modal__content {

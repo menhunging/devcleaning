@@ -21,7 +21,7 @@ export const getPlanner = createAsyncThunk<
   { rejectValue: string }
 >("planner/getPlanner", async (_, thunkAPI) => {
   try {
-    const response = await api.post("get_planners/");
+    const response = await api.post<PlannerForm>("get_planners/");
 
     const { success, DATA, message } = response.data;
 
@@ -41,11 +41,9 @@ export const addPlanner = createAsyncThunk<
   { rejectValue: string }
 >("planner/addPlanner", async (payload, thunkAPI) => {
   try {
-    const response = await api.post("add_planner/", payload);
+    const response = await api.post<PlannerForm>("add_planner/", payload);
 
     const { success, DATA, message } = response.data;
-
-    console.log("DATA", DATA);
 
     if (!success) {
       return thunkAPI.rejectWithValue(
@@ -59,50 +57,55 @@ export const addPlanner = createAsyncThunk<
   }
 });
 
-// export const updateObject = createAsyncThunk<
-//   boolean,
-//   ObjectForm,
-//   { rejectValue: string }
-// >("object/updateObject", async (payload, thunkAPI) => {
-//   try {
-//     const response = await api.post("edit_object/", payload);
+export const updatePlanner = createAsyncThunk<
+  PlannerForm["DATA"],
+  Planner,
+  { rejectValue: string }
+>("planner/updatePlanner", async (payload, thunkAPI) => {
+  try {
+    const response = await api.post<PlannerForm>("updatePlanner/", payload);
 
-//     const { success, message } = response.data;
+    const { success, DATA, message } = response.data;
 
-//     if (!success) {
-//       return thunkAPI.rejectWithValue(
-//         message || "Ошибка при обновлении обьекта"
-//       );
-//     }
+    if (!success) {
+      return thunkAPI.rejectWithValue(
+        message || "Ошибка при добавлении задачи"
+      );
+    }
 
-//     return success;
-//   } catch (err: any) {
-//     return thunkAPI.rejectWithValue("Ошибка при обновлении обьекта");
-//   }
-// });
+    return DATA;
+  } catch (err: any) {
+    return thunkAPI.rejectWithValue("Ошибка при добавлении задачи");
+  }
+});
 
-// export const deleteObject = createAsyncThunk<
-//   boolean,
-//   string,
-//   { rejectValue: string }
-// >("object/deleteObject", async (id, thunkAPI) => {
-//   try {
-//     const response = await api.post("delete_object/", { id: id });
+export const changeStatus = createAsyncThunk<
+  { success: boolean; payload: { id: string } },
+  { id: string },
+  { rejectValue: string }
+>("planner/changeStatus", async (payload, thunkAPI) => {
+  try {
+    const response = await api.post<PlannerForm>(
+      "status_change_planner/",
+      payload
+    );
 
-//     const { success, message } = response.data;
+    const { success, message } = response.data;
 
-//     if (!success) {
-//       return thunkAPI.rejectWithValue(message || "Ошибка при удалении объекта");
-//     }
+    if (!success) {
+      return thunkAPI.rejectWithValue(
+        message || "Ошибка при добавлении задачи"
+      );
+    }
 
-//     return success;
-//   } catch (err: any) {
-//     const error = err as { response?: { data?: { message?: string } } };
-//     return thunkAPI.rejectWithValue(
-//       error.response?.data?.message || "Ошибка при удалении объекта"
-//     );
-//   }
-// });
+    return {
+      success,
+      payload,
+    };
+  } catch (err: any) {
+    return thunkAPI.rejectWithValue("Ошибка при добавлении задачи");
+  }
+});
 
 const plannerSlice = createSlice({
   name: "planner",
@@ -116,11 +119,25 @@ const plannerSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(addPlanner.fulfilled, (state) => {
+      .addCase(addPlanner.fulfilled, (state, action) => {
         state.loading = false;
-        // state.DATA = action.payload;
+        state.DATA = action.payload;
       })
       .addCase(addPlanner.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Ошибка";
+      })
+
+      // updatePlanner
+      .addCase(updatePlanner.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updatePlanner.fulfilled, (state, action) => {
+        state.loading = false;
+        state.DATA = action.payload;
+      })
+      .addCase(updatePlanner.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Ошибка";
       })
@@ -137,22 +154,36 @@ const plannerSlice = createSlice({
       .addCase(getPlanner.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Ошибка";
-      });
+      })
 
-    // // deleteObject
-    // .addCase(deleteObject.pending, (state) => {
-    //   state.loading = true;
-    //   state.error = null;
-    // })
-    // .addCase(deleteObject.fulfilled, (state) => {
-    //   state.loading = false;
-    // })
-    // .addCase(deleteObject.rejected, (state, action) => {
-    //   state.loading = false;
-    //   state.error = action.payload as string;
-    // });
+      // changeStatus
+      .addCase(changeStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(changeStatus.fulfilled, (state, action) => {
+        state.loading = false;
+
+        let { payload } = action.payload;
+
+        if (state.DATA) {
+          const found = state.DATA.find(
+            (item) => item.id === Number(payload.id)
+          );
+          if (found) {
+            found.status = found.status === 0 ? 1 : 0;
+            found.name_status = found.status === 0 ? "Активно" : "Остановлено";
+          }
+        }
+
+        // state.DATA;
+      })
+      .addCase(changeStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Ошибка";
+      });
   },
 });
 
-export const {} = plannerSlice.actions;
+// export const {} = plannerSlice.actions;
 export default plannerSlice.reducer;

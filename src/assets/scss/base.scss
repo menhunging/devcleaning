@@ -106,6 +106,7 @@ picture {
     border-radius: 10px;
     background-color: $colorGray;
     border: solid 1px $colorGray;
+    font-family: $fontMain;
 
     &::placeholder {
       // color: $colorGrayLight-a2;
@@ -165,6 +166,14 @@ picture {
   border: solid 1px $colorGray;
   border-radius: 10px;
   padding: 10px;
+
+  .input-date__title {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    color: $colorBlack;
+    margin-top: 10px;
+  }
 
   label {
     font-weight: 500;
@@ -522,6 +531,46 @@ picture {
   }
 }
 
+.switcher {
+  cursor: pointer;
+  width: 125px;
+
+  .switcher__text {
+    position: relative;
+    padding-left: 32px;
+
+    @include before {
+      width: 25px;
+      height: 15px;
+      left: 0;
+      top: calc(50% - 7.5px);
+      background-color: rgba(111, 117, 131, 0.5);
+      border-radius: 48px;
+    }
+
+    @include after {
+      width: 13px;
+      height: 13px;
+      left: 1px;
+      top: calc(50% - 6.5px);
+      box-shadow: 0px 1.45px 0.48px 0px #0000000f;
+      background-color: $colorWhite;
+      border-radius: 50%;
+    }
+
+    &.isActive {
+      &::before {
+        background-color: $colorGreen;
+      }
+      &:after {
+        left: 11px;
+      }
+    }
+  }
+}
+
+// DatePicker тут все стили
+
 .blockDatePicker {
   .react-datepicker--time-only {
     padding: 0;
@@ -575,13 +624,99 @@ picture {
       display: none;
     }
   }
+
+  .react-datepicker__time-list {
+  }
+}
+
+/* Base: make sure the time list can scroll */
+.react-datepicker__time-list {
+  max-height: 220px;
+  overflow-y: auto;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #9aa3b2 transparent; /* Firefox */
+}
+
+.react-datepicker__time-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.react-datepicker__time-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.react-datepicker__time-list::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #bfc7d5, #9aa3b2);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.react-datepicker__time-list::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #aeb7c7, #8891a1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .react-datepicker__time-list {
+    scrollbar-color: #6b7280 transparent;
+  }
+  .react-datepicker__time-list::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #8087a0, #6b7280);
+  }
 }
 
 .blockDatePicker {
-  height: 159px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .blockDatePicker__info {
+    min-width: 75px;
+    height: 35px;
+    color: $colorBlack;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    background-color: $colorWhite;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+  }
 
   .datepicker-input {
-    margin-top: 5px;
+    cursor: pointer;
+
+    &.datepicker-input--date {
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M1.5 2.5C1.23478 2.5 0.98043 2.60536 0.792893 2.79289C0.605357 2.98043 0.5 3.23478 0.5 3.5V12.5C0.5 12.7652 0.605357 13.0196 0.792893 13.2071C0.98043 13.3946 1.23478 13.5 1.5 13.5H12.5C12.7652 13.5 13.0196 13.3946 13.2071 13.2071C13.3946 13.0196 13.5 12.7652 13.5 12.5V3.5C13.5 3.23478 13.3946 2.98043 13.2071 2.79289C13.0196 2.60536 12.7652 2.5 12.5 2.5H10.5' stroke='black' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M3.5 0.5V4.5' stroke='black' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M10.5 0.5V4.5' stroke='black' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M3.5 2.5H8.5' stroke='black' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M9.5 8H4.5' stroke='black' stroke-linecap='round' stroke-linejoin='round'/%3e%3cpath d='M7 5.5V10.5' stroke='black' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e ");
+      background-position: center;
+      background-repeat: no-repeat;
+      width: 35px;
+      height: 35px;
+      color: transparent;
+    }
+
+    &.datepicker-input--time {
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M4.6 0H5.4V10H4.6V0Z' fill='black'/%3e%3cpath d='M10 4.58808V5.41161L0 5.41161L3.49683e-08 4.58808L10 4.58808Z' fill='black'/%3e%3c/svg%3e ");
+      background-position: center;
+      background-repeat: no-repeat;
+      width: 35px;
+      height: 35px;
+      color: transparent;
+    }
+  }
+
+  .blockDatePicker__time {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    font-size: 12px;
+
+    .blockDatePicker__info {
+      margin-left: 10px;
+    }
   }
 
   .react-datepicker {
@@ -596,7 +731,7 @@ picture {
   .react-datepicker-popper {
     width: 100%;
     transform: initial !important;
-    margin-top: 50px;
+    margin-top: 70px;
   }
 
   .react-datepicker__header {
@@ -716,3 +851,5 @@ picture {
     pointer-events: none;
   }
 }
+
+// /DatePicker тут все стили

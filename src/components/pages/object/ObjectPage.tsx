@@ -29,7 +29,7 @@ import { getObjects } from "@/store/slices/objectsSlice";
 
 const ObjectPage: React.FC = () => {
   const { DATA: users } = useAppSelector((state) => state.users);
-  const { loading, data: obj } = useAppSelector((state) => state.object);
+  const { loading, data: obj, error } = useAppSelector((state) => state.object);
 
   const { id } = useParams<{ id: string }>();
 
@@ -102,6 +102,12 @@ const ObjectPage: React.FC = () => {
       dispatch(fetchUsers());
     }
   }, [id, dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      navigate("/404");
+    }
+  }, [error, navigate]);
 
   if (obj) {
     return (
@@ -205,7 +211,7 @@ const ObjectPage: React.FC = () => {
                         </li>
                         <li>
                           <span>сотрудники:</span>
-                          <strong>{obj.users_count | 0}</strong>
+                          <strong>{obj.users_count ?? 0}</strong>
                         </li>
                       </ul>
                     </div>

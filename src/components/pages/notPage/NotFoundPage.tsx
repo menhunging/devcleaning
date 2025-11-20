@@ -1,9 +1,13 @@
+import "./NotFoundPage.scss";
+
 const NotFoundPage: React.FC = () => {
   return (
-    <div style={{ padding: "2rem", textAlign: "center" }}>
-      <h1>404</h1>
-      <p>Страница не найдена</p>
-      <a href="/">На главную </a>
+    <div className="NotPage">
+      <a href="/" data-discover="true">
+        <img alt="Logo" src="/src/assets/img/logo-black.png" />
+      </a>
+      <span className="NotPage__caption">404</span>
+      <p>Страница не найдена или находится в разработке</p>
     </div>
   );
 };

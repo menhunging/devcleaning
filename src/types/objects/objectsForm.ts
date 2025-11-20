@@ -20,6 +20,7 @@ export interface ObjectFormProps {
 
 export interface objectRemove {
   loading: boolean;
+  mode?: "deactivate";
   onSuccess: () => void;
   onClose: () => void;
 }

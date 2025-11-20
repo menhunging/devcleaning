@@ -5,19 +5,18 @@ import type { UserFormData } from "@/types/users/users";
 
 import { getFormateDate } from "@/utils/getFormateDate";
 import { getObjectNameByID } from "@/utils/getObjectNameByID";
+import { getRoleName } from "@/utils/getFoleName";
 
 import Modal from "@/components/shared/ui/Modal/Modal";
 import UsersForm from "@/components/features/users/UsersForm/UsersForm";
 import TableUsersSkeleton from "./TableUsersSkeleton/TableUsersSkeleton";
-import { getRoleName } from "@/utils/getFoleName";
-// import PopupRemove from "@/components/shared/ui/PopupRemove/PopupRemove";
+import PopupRemove from "@/components/shared/ui/PopupRemove/PopupRemove";
 
 import { getObjects } from "@/store/slices/objectsSlice";
 import { fetchTeams } from "@/store/slices/teamsSlice";
-
 import {
   addUser,
-  // deleteUser,
+  deleteUser,
   fetchUsers,
   updateUser,
 } from "@/store/slices/usersSlice";
@@ -32,7 +31,7 @@ const CatalogUsers: React.FC = () => {
 
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
-  // const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const [currentUser, setCurrentUser] = useState<UserFormData | null>(null);
 
@@ -66,18 +65,17 @@ const CatalogUsers: React.FC = () => {
     }
   };
 
-  // const handleRemoveSuccess = async () => {
-  //   // если удаление сотрудника происходит успешно
-
-  //   if (currentUser) {
-  //     const result = await dispatch(deleteUser(currentUser.id));
-  //     if (deleteUser.fulfilled.match(result)) {
-  //       setCurrentUser(null);
-  //       setDeleteModalOpen(false);
-  //       dispatch(fetchUsers());
-  //     }
-  //   }
-  // };
+  const handleRemoveSuccess = async () => {
+    // если деактивирование сотрудника происходит успешно
+    if (currentUser) {
+      const result = await dispatch(deleteUser(currentUser.id));
+      if (deleteUser.fulfilled.match(result)) {
+        setCurrentUser(null);
+        setDeleteModalOpen(false);
+        dispatch(fetchUsers());
+      }
+    }
+  };
 
   const onOpenModal = (mode?: string) => {
     if (mode === "edit") {
@@ -159,8 +157,11 @@ const CatalogUsers: React.FC = () => {
                     </span>
                   </div>
                   <div className="table__cell">
-                    <span className="status status--active">Активен</span>
-                    {/* <span className="status status--notactive">Не активен</span> */}
+                    {user.active ? (
+                      <span className="status status--active">Активен</span>
+                    ) : (
+                      <span className="status status--not-active">Активен</span>
+                    )}
                   </div>
                   <div className="table__cell">
                     <div className="icons-controls">
@@ -171,13 +172,14 @@ const CatalogUsers: React.FC = () => {
                           onOpenModal("edit");
                         }}
                       ></span>
-                      {/* <span
-                      className="icon-delete"
-                      onClick={() => {
-                        setCurrentUser(user);
-                        setDeleteModalOpen(true);
-                      }}
-                    ></span> */}
+                      <span
+                        style={{ pointerEvents: "none", opacity: "0.3" }}
+                        className="icon-delete"
+                        onClick={() => {
+                          setCurrentUser(user);
+                          setDeleteModalOpen(true);
+                        }}
+                      ></span>
                     </div>
                   </div>
                 </div>
@@ -200,16 +202,17 @@ const CatalogUsers: React.FC = () => {
       </Modal>
 
       {/* попап на удаление сотрудника */}
-      {/* <Modal
+      <Modal
         isOpen={isDeleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
       >
         <PopupRemove
           loading={loading}
+          mode="deactivate"
           onSuccess={handleRemoveSuccess}
           onClose={() => setDeleteModalOpen(false)}
         />
-      </Modal> */}
+      </Modal>
     </>
   );
 };

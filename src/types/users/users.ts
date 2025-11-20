@@ -8,6 +8,7 @@ export interface Users {
   phone: string;
   last_active_date: string;
   id_object: string | number;
+  active: number;
   object: {
     id_object_user: number;
     id: number;
