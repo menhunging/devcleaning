@@ -4,7 +4,7 @@ const AppealsPageSkeleton = () => {
   return (
     <div className="table table--appeals table--skeleton">
       <div className="table__body">
-        {[...Array(10)].map((_, i) => (
+        {[...Array(5)].map((_, i) => (
           <div className="table__row skeleton-row" key={i}>
             <div className="table__cell">
               <span className="skeleton__line skeleton__text" />
@@ -36,9 +36,6 @@ const AppealsPageSkeleton = () => {
             <div className="table__cell">
               <span className="skeleton__line skeleton__status" />
             </div>
-            <div className="table__cell">
-              <span className="skeleton__icon skeleton__line" />
-            </div>
           </div>
         ))}
       </div>
@@ -47,4 +44,3 @@ const AppealsPageSkeleton = () => {
 };
 
 export default AppealsPageSkeleton;
-

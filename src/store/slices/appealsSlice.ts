@@ -23,13 +23,13 @@ export const getAppeals = createAsyncThunk<
   try {
     const response = await api.post<AppealsForm>("get_appeals/");
 
-    const { success, DATA, message } = response.data;
+    const { DATA } = response.data;
 
-    if (!success) {
-      return thunkAPI.rejectWithValue(
-        message || "Ошибка при получении обращений"
-      );
-    }
+    // if (!success) {
+    //   return thunkAPI.rejectWithValue(
+    //     message || "Ошибка при получении обращений"
+    //   );
+    // }
 
     return DATA;
   } catch (err: any) {
@@ -59,90 +59,12 @@ export const addAppeal = createAsyncThunk<
   }
 });
 
-export const updateAppeal = createAsyncThunk<
-  AppealsForm["DATA"],
-  Appeal,
-  { rejectValue: string }
->("appeals/updateAppeal", async (payload, thunkAPI) => {
-  try {
-    const response = await api.post<AppealsForm>("updateAppeal/", payload);
-
-    const { success, DATA, message } = response.data;
-
-    if (!success) {
-      return thunkAPI.rejectWithValue(
-        message || "Ошибка при обновлении обращения"
-      );
-    }
-
-    return DATA;
-  } catch (err: any) {
-    return thunkAPI.rejectWithValue("Ошибка при обновлении обращения");
-  }
-});
-
-export const changeAppealStatus = createAsyncThunk<
-  { success: boolean; payload: { id: string } },
-  { id: string },
-  { rejectValue: string }
->("appeals/changeAppealStatus", async (payload, thunkAPI) => {
-  try {
-    const response = await api.post<AppealsForm>(
-      "status_change_appeal/",
-      payload
-    );
-
-    const { success, message } = response.data;
-
-    if (!success) {
-      return thunkAPI.rejectWithValue(
-        message || "Ошибка при изменении статуса обращения"
-      );
-    }
-
-    return {
-      success,
-      payload,
-    };
-  } catch (err: any) {
-    return thunkAPI.rejectWithValue("Ошибка при изменении статуса обращения");
-  }
-});
-
 const appealsSlice = createSlice({
   name: "appeals",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // addAppeal
-      .addCase(addAppeal.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(addAppeal.fulfilled, (state, action) => {
-        state.loading = false;
-        state.DATA = action.payload;
-      })
-      .addCase(addAppeal.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload || "Ошибка";
-      })
-
-      // updateAppeal
-      .addCase(updateAppeal.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(updateAppeal.fulfilled, (state, action) => {
-        state.loading = false;
-        state.DATA = action.payload;
-      })
-      .addCase(updateAppeal.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload || "Ошибка";
-      })
-
       // getAppeals
       .addCase(getAppeals.pending, (state) => {
         state.loading = true;
@@ -157,27 +79,16 @@ const appealsSlice = createSlice({
         state.error = action.payload || "Ошибка";
       })
 
-      // changeAppealStatus
-      .addCase(changeAppealStatus.pending, (state) => {
+      // addAppeal
+      .addCase(addAppeal.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(changeAppealStatus.fulfilled, (state, action) => {
+      .addCase(addAppeal.fulfilled, (state, action) => {
         state.loading = false;
-
-        const { payload } = action.payload;
-
-        if (state.DATA) {
-          const found = state.DATA.find(
-            (item) => item.id === Number(payload.id)
-          );
-          if (found) {
-            found.status = found.status === 0 ? 1 : 0;
-            found.name_status = found.status === 0 ? "Активно" : "Остановлено";
-          }
-        }
+        state.DATA = action.payload;
       })
-      .addCase(changeAppealStatus.rejected, (state, action) => {
+      .addCase(addAppeal.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Ошибка";
       });
@@ -185,4 +96,3 @@ const appealsSlice = createSlice({
 });
 
 export default appealsSlice.reducer;
-
