@@ -9,6 +9,10 @@ export interface Appeal {
   name_object: string;
   date_create: string;
   gallery: string | null;
+  id_object: number;
+  id_zone: number;
+  id_user: number;
+  id_team: number;
 }
 
 export interface AppealsForm {

@@ -9,7 +9,7 @@ const PopupRemove: React.FC<objectRemove> = ({
   onClose,
 }) => {
   const titles: Record<string, string> = {
-    deactivate: "Изменить статус",
+    deactivate: "Деактивация",
     delete: "Удалить",
   };
 

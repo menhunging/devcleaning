@@ -14,8 +14,14 @@ export interface Users {
     id: number;
     name: string;
   };
+  managers?: {
+    id_object_user: number;
+    id: number;
+    name: string;
+  }[];
   team: [];
 }
+
 export interface UsersState {
   loading: boolean;
   error: string | null;
@@ -37,12 +43,13 @@ export interface UserFormData {
   name: string;
   surname: string;
   phone: string;
+  active: string | number;
   id_object: string | number | [];
-  // object: {
-  //   id_object_user?: number;
-  //   id?: number;
-  //   name?: string;
-  // };
+  managers?: {
+    id_object_user?: number; // оно всегда приходит, просто чтобы state local обновлять, я буду сюда записыватьи option целиком, без id_object_user
+    id: number;
+    name: string;
+  }[] | null;
   id_teams?: string;
   team?: {
     id_team_user: string | number;

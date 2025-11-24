@@ -6,17 +6,65 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useFormatedTime } from "@/utils/forPlanner/useFormatedTime";
 import { normalizeTime } from "@/utils/forPlanner/normalizeTime";
 
+import SelectUI from "../../Select/SelectUI/SelectUI";
+
 import type { Planner } from "@/types/planner/planner";
+import type { SingleValue } from "react-select";
+import type { Option } from "@/types/ui/select/select";
 
 interface TimePickerStartEndProps {
   formData: Planner;
   setFormData: React.Dispatch<React.SetStateAction<Planner>>;
+  mode?: "period" | "exact";
 }
 
 const TimePickerStartEnd = ({
   formData,
   setFormData,
+  mode,
 }: TimePickerStartEndProps) => {
+  const onChangeDuration = (selected: SingleValue<Option>) => {
+    setFormData((prev) => ({
+      ...prev,
+      duration: selected ? Number(selected.value) : null,
+    }));
+  };
+
+  const options = [
+    {
+      value: "10",
+      label: "10 мин",
+    },
+    {
+      value: "20",
+      label: "20 мин",
+    },
+    {
+      value: "30",
+      label: "30 мин",
+    },
+    {
+      value: "40",
+      label: "40 мин",
+    },
+    {
+      value: "50",
+      label: "50 мин",
+    },
+    {
+      value: "60",
+      label: "60 мин",
+    },
+    {
+      value: "70",
+      label: "70 мин",
+    },
+    {
+      value: "80",
+      label: "80 мин",
+    },
+  ];
+
   return (
     <div className="blockDatePicker">
       <div className="blockDatePicker__time">
@@ -100,6 +148,53 @@ const TimePickerStartEnd = ({
           maxTime={setHours(setMinutes(new Date(), 59), 23)} // всегда до конца дня
         />
       </div>
+
+      <div className="blockDatePicker__time">
+        <span>Длительность:</span>
+        <span
+          className={
+            !formData.duration
+              ? "blockDatePicker__empty"
+              : "blockDatePicker__info"
+          }
+        >
+          <SelectUI
+            options={options}
+            value={
+              options?.find(
+                (opt) => String(opt.value) === String(formData.duration)
+              ) || null
+            }
+            placeholder={!formData.duration ? "Не выбрано" : ""}
+            onChange={onChangeDuration}
+          />
+        </span>
+      </div>
+
+      {mode && (
+        <div className="blockDatePicker__time">
+          <span>Период:</span>
+
+          <span
+            className={
+              !formData.duration
+                ? "blockDatePicker__empty"
+                : "blockDatePicker__info"
+            }
+          >
+            <SelectUI
+              options={options}
+              value={
+                options?.find(
+                  (opt) => String(opt.value) === String(formData.duration)
+                ) || null
+              }
+              placeholder={!formData.duration ? "Не выбрано" : ""}
+              onChange={onChangeDuration}
+            />
+          </span>
+        </div>
+      )}
     </div>
   );
 };

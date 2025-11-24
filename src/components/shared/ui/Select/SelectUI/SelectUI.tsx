@@ -56,7 +56,6 @@ const SelectUI: React.FC<SelectUIProps> = ({
     noOptionsMessage={() =>
       notOptionsPlaceholder ? String(notOptionsPlaceholder) : "Здесь ничего нет"
     }
-    // closeMenuOnSelect={false}
     onChange={(selected) => {
       const valueLocal = (selected as SingleValue<Option>) || null;
       onChange?.(valueLocal);

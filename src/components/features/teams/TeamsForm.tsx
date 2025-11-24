@@ -21,6 +21,7 @@ interface TeamsFormProps {
   users?:
     | {
         id: string | number;
+        active: number;
         id_object: string | number;
         login: string;
         name: string;
@@ -57,6 +58,7 @@ const TeamsForm: React.FC<TeamsFormProps> = ({
     .filter(
       (user) =>
         user.role === 3 &&
+        user.active === 1 && // пускай на всякий и активный только
         (!formData.id_object || user.id_object === Number(formData.id_object))
     )
     .map((user) => ({

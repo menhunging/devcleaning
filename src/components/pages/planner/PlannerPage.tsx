@@ -22,6 +22,7 @@ import "./PlannerPage.scss";
 
 const PlannerPage: React.FC = () => {
   const { loading, DATA: planners } = useAppSelector((state) => state.planner);
+  const { loading: loadingObject } = useAppSelector((state) => state.object);
   const dispatch = useAppDispatch();
 
   const [currentPlanner, setCurrentPlanner] = useState<Planner | null>(null);
@@ -133,7 +134,11 @@ const PlannerPage: React.FC = () => {
                     <div className="table__cell">
                       {normalizeTime(plannerItem.time_start)}
                     </div>
-                    <div className="table__cell">-</div>
+                    <div className="table__cell">
+                      {plannerItem.duration
+                        ? `${plannerItem.duration} мин`
+                        : "-"}
+                    </div>
                     <div className="table__cell">
                       <Switcher
                         status={plannerItem.status}
@@ -181,6 +186,7 @@ const PlannerPage: React.FC = () => {
       <PlannerPopup
         mode={isUpdateModalOpen ? "edit" : "add"}
         loading={loading}
+        loadingObject={loadingObject}
         initialData={currentPlanner ? currentPlanner : null}
         isOpen={isAddModalOpen}
         handleModalClose={OnCloseModal}

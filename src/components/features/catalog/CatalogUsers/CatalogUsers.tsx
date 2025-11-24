@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
-import type { UserFormData } from "@/types/users/users";
+import type { UserFormData, Users } from "@/types/users/users";
 
 import { getFormateDate } from "@/utils/getFormateDate";
 import { getObjectNameByID } from "@/utils/getObjectNameByID";
@@ -68,7 +68,17 @@ const CatalogUsers: React.FC = () => {
   const handleRemoveSuccess = async () => {
     // если деактивирование сотрудника происходит успешно
     if (currentUser) {
-      const result = await dispatch(deleteUser(currentUser.id));
+      let isActive = 1;
+
+      if (Number(currentUser.active) === Number(isActive)) {
+        isActive = 0;
+      } else {
+        isActive = 1;
+      }
+
+      const result = await dispatch(
+        deleteUser({ id: currentUser.id, active: String(isActive) })
+      );
       if (deleteUser.fulfilled.match(result)) {
         setCurrentUser(null);
         setDeleteModalOpen(false);
@@ -94,6 +104,22 @@ const CatalogUsers: React.FC = () => {
   const onCloseAddModal = () => {
     setCurrentUser(null);
     setAddModalOpen(false);
+  };
+
+  const printObjectName = (
+    objID: string | number,
+    managers: Users["managers"] // вот так с бэка
+  ) => {
+    // просто печатаем название обьектов для сотрудников и для менеджера
+    if (objID) {
+      return getObjectNameByID(objects, objID);
+    }
+
+    if (managers) {
+      return managers.map((managerItem) => String(managerItem.name)).join(", ");
+    }
+
+    return "-";
   };
 
   return (
@@ -126,7 +152,7 @@ const CatalogUsers: React.FC = () => {
             </div>
 
             <div className="table__body">
-              {users.map((user) => (
+              {users?.map((user) => (
                 <div className="table__row" key={user.id}>
                   <div className="table__cell">{`${user.surname} ${user.name}`}</div>
                   <div className="table__cell">
@@ -136,9 +162,7 @@ const CatalogUsers: React.FC = () => {
                   </div>
 
                   <div className="table__cell">
-                    {user.id_object
-                      ? getObjectNameByID(objects, user.id_object)
-                      : "-"}
+                    {printObjectName(user.id_object, user.managers)}
                   </div>
 
                   <div className="table__cell">
@@ -160,7 +184,9 @@ const CatalogUsers: React.FC = () => {
                     {user.active ? (
                       <span className="status status--active">Активен</span>
                     ) : (
-                      <span className="status status--not-active">Активен</span>
+                      <span className="status status--not-active">
+                        Не активен
+                      </span>
                     )}
                   </div>
                   <div className="table__cell">
@@ -173,7 +199,6 @@ const CatalogUsers: React.FC = () => {
                         }}
                       ></span>
                       <span
-                        style={{ pointerEvents: "none", opacity: "0.3" }}
                         className="icon-delete"
                         onClick={() => {
                           setCurrentUser(user);

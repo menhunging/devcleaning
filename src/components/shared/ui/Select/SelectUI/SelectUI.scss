@@ -1,5 +1,8 @@
 .selectUI__single-value {
   min-height: 20px;
-  margin-top: 1px;
+  margin-top: 2px;
+
+  @include responsive1439 {
+    margin-top: 5px;
+  }
 }
- 

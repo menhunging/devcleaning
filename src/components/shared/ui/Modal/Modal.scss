@@ -78,11 +78,13 @@
 }
 
 .modal__wrapper {
-  max-height: 100vh;
+  height: 100vh;
   overflow: auto;
   padding: 20px 40px;
   scrollbar-width: none;
   scrollbar-color: transparent transparent;
+  display: flex;
+  align-items: flex-start;
 }
 
 .modal__wrapper::-webkit-scrollbar {
@@ -99,6 +101,7 @@
   padding: 15px;
   border-radius: 14px;
   position: relative;
+  margin: auto;
 }
 
 .modal__close {

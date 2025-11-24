@@ -84,8 +84,8 @@ export const deleteObject = createAsyncThunk<
 export const updateManagerObject = createAsyncThunk<
   boolean,
   {
+    id_object: string;
     id_user: number;
-    id_object: number;
   },
   { rejectValue: string }
 >("object/updateManagerObject", async (payload, thunkAPI) => {

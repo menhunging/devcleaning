@@ -1,38 +1,98 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import { getAppeals } from "@/store/slices/appealsSlice";
 
-import "./AppealsPage.scss";
+import { addPlanner, getPlanner } from "@/store/slices/plannerSlice";
+import { getObjects } from "@/store/slices/objectsSlice";
+
 import AppealsPageSkeleton from "@/components/features/appeals/Skeleton/AppealsPageSkeleton";
+import PlannerPopup from "@/components/features/planner/PlannerPopup";
+import type { Planner } from "@/types/planner/planner";
+
+import "./AppealsPage.scss";
 
 const AppealsPage: React.FC = () => {
+  // универсальный "пустой" Planner, лень ts переписывать
+  const emptyPlanner: Planner = {
+    id: null,
+    name: "",
+    data_create: "",
+    description: "",
+    date_start: "",
+    time_start: "",
+    data_end: "",
+    time_end: "",
+    status: 0,
+    name_object: "",
+    name_zone: "",
+    name_user: "",
+    surname_user: "",
+    name_team: "",
+    name_status: "",
+    duration: null,
+    id_object: "",
+    id_zone: "",
+    id_user: "",
+    id_team: "",
+  };
+
   const { loading, DATA: appeals } = useAppSelector((state) => state.appeals);
+  const { loading: loadingObject } = useAppSelector((state) => state.object);
+
   const dispatch = useAppDispatch();
 
-  // const [currentAppeal, setCurrentAppeal] = useState<Appeal | null>(null);
+  const [isAddModalOpen, setAddModalOpen] = useState(false);
 
-  // const [isAddModalOpen, setAddModalOpen] = useState(false);
-  // const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
+  const [currentPlanner, setCurrentPlanner] = useState<Planner | null>(null);
 
-  // const onOpenModal = (mode: string) => {
-  //   if (mode === "edit") {
-  //     setUpdateModalOpen(true);
-  //     setAddModalOpen(true);
-  //   } else {
-  //     setUpdateModalOpen(false);
-  //     setAddModalOpen(true);
-  //   }
-  // };
+  const formatedDateAppeals = (apiDate: string, mode: string) => {
+    const dateObj = new Date(apiDate.replace(" ", "T")); // заменяем пробел на T для корректного парсинга
 
-  // const OnCloseModal = () => {
-  //   setCurrentAppeal(null);
-  //   setAddModalOpen(false);
-  // };
+    if (mode === "date") {
+      // Форматируем дату: DD.MM.YY
+      const datePart = dateObj.toLocaleDateString("ru-RU", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+      });
+
+      return datePart;
+    }
+
+    if (mode === "time") {
+      // Форматируем время: HH:MM
+      const timePart = dateObj.toLocaleTimeString("ru-RU", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      return timePart;
+    }
+
+    return "-";
+  };
+
+  const handleAddTask = async (formData: Planner) => {
+    const result = await dispatch(addPlanner(formData));
+
+    if (addPlanner.fulfilled.match(result)) {
+      OnCloseModal();
+      dispatch(getPlanner());
+    }
+  };
+
+  const onOpenModal = () => {
+    setAddModalOpen(true);
+  };
+
+  const OnCloseModal = () => {
+    setCurrentPlanner(null);
+    setAddModalOpen(false);
+  };
 
   useEffect(() => {
-    // dispatch(fetchUsers());
-    // dispatch(getObjects());
+    dispatch(getObjects());
     dispatch(getAppeals());
   }, []);
 
@@ -43,15 +103,6 @@ const AppealsPage: React.FC = () => {
       </div>
 
       <div className="page__controls">
-        {/* <span
-          className="btn btn--greenLight btn--add"
-          onClick={() => {
-            onOpenModal("add");
-          }}
-        >
-          Добавить обращение
-        </span> */}
-
         <span className="btn btn--download">Скачать</span>
       </div>
 
@@ -70,7 +121,7 @@ const AppealsPage: React.FC = () => {
                   <div className="table__cell">зона</div>
                   <div className="table__cell">Текст обращения</div>
                   <div className="table__cell">Кто обратился</div>
-                  <div className="table__cell">Медиа</div>
+                  {/* <div className="table__cell">Медиа</div> */}
                   <div className="table__cell">Статус</div>
                   <div className="table__cell"></div>
                 </div>
@@ -80,12 +131,18 @@ const AppealsPage: React.FC = () => {
                     return (
                       <div className="table__row" key={appealItem.id}>
                         <div className="table__cell">
-                          {appealItem.date_create}
+                          {formatedDateAppeals(appealItem.date_create, "date")}
                         </div>
                         <div className="table__cell">
-                          {appealItem.date_create}
+                          {formatedDateAppeals(appealItem.date_create, "time")}
                         </div>
-                        <div className="table__cell">{appealItem.like_a}</div>
+                        <div className="table__cell">
+                          {appealItem.like_a === 1 ? (
+                            <span className="like"></span>
+                          ) : (
+                            <span className="deslike"></span>
+                          )}
+                        </div>
                         <div className="table__cell">
                           {appealItem.name_object}
                         </div>
@@ -98,11 +155,36 @@ const AppealsPage: React.FC = () => {
                         <div className="table__cell">
                           {appealItem.contact_name}
                         </div>
-                        <div className="table__cell">Смотреть</div>
+                        {/* <div className="table__cell">Смотреть</div> */}
                         <div className="table__cell">
-                          {appealItem.status_success}
+                          {appealItem.status_success === 0 ? (
+                            <span className="status status--active">
+                              В работе
+                            </span>
+                          ) : (
+                            <span className="status status--success">
+                              Выполнено
+                            </span>
+                          )}
                         </div>
-                        <div className="table__cell">Создать задание</div>
+                        <div className="table__cell">
+                          <div className="appeleals-controls">
+                            <span
+                              className="icon icon-add"
+                              onClick={() => {
+                                setCurrentPlanner({
+                                  ...emptyPlanner,
+                                  name: "Задача по обращению",
+                                  data_create: appealItem.date_create,
+                                  id_object: String(appealItem.id_object),
+                                  id_zone: String(appealItem.id_zone),
+                                });
+                                onOpenModal();
+                              }}
+                            ></span>
+                            <span className="icon icon-delete"></span>
+                          </div>
+                        </div>
                       </div>
                     );
                   })}
@@ -116,6 +198,16 @@ const AppealsPage: React.FC = () => {
           </>
         )}
       </div>
+
+      <PlannerPopup
+        mode={"edit"}
+        loading={loading}
+        loadingObject={loadingObject}
+        initialData={currentPlanner ? currentPlanner : null}
+        isOpen={isAddModalOpen}
+        handleModalClose={OnCloseModal}
+        onSubmit={handleAddTask}
+      />
     </div>
   );
 };

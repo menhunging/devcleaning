@@ -98,12 +98,12 @@ export const updateUser = createAsyncThunk<
 
 export const deleteUser = createAsyncThunk<
   boolean,
-  number | undefined,
+  { id: number | undefined; active: string },
   { rejectValue: string }
->("users/deleteUser", async (id, thunkAPI) => {
+>("users/deleteUser", async (payload, thunkAPI) => {
   try {
-    // TODO. передалем на другой endpoint
-    const response = await api.post("edit_user/", { id: id, active: 0 });
+    // TODO. не работает сейчас удаление из зоны, ждем доработку бэка
+    const response = await api.post("deactivate_user/", payload);
 
     const { success, message } = response.data;
 

@@ -18,6 +18,7 @@ import "./PlannerPopup.scss";
 interface PlannerPopupProps {
   mode?: "add" | "edit";
   loading: boolean;
+  loadingObject: boolean;
   initialData?: Planner | null;
   isOpen: boolean;
   handleModalClose: () => void;
@@ -27,6 +28,7 @@ interface PlannerPopupProps {
 const PlannerPopup: React.FC<PlannerPopupProps> = ({
   mode,
   loading,
+  loadingObject,
   initialData,
   isOpen,
   handleModalClose,
@@ -56,16 +58,38 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
     data_create: initialData?.data_create || "",
 
     date_start: initialData?.date_start || "",
-    time_start: initialData?.time_start || "",
     data_end: initialData?.data_end || "",
+
+    time_start: initialData?.time_start || "",
     time_end: initialData?.time_end || "",
+
+    duration: initialData?.duration || null,
   });
 
   const [formData, setFormData] = useState(initFormData(initialData));
 
   const [activeTab, setActiveTab] = useState<"user" | "team">(
-    formData.name_team ? "team" : "user"
+    formData.id_team ? "team" : "user"
   ); // табы для сотрудников и команды
+
+  const [activeDateTab, setActiveDateTab] = useState<"day" | "week">("day"); // табя для даты
+
+  const [activeTimeTab, setActiveTimeTab] = useState<"period" | "exact">(
+    "exact"
+  ); // табя для времени
+
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
+
+  const days = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
+
+  const toggleDay = (day: string) => {
+    setSelectedDays(
+      (prev) =>
+        prev.includes(day)
+          ? prev.filter((d) => d !== day) // убираем если уже выбран
+          : [...prev, day] // добавляем если не выбран
+    );
+  };
 
   const { optionsObjects, optionsZones, optionsUsers, optionsTeams } =
     usePlannerOptions();
@@ -84,19 +108,23 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
   const handleObjectSelect = async (selected: SingleValue<Option>) => {
     setFormData((prev) => ({
       ...prev,
+      id_zone: "",
+      id_user: "",
+      id_team: "",
       name_zone: "",
     }));
 
-    const result = await dispatch(getObjectById(String(selected?.value)));
+    // const result = await dispatch(getObjectById(String(selected?.value)));
 
-    if (getObjectById.fulfilled.match(result)) {
-      setFormData((prev) => ({
-        ...prev,
-        id_object: selected ? selected.value : "",
-        name_object: selected ? selected.label : "",
-        name_zone: "",
-      }));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      id_object: selected ? selected.value : "",
+      name_object: selected ? selected.label : "",
+      name_zone: "",
+    }));
+
+    // if (getObjectById.fulfilled.match(result)) {
+    // }
   };
 
   const handleZoneSelect = async (selected: SingleValue<Option>) => {
@@ -134,6 +162,7 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
 
   const btnDisabled =
     loading ||
+    loadingObject ||
     !formData.name ||
     !formData.id_object ||
     !formData.id_zone ||
@@ -146,6 +175,16 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
   useEffect(() => {
     setFormData(initFormData(initialData));
   }, [initialData]);
+
+  useEffect(() => {
+    if (formData.id_object) {
+      dispatch(getObjectById(formData.id_object));
+    }
+  }, [formData.id_object, dispatch]);
+
+  useEffect(() => {
+    setActiveTab(formData.id_team ? "team" : "user");
+  }, [formData.id_team, dispatch]);
 
   return (
     <Modal isOpen={isOpen} onClose={handleModalClose}>
@@ -173,12 +212,12 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
                 <div className="selectWrap__wrap">
                   <SelectUI
                     options={optionsObjects}
-                    // value={
-                    //   getOptionForObjects(objects)?.find(
-                    //     (opt) =>
-                    //       Number(opt.value) === Number(formData.id_object)
-                    //   ) || null
-                    // }
+                    value={
+                      optionsObjects?.find(
+                        (opt) =>
+                          Number(opt.value) === Number(formData.id_object)
+                      ) || null
+                    }
                     onChange={(event) => {
                       handleObjectSelect(event);
                     }}
@@ -189,7 +228,7 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
 
             <div
               className={
-                formData.name_object
+                formData.id_object && !loadingObject
                   ? "input-item"
                   : "input-item input-item--disabled"
               }
@@ -199,12 +238,11 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
                 <div className="selectWrap__wrap">
                   <SelectUI
                     options={optionsZones}
-                    // value={
-                    //   optionsZones?.find(
-                    //     (opt) =>
-                    //       Number(opt.value) === Number(formData.name_zone)
-                    //   ) || null
-                    // }
+                    value={
+                      optionsZones?.find(
+                        (opt) => Number(opt.value) === Number(formData.id_zone)
+                      ) || null
+                    }
                     onChange={(event) => {
                       handleZoneSelect(event);
                     }}
@@ -233,7 +271,7 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
                 {activeTab === "user" && (
                   <div
                     className={
-                      formData.name_zone
+                      formData.id_zone && !loadingObject
                         ? "input-item"
                         : "input-item input-item--disabled"
                     }
@@ -243,12 +281,12 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
                       <div className="selectWrap__wrap">
                         <SelectUI
                           options={optionsUsers}
-                          // value={
-                          //   formData.users?.map((user) => ({
-                          //     value: String(user.id_user),
-                          //     label: `${user.name}`,
-                          //   })) || []
-                          // }
+                          value={
+                            optionsUsers?.find(
+                              (opt) =>
+                                Number(opt.value) === Number(formData.id_user)
+                            ) || null
+                          }
                           onChange={handleUsersSelect}
                         />
                       </div>
@@ -259,7 +297,7 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
                 {activeTab === "team" && (
                   <div
                     className={
-                      formData.name_zone
+                      formData.id_zone && !loadingObject
                         ? "input-item"
                         : "input-item input-item--disabled"
                     }
@@ -269,14 +307,12 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
                       <div className="selectWrap__wrap">
                         <SelectUI
                           options={optionsTeams}
-                          // value={
-                          //   formData.team
-                          //     ? {
-                          //         value: String(formData.team.id),
-                          //         label: formData.team.name,
-                          //       }
-                          //     : null
-                          // }
+                          value={
+                            optionsTeams?.find(
+                              (opt) =>
+                                Number(opt.value) === Number(formData.id_team)
+                            ) || null
+                          }
                           onChange={handleTeamSelect}
                         />
                       </div>
@@ -301,19 +337,109 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
             <div className="input-date">
               <label htmlFor="date_start">Дата выполнения:</label>
 
-              {!formData.date_start && (
-                <span className="input-date__title">Выбрать день</span>
-              )}
+              <div className="tab-input-date tab-input-date--date">
+                <div className="tab-input-date__head">
+                  <span
+                    className={`input-date__title ${
+                      activeDateTab === "day" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveDateTab("day")}
+                  >
+                    Выбрать дни
+                  </span>
+                  <span
+                    className={`input-date__title ${
+                      activeDateTab === "week" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveDateTab("week")}
+                  >
+                    Каждую неделю
+                  </span>
+                </div>
 
-              <DatePickerStart formData={formData} setFormData={setFormData} />
+                <div className="tab-input-date__body">
+                  {activeDateTab === "day" && (
+                    <DatePickerStart
+                      formData={formData}
+                      setFormData={setFormData}
+                    />
+                  )}
+                  {activeDateTab === "week" && (
+                    <>
+                      <div className="dayCircle">
+                        {days.map((day) => (
+                          <span
+                            key={day}
+                            className={`dayCircle__circle ${
+                              selectedDays.includes(day) ? "active" : ""
+                            }`}
+                            onClick={() => toggleDay(day)}
+                          >
+                            {day}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="blockDatePicker">
+                        <div className="blockDatePicker__time">
+                          <span>Начало повторов:</span>
+                          <DatePickerStart
+                            formData={formData}
+                            setFormData={setFormData}
+                          />
+                        </div>
+                        <div className="blockDatePicker__time">
+                          <span>Конец повторов:</span>
+                          <DatePickerStart
+                            formData={formData}
+                            setFormData={setFormData}
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
 
             <div className="input-date">
               <label htmlFor="date_start">Время выполнения:</label>
-              <TimePickerStartEnd
-                formData={formData}
-                setFormData={setFormData}
-              />
+
+              <div className="tab-input-date tab-input-date--time">
+                <div className="tab-input-date__head">
+                  <span
+                    className={`input-date__title ${
+                      activeTimeTab === "period" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTimeTab("period")}
+                  >
+                    Указать период
+                  </span>
+                  <span
+                    className={`input-date__title ${
+                      activeTimeTab === "exact" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTimeTab("exact")}
+                  >
+                    Точное время
+                  </span>
+                </div>
+
+                <div className="tab-input-date__body">
+                  {activeTimeTab === "exact" && (
+                    <TimePickerStartEnd
+                      formData={formData}
+                      setFormData={setFormData}
+                    />
+                  )}
+                  {activeTimeTab === "period" && (
+                    <TimePickerStartEnd
+                      mode="period"
+                      formData={formData}
+                      setFormData={setFormData}
+                    />
+                  )}
+                </div>
+              </div>
             </div>
           </div>
           <div className="btn-controls btn-controls--right">

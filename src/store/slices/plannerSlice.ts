@@ -63,19 +63,19 @@ export const updatePlanner = createAsyncThunk<
   { rejectValue: string }
 >("planner/updatePlanner", async (payload, thunkAPI) => {
   try {
-    const response = await api.post<PlannerForm>("updatePlanner/", payload);
+    const response = await api.post<PlannerForm>("edit_planner/", payload);
 
     const { success, DATA, message } = response.data;
 
     if (!success) {
       return thunkAPI.rejectWithValue(
-        message || "Ошибка при добавлении задачи"
+        message || "Ошибка при редактировании задачи"
       );
     }
 
     return DATA;
   } catch (err: any) {
-    return thunkAPI.rejectWithValue("Ошибка при добавлении задачи");
+    return thunkAPI.rejectWithValue("Ошибка при редактировании задачи");
   }
 });
 

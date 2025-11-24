@@ -41,6 +41,8 @@ const UsersForm: React.FC<UsersFormProps> = ({
     name: initialData?.name || "",
     surname: initialData?.surname || "",
     phone: initialData?.phone || "",
+    managers: initialData?.managers || null,
+    active: initialData?.active || 1,
     id_object: initialData?.id_object || [], // все id обьектов юзера
     id_teams: initialData?.id_teams || "", // все id команд юзера
     team: initialData?.team || [], // команды целиком именно юзера
@@ -82,6 +84,10 @@ const UsersForm: React.FC<UsersFormProps> = ({
     setFormData((prev) => ({
       ...prev,
       id_object: selected.map((opt) => opt.value).join(","),
+      managers: selected.map((opt) => ({
+        id: Number(opt.value),
+        name: opt.label,
+      })),
     }));
   };
 
@@ -92,7 +98,7 @@ const UsersForm: React.FC<UsersFormProps> = ({
       ...prev,
       id_teams: "",
       team: [],
-      id_object: selected ? Number(selected.value) : [],
+      id_object: selected ? String(selected.value) : [],
     }));
   };
 
@@ -121,6 +127,7 @@ const UsersForm: React.FC<UsersFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("formData", formData);
     onSuccess(formData);
   };
 
@@ -236,13 +243,10 @@ const UsersForm: React.FC<UsersFormProps> = ({
               <div className="selectWrap__wrap">
                 <SelectUIMulti
                   options={optionsObjects}
-                  // value={optionsObjects.find(
-                  //   (opt) => opt.value === String(formData.id_object)
-                  // )}
-                  // value={optionsObjects.map((opt) => ({
-                  //   value: String(opt.value),
-                  //   label: String(opt.label),
-                  // }))}
+                  value={formData.managers?.map((opt) => ({
+                    value: String(opt.id),
+                    label: String(opt.name),
+                  }))}
                   onChange={(event) => {
                     handleSelectObjManagerChange(event);
                   }}

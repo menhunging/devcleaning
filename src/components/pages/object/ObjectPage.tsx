@@ -82,7 +82,7 @@ const ObjectPage: React.FC = () => {
   const changeManager = async (selected: SingleValue<Option>) => {
     if (selected && obj) {
       const payload = {
-        id_object: Number(obj.id),
+        id_object: String(obj.id),
         id_user: Number(selected.value),
       };
 
