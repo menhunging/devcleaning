@@ -8,7 +8,7 @@ export interface Appeal {
   name_zone: string;
   name_object: string;
   date_create: string;
-  gallery: string | null;
+  gallery: [] | null;
   id_object: number;
   id_zone: number;
   id_user: number;

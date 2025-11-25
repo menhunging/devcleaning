@@ -64,6 +64,7 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
     time_end: initialData?.time_end || "",
 
     duration: initialData?.duration || null,
+    period: initialData?.period || null,
   });
 
   const [formData, setFormData] = useState(initFormData(initialData));

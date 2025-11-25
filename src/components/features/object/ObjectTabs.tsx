@@ -129,7 +129,10 @@ const ObjectTabs = ({ loading, obj }: ObjectTabsProps) => {
                   <div className="object-requests">
                     {obj?.appeal.map((appealItem) => {
                       return (
-                        <div className="object-requests__item">
+                        <div
+                          className="object-requests__item"
+                          key={appealItem.id}
+                        >
                           <span className="object-requests__name">
                             {appealItem.name_zone}
                           </span>
@@ -171,7 +174,10 @@ const ObjectTabs = ({ loading, obj }: ObjectTabsProps) => {
                   <div className="object-requests">
                     {obj?.appeal.map((appealItem) => {
                       return (
-                        <div className="object-requests__item">
+                        <div
+                          className="object-requests__item"
+                          key={appealItem.id}
+                        >
                           <span className="object-requests__name">
                             {appealItem.name_zone}
                           </span>

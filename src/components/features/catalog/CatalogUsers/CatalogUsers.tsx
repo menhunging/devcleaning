@@ -198,8 +198,11 @@ const CatalogUsers: React.FC = () => {
                           onOpenModal("edit");
                         }}
                       ></span>
+
                       <span
-                        className="icon-delete"
+                        className={
+                          user.active ? "icon-deactive" : "icon-restore"
+                        }
                         onClick={() => {
                           setCurrentUser(user);
                           setDeleteModalOpen(true);
@@ -233,7 +236,7 @@ const CatalogUsers: React.FC = () => {
       >
         <PopupRemove
           loading={loading}
-          mode="deactivate"
+          mode={currentUser?.active === 1 ? "deactivate" : "activeted"}
           onSuccess={handleRemoveSuccess}
           onClose={() => setDeleteModalOpen(false)}
         />

@@ -15,6 +15,7 @@ export interface Planner {
   name_team: string;
   name_status: string;
   duration: number | null;
+  period: number | null;
 
   id_object: string;
   id_zone: string;

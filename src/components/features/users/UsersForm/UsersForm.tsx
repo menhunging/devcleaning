@@ -48,6 +48,8 @@ const UsersForm: React.FC<UsersFormProps> = ({
     team: initialData?.team || [], // команды целиком именно юзера
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const optionsRole: OptionRole[] = [
     { value: 2, label: "Менеджер" },
     { value: 3, label: "Сотрудник" },
@@ -127,7 +129,6 @@ const UsersForm: React.FC<UsersFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("formData", formData);
     onSuccess(formData);
   };
 
@@ -208,12 +209,19 @@ const UsersForm: React.FC<UsersFormProps> = ({
         <div className="input-item">
           <label htmlFor="name">Пароль</label>
           <input
-            type="text"
             id="password"
             name="password"
+            autoComplete="off"
+            type={showPassword ? "text" : "password"}
+            placeholder=""
             value={formData.password}
             onChange={handleInputChange}
           />
+
+          <span
+            className={showPassword ? "icon-eye active" : "icon-eye"}
+            onClick={() => setShowPassword((prev) => !prev)}
+          ></span>
         </div>
 
         <div className="input-item">

@@ -30,6 +30,13 @@ const TimePickerStartEnd = ({
     }));
   };
 
+  const onChangePeriod = (selected: SingleValue<Option>) => {
+    setFormData((prev) => ({
+      ...prev,
+      period: selected ? Number(selected.value) : null,
+    }));
+  };
+
   const options = [
     {
       value: "10",
@@ -177,7 +184,7 @@ const TimePickerStartEnd = ({
 
           <span
             className={
-              !formData.duration
+              !formData.period
                 ? "blockDatePicker__empty"
                 : "blockDatePicker__info"
             }
@@ -186,11 +193,11 @@ const TimePickerStartEnd = ({
               options={options}
               value={
                 options?.find(
-                  (opt) => String(opt.value) === String(formData.duration)
+                  (opt) => String(opt.value) === String(formData.period)
                 ) || null
               }
-              placeholder={!formData.duration ? "Не выбрано" : ""}
-              onChange={onChangeDuration}
+              placeholder={!formData.period ? "Не выбрано" : ""}
+              onChange={onChangePeriod}
             />
           </span>
         </div>

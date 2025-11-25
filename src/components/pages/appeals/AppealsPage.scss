@@ -2,6 +2,14 @@
   &.table--appeals {
     .table__header {
     }
+
+    .table__body {
+      .table__cell {
+        &:nth-child(6) {
+          width: 20%;
+        }
+      }
+    }
   }
 }
 
@@ -30,6 +38,29 @@
 
     &.icon-delete {
       background-color: transparent;
+    }
+  }
+}
+
+.appealsMediaBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .appealsMediaBlock__text {
+    & + .appealsMediaBlock__text {
+      margin-top: 5px;
+    }
+  }
+
+  .appealsMediaBlock__link {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #6f7583;
+    text-decoration-skip-ink: none;
+
+    @include hover {
+      text-decoration-color: transparent;
     }
   }
 }

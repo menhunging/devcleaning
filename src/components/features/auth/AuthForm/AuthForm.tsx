@@ -35,6 +35,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ loading, authHandle }) => {
           type={showPassword ? "text" : "password"}
           placeholder="Пароль"
           name="password"
+          autoComplete="off"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required

@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
+
 import { getAppeals } from "@/store/slices/appealsSlice";
 
 import { addPlanner, getPlanner } from "@/store/slices/plannerSlice";
@@ -11,6 +14,7 @@ import PlannerPopup from "@/components/features/planner/PlannerPopup";
 import type { Planner } from "@/types/planner/planner";
 
 import "./AppealsPage.scss";
+import testImageJpg from "@/assets/img/test-images.jpg";
 
 const AppealsPage: React.FC = () => {
   // универсальный "пустой" Planner, лень ts переписывать
@@ -31,6 +35,7 @@ const AppealsPage: React.FC = () => {
     name_team: "",
     name_status: "",
     duration: null,
+    period: null,
     id_object: "",
     id_zone: "",
     id_user: "",
@@ -38,6 +43,7 @@ const AppealsPage: React.FC = () => {
   };
 
   const { loading, DATA: appeals } = useAppSelector((state) => state.appeals);
+  const { loading: loadingObjects } = useAppSelector((state) => state.objects);
   const { loading: loadingObject } = useAppSelector((state) => state.object);
 
   const dispatch = useAppDispatch();
@@ -45,6 +51,10 @@ const AppealsPage: React.FC = () => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
 
   const [currentPlanner, setCurrentPlanner] = useState<Planner | null>(null);
+
+  const [openFullGalleryID, setOpenFullGalleryID] = useState<number | null>(
+    null
+  ); // так надо чтобы можно было множество галлерей открывать на одной странице. Через ID
 
   const formatedDateAppeals = (apiDate: string, mode: string) => {
     const dateObj = new Date(apiDate.replace(" ", "T")); // заменяем пробел на T для корректного парсинга
@@ -82,8 +92,12 @@ const AppealsPage: React.FC = () => {
     }
   };
 
-  const onOpenModal = () => {
-    setAddModalOpen(true);
+  const onOpenModal = async () => {
+    const result = await dispatch(getObjects());
+
+    if (getObjects.fulfilled.match(result)) {
+      setAddModalOpen(true);
+    }
   };
 
   const OnCloseModal = () => {
@@ -92,7 +106,6 @@ const AppealsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    dispatch(getObjects());
     dispatch(getAppeals());
   }, []);
 
@@ -121,7 +134,7 @@ const AppealsPage: React.FC = () => {
                   <div className="table__cell">зона</div>
                   <div className="table__cell">Текст обращения</div>
                   <div className="table__cell">Кто обратился</div>
-                  {/* <div className="table__cell">Медиа</div> */}
+                  <div className="table__cell">Медиа</div>
                   <div className="table__cell">Статус</div>
                   <div className="table__cell"></div>
                 </div>
@@ -155,7 +168,42 @@ const AppealsPage: React.FC = () => {
                         <div className="table__cell">
                           {appealItem.contact_name}
                         </div>
-                        {/* <div className="table__cell">Смотреть</div> */}
+                        <div className="table__cell">
+                          {appealItem.gallery?.length ? (
+                            <div className="appealsMediaBlock">
+                              <span className="appealsMediaBlock__text">
+                                {appealItem.gallery?.length} фото
+                              </span>
+                              <span
+                                className="appealsMediaBlock__link"
+                                onClick={() =>
+                                  setOpenFullGalleryID(appealItem.id)
+                                }
+                              >
+                                Смотреть
+                              </span>
+
+                              {openFullGalleryID === appealItem.id && (
+                                <Lightbox
+                                  open={true}
+                                  close={() => setOpenFullGalleryID(null)}
+                                  carousel={{ finite: true }}
+                                  styles={{
+                                    container: {
+                                      backgroundColor: "rgba(0, 0, 0, 0.85)",
+                                    },
+                                  }}
+                                  slides={appealItem.gallery?.map(() => {
+                                    // return { src: item.photo };
+                                    return { src: testImageJpg }; // TODO вот тут я вывожу просто фото, а надо сделать чтобы выводилось именно с бэка, с бэка просто приходит уренда поэтому пока так
+                                  })}
+                                />
+                              )}
+                            </div>
+                          ) : (
+                            "-"
+                          )}
+                        </div>
                         <div className="table__cell">
                           {appealItem.status_success === 0 ? (
                             <span className="status status--active">
@@ -170,11 +218,15 @@ const AppealsPage: React.FC = () => {
                         <div className="table__cell">
                           <div className="appeleals-controls">
                             <span
-                              className="icon icon-add"
+                              className={
+                                loadingObjects
+                                  ? "icon icon-add disabled"
+                                  : "icon icon-add"
+                              }
                               onClick={() => {
                                 setCurrentPlanner({
                                   ...emptyPlanner,
-                                  name: "Задача по обращению",
+                                  name: `Задача по обращению №${appealItem.id}`,
                                   data_create: appealItem.date_create,
                                   id_object: String(appealItem.id_object),
                                   id_zone: String(appealItem.id_zone),
@@ -182,7 +234,13 @@ const AppealsPage: React.FC = () => {
                                 onOpenModal();
                               }}
                             ></span>
-                            <span className="icon icon-delete"></span>
+                            <span
+                              className={
+                                loadingObjects
+                                  ? "icon icon-delete disabled"
+                                  : "icon icon-delete"
+                              }
+                            ></span>
                           </div>
                         </div>
                       </div>

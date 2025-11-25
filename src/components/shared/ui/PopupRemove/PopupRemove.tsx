@@ -10,11 +10,13 @@ const PopupRemove: React.FC<objectRemove> = ({
 }) => {
   const titles: Record<string, string> = {
     deactivate: "Деактивация",
+    activeted: "Активация",
     delete: "Удалить",
   };
 
   const messages: Record<string, string> = {
     deactivate: "Вы уверены что хотите деактивировать сотрудника?",
+    activeted: "Вы уверены что хотите активировать сотрудника?",
     delete: "Вы уверены что хотите удалить?",
   };
 
@@ -29,7 +31,7 @@ const PopupRemove: React.FC<objectRemove> = ({
           Отмена
         </button>
         <button className="btn btn--green" onClick={onSuccess}>
-          {loading ? "Удаление..." : "Да"}
+          {loading ? "Обработка..." : "Да"}
         </button>
       </div>
     </div>
