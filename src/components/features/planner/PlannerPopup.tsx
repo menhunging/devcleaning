@@ -14,9 +14,10 @@ import TimePickerStartEnd from "@/components/shared/ui/DatePicker/TimePickerStar
 import DatePickerStart from "@/components/shared/ui/DatePicker/DatePickerStart/DatePickerStart";
 
 import "./PlannerPopup.scss";
+import DatePickerRepeat from "@/components/shared/ui/DatePicker/DatePickerRepeat/DatePickerRepeat";
 
 interface PlannerPopupProps {
-  mode?: "add" | "edit";
+  mode?: "add" | "edit" | "addAppels";
   loading: boolean;
   loadingObject: boolean;
   initialData?: Planner | null;
@@ -57,14 +58,19 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
 
     data_create: initialData?.data_create || "",
 
-    date_start: initialData?.date_start || "",
+    date: initialData?.date || [],
     data_end: initialData?.data_end || "",
 
     time_start: initialData?.time_start || "",
     time_end: initialData?.time_end || "",
 
+    repeat_start: initialData?.repeat_start || "",
+    repeat_end: initialData?.repeat_end || "",
+
     duration: initialData?.duration || null,
     period: initialData?.period || null,
+
+    days: initialData?.days || [],
   });
 
   const [formData, setFormData] = useState(initFormData(initialData));
@@ -73,23 +79,28 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
     formData.id_team ? "team" : "user"
   ); // табы для сотрудников и команды
 
-  const [activeDateTab, setActiveDateTab] = useState<"day" | "week">("day"); // табя для даты
+  const [activeDateTab, setActiveDateTab] = useState<"day" | "week">(
+    formData.days?.length ? "week" : "day"
+  ); // табя для даты
 
   const [activeTimeTab, setActiveTimeTab] = useState<"period" | "exact">(
     "exact"
   ); // табя для времени
 
-  const [selectedDays, setSelectedDays] = useState<string[]>([]);
-
-  const days = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
+  const days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 
   const toggleDay = (day: string) => {
-    setSelectedDays(
-      (prev) =>
-        prev.includes(day)
-          ? prev.filter((d) => d !== day) // убираем если уже выбран
-          : [...prev, day] // добавляем если не выбран
-    );
+    setFormData((prevFormData) => {
+      const prevDays = prevFormData.days || [];
+      const updatedDays = prevDays.includes(day)
+        ? prevDays.filter((d) => d !== day)
+        : [...prevDays, day];
+
+      return {
+        ...prevFormData,
+        days: updatedDays,
+      };
+    });
   };
 
   const { optionsObjects, optionsZones, optionsUsers, optionsTeams } =
@@ -156,10 +167,31 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
     }));
   };
 
+  const resetScheduleFields = () => {
+    setFormData((prev) => ({
+      ...prev,
+      date: [],
+      days: [],
+      repeat_start: "",
+      repeat_end: "",
+      time_start: "",
+      time_end: "",
+    }));
+  };
+
+  const handleClose = () => {
+    resetScheduleFields();
+    handleModalClose();
+  };
+
   const handeSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
   };
+
+  const hasDates =
+    formData.date.length > 0 ||
+    (formData.days.length > 0 && formData.repeat_start && formData.repeat_end);
 
   const btnDisabled =
     loading ||
@@ -169,7 +201,7 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
     !formData.id_zone ||
     !(formData.id_team || formData.id_user) ||
     !formData.description ||
-    !formData.date_start ||
+    !hasDates ||
     !formData.time_start ||
     !formData.time_end;
 
@@ -187,11 +219,15 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
     setActiveTab(formData.id_team ? "team" : "user");
   }, [formData.id_team, dispatch]);
 
+  useEffect(() => {
+    setActiveDateTab(formData.days?.length ? "week" : "day");
+  }, [formData.days]);
+
   return (
-    <Modal isOpen={isOpen} onClose={handleModalClose}>
+    <Modal isOpen={isOpen} onClose={handleClose}>
       <div className="popup-planer">
         <div className="popup-planer__head">
-          {mode === "edit" ? formData.name : "Новое задание"}
+          {mode !== "add" ? formData.name : "Новое задание"}
         </div>
 
         <form className="popup-planer__form" onSubmit={handeSubmit}>
@@ -334,9 +370,15 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
             </div>
           </div>
 
-          <div className="popup-planer__col">
+          <div
+            className={
+              mode !== "edit"
+                ? "popup-planer__col"
+                : "popup-planer__col popup-planer__col--disabled"
+            }
+          >
             <div className="input-date">
-              <label htmlFor="date_start">Дата выполнения:</label>
+              <label>Дата выполнения:</label>
 
               <div className="tab-input-date tab-input-date--date">
                 <div className="tab-input-date__head">
@@ -344,7 +386,15 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
                     className={`input-date__title ${
                       activeDateTab === "day" ? "active" : ""
                     }`}
-                    onClick={() => setActiveDateTab("day")}
+                    onClick={() => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        days: [],
+                        repeat_start: "",
+                        repeat_end: "",
+                      }));
+                      setActiveDateTab("day");
+                    }}
                   >
                     Выбрать дни
                   </span>
@@ -352,7 +402,13 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
                     className={`input-date__title ${
                       activeDateTab === "week" ? "active" : ""
                     }`}
-                    onClick={() => setActiveDateTab("week")}
+                    onClick={() => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        date: [],
+                      }));
+                      setActiveDateTab("week");
+                    }}
                   >
                     Каждую неделю
                   </span>
@@ -372,7 +428,7 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
                           <span
                             key={day}
                             className={`dayCircle__circle ${
-                              selectedDays.includes(day) ? "active" : ""
+                              formData.days.includes(day) ? "active" : ""
                             }`}
                             onClick={() => toggleDay(day)}
                           >
@@ -383,16 +439,18 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
                       <div className="blockDatePicker">
                         <div className="blockDatePicker__time">
                           <span>Начало повторов:</span>
-                          <DatePickerStart
+                          <DatePickerRepeat
                             formData={formData}
                             setFormData={setFormData}
+                            mode={"repeat_start"}
                           />
                         </div>
                         <div className="blockDatePicker__time">
                           <span>Конец повторов:</span>
-                          <DatePickerStart
+                          <DatePickerRepeat
                             formData={formData}
                             setFormData={setFormData}
+                            mode={"repeat_end"}
                           />
                         </div>
                       </div>
@@ -403,7 +461,7 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
             </div>
 
             <div className="input-date">
-              <label htmlFor="date_start">Время выполнения:</label>
+              <label>Время выполнения:</label>
 
               <div className="tab-input-date tab-input-date--time">
                 <div className="tab-input-date__head">
@@ -447,7 +505,7 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
             <button
               type="button"
               className="btn btn--transparent"
-              onClick={handleModalClose}
+              onClick={handleClose}
             >
               Отмена
             </button>

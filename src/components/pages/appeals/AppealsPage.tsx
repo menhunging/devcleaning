@@ -23,7 +23,8 @@ const AppealsPage: React.FC = () => {
     name: "",
     data_create: "",
     description: "",
-    date_start: "",
+    date: [],
+    days: [],
     time_start: "",
     data_end: "",
     time_end: "",
@@ -40,6 +41,8 @@ const AppealsPage: React.FC = () => {
     id_zone: "",
     id_user: "",
     id_team: "",
+    repeat_start: "",
+    repeat_end: "",
   };
 
   const { loading, DATA: appeals } = useAppSelector((state) => state.appeals);
@@ -258,7 +261,7 @@ const AppealsPage: React.FC = () => {
       </div>
 
       <PlannerPopup
-        mode={"edit"}
+        mode={"addAppels"}
         loading={loading}
         loadingObject={loadingObject}
         initialData={currentPlanner ? currentPlanner : null}

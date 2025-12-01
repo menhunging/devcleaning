@@ -3,7 +3,6 @@ export interface Planner {
   name: string;
   data_create: string;
   description: string;
-  date_start: string;
   time_start: string;
   data_end: string;
   time_end: string;
@@ -21,6 +20,12 @@ export interface Planner {
   id_zone: string;
   id_user: string;
   id_team: string;
+
+  repeat_start: string;
+  repeat_end: string;
+
+  date: string[]; // просто множество дат
+  days: string[]; // дни недели
 }
 
 export interface PlannerForm {

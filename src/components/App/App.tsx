@@ -24,7 +24,7 @@ const App: React.FC = () => {
     if (isAuthenticated) {
       dispatch(authUser());
     }
-  }, []);
+  }, [isAuthenticated, dispatch]);
 
   const protectedRoutes = [
     { path: "/", element: <ObjectsPage /> },

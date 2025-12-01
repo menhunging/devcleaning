@@ -20,6 +20,11 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+
+    &--disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
   }
 
   textarea {
@@ -28,9 +33,8 @@
 
 .table {
   &.table--planner {
-
-    .table__header{
-      .table__cell{
+    .table__header {
+      .table__cell {
         white-space: nowrap;
       }
     }

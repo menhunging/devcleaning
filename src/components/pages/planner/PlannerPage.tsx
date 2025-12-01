@@ -129,8 +129,13 @@ const PlannerPage: React.FC = () => {
                       {plannerItem.name_team || "-"}
                     </div>
                     <div className="table__cell">
-                      {useFormatedDate(plannerItem.date_start)}
+                      {plannerItem.date?.[0]
+                        ? useFormatedDate(plannerItem.date[0])
+                        : plannerItem.repeat_start
+                        ? useFormatedDate(plannerItem.repeat_start)
+                        : null}
                     </div>
+
                     <div className="table__cell">
                       {normalizeTime(plannerItem.time_start)}
                     </div>
@@ -160,13 +165,6 @@ const PlannerPage: React.FC = () => {
                             onOpenModal("edit");
                           }}
                         ></span>
-                        {/* <span
-                                className="icon-delete"
-                                onClick={() => {
-                                  setCurrentUser(user);
-                                  setDeleteModalOpen(true);
-                                }}
-                              ></span> */}
                       </div>
                     </div>
                   </div>
