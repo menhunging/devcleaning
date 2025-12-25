@@ -48,13 +48,10 @@ const Header: React.FC = () => {
         >
           Планер
         </NavLink>
-        {/* TODO потом удаляем этот класс isTempDisabled , просто пока скрываем, потому что не делали в первом этапе */}
-        <Link
-          to="/"
-          className="menu__link menu__link--dashboard isTempDisabled"
-        >
+        <NavLink to="/dashboard" className="menu__link menu__link--dashboard">
           Дашборд
-        </Link>
+        </NavLink>
+
         <NavLink
           to="/appeals"
           className={({ isActive }) =>
@@ -63,15 +60,21 @@ const Header: React.FC = () => {
         >
           Обращения
         </NavLink>
-        <Link to="/" className="menu__link menu__link--docs isTempDisabled">
+
+        {/* TODO потом удаляем этот класс isTempDisabled , просто пока скрываем, потому что не делали в первом этапе */}
+
+        <NavLink to="/" className="menu__link menu__link--docs isTempDisabled">
           Рабочие документы
-        </Link>
-        <Link to="/" className="menu__link menu__link--insp isTempDisabled">
+        </NavLink>
+        <NavLink to="/" className="menu__link menu__link--insp isTempDisabled">
           Инспектор
-        </Link>
-        <Link to="/" className="menu__link menu__link--educat isTempDisabled">
+        </NavLink>
+        <NavLink
+          to="/"
+          className="menu__link menu__link--educat isTempDisabled"
+        >
           Обучение
-        </Link>
+        </NavLink>
       </nav>
 
       <div className="header-controls">

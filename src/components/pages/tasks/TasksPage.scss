@@ -1,0 +1,57 @@
+.page--tasks {
+  width: 100%;
+
+  .page__controls {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .table__header {
+    .table__cell {
+      vertical-align: top;
+      white-space: initial;
+      word-wrap: break-word;
+    }
+  }
+
+  .table__cell {
+    &:first-child {
+      white-space: nowrap;
+    }
+
+    &:nth-child(2) {
+    }
+
+    &:nth-child(3) {
+    }
+  }
+}
+
+.popup-tasks__head {
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 24px;
+  margin-bottom: 25px;
+}
+
+.popup-tasks__form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+
+  .popup-tasks__col {
+    width: 410px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    &--disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+  }
+
+  textarea {
+  }
+}

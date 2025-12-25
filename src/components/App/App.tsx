@@ -13,6 +13,7 @@ import ProtectedRoute from "@/components/shared/routes/ProtectedRoute";
 import CatalogsPage from "../pages/catalog/CatalogsPage";
 import NotFoundPage from "../pages/notPage/NotFoundPage";
 import PlannerPage from "../pages/planner/PlannerPage";
+import TasksPage from "../pages/tasks/TasksPage";
 import AppealsPage from "../pages/appeals/AppealsPage";
 
 const App: React.FC = () => {
@@ -31,6 +32,7 @@ const App: React.FC = () => {
     { path: "/object/:id", element: <ObjectPage /> },
     { path: "/catalog", element: <CatalogsPage /> },
     { path: "/planer", element: <PlannerPage /> },
+    { path: "/dashboard", element: <TasksPage /> },
     { path: "/appeals", element: <AppealsPage /> },
   ];
 

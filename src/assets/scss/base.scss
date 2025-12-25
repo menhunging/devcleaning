@@ -516,6 +516,12 @@ picture {
       border-bottom-right-radius: 10px;
       text-align: right;
     }
+
+    .desc {
+      color: #6f7583;
+      display: block;
+      opacity: 0.7;
+    }
   }
 
   .table__row:last-child .table__cell {
@@ -1006,4 +1012,13 @@ picture {
 .disabled {
   opacity: 0.3;
   pointer-events: none;
+}
+
+.track-min {
+  white-space: nowrap;
+  padding: 5px 10px;
+  color: #5ad050;
+  font-weight: 600;
+  background-color: #68f35c33;
+  border-radius: 50px;
 }

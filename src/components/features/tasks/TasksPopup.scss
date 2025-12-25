@@ -1,0 +1,76 @@
+.popup-tasks {
+  width: 100%;
+  max-width: 900px;
+}
+
+.popup-tasks__head {
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 24px;
+  margin-bottom: 25px;
+}
+
+.popup-tasks__form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+
+  .popup-tasks__col {
+    width: 410px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    &--disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+  }
+
+  .popup-tasks__users {
+    margin-top: 20px;
+
+    .popup-tasks__users__tabs {
+      padding: 0 15px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 16px;
+      margin-bottom: 10px;
+
+      span {
+        cursor: pointer;
+        text-decoration: underline;
+        text-decoration-color: transparent;
+        transition: text-decoration 0.3s;
+        color: #6f7583;
+        text-decoration-skip-ink: none;
+
+        &.active {
+          text-decoration-color: $colorBlack;
+          color: $colorBlack;
+        }
+      }
+
+      .active {
+      }
+    }
+  }
+
+  textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+}
+
+.input-item--times {
+  border-radius: 10px;
+  background-color: #f3f6f8;
+  padding: 20px 10px 10px;
+}
+
+.popup-tasks__times {
+  margin-top: 15px;
+}
