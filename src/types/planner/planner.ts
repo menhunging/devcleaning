@@ -26,7 +26,7 @@ export interface Planner {
 
   date: string[]; // просто множество дат
   days: string[]; // дни недели
-  binding_appeal?: number | null;
+  binding_appeal: number | null;
 }
 
 export interface PlannerForm {
