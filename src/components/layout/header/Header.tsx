@@ -63,18 +63,15 @@ const Header: React.FC = () => {
 
         {/* TODO потом удаляем этот класс isTempDisabled , просто пока скрываем, потому что не делали в первом этапе */}
 
-        <NavLink to="/" className="menu__link menu__link--docs isTempDisabled">
+        <Link to="/" className="menu__link menu__link--docs isTempDisabled">
           Рабочие документы
-        </NavLink>
-        <NavLink to="/" className="menu__link menu__link--insp isTempDisabled">
+        </Link>
+        <Link to="/" className="menu__link menu__link--insp isTempDisabled">
           Инспектор
-        </NavLink>
-        <NavLink
-          to="/"
-          className="menu__link menu__link--educat isTempDisabled"
-        >
+        </Link>
+        <Link to="/" className="menu__link menu__link--educat isTempDisabled">
           Обучение
-        </NavLink>
+        </Link>
       </nav>
 
       <div className="header-controls">

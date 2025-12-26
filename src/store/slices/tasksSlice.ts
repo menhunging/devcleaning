@@ -102,6 +102,30 @@ export const editTaskByID = createAsyncThunk<
   }
 });
 
+export const deleteTasks = createAsyncThunk<
+  boolean,
+  string,
+  { rejectValue: string }
+>("tasks/deleteTasks", async (payload, thunkAPI) => {
+  try {
+    const response = await api.post<ITaskFormData>("delete_planner_user/", {
+      id: payload,
+    });
+
+    const { success, message } = response.data;
+
+    if (!success) {
+      return thunkAPI.rejectWithValue(
+        message || "Ошибка при добавлении обращения"
+      );
+    }
+
+    return success;
+  } catch (err: any) {
+    return thunkAPI.rejectWithValue("Ошибка при добавлении обращения");
+  }
+});
+
 const tasksSlice = createSlice({
   name: "tasks",
   initialState,
@@ -135,6 +159,19 @@ const tasksSlice = createSlice({
         state.loading = false;
       })
       .addCase(editTaskByID.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // deleteTasks
+      .addCase(deleteTasks.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteTasks.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(deleteTasks.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

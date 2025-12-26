@@ -71,6 +71,7 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
     period: initialData?.period || null,
 
     days: initialData?.days || [],
+    binding_appeal: initialData?.binding_appeal || null,
   });
 
   const [formData, setFormData] = useState(initFormData(initialData));

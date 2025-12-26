@@ -38,6 +38,10 @@
 
     &.icon-delete {
       background-color: transparent;
+
+      @include hover {
+        background-color: $colorWhite;
+      }
     }
   }
 }

@@ -4,7 +4,7 @@ export interface Appeal {
   contact_name: string;
   result: number;
   like_a: number;
-  status_success: number;
+  status: number;
   name_zone: string;
   name_object: string;
   date_create: string;

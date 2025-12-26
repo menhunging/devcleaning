@@ -25,12 +25,6 @@ export const getAppeals = createAsyncThunk<
 
     const { DATA } = response.data;
 
-    // if (!success) {
-    //   return thunkAPI.rejectWithValue(
-    //     message || "Ошибка при получении обращений"
-    //   );
-    // }
-
     return DATA;
   } catch (err: any) {
     return thunkAPI.rejectWithValue("Ошибка при получении обращений");
@@ -54,6 +48,30 @@ export const addAppeal = createAsyncThunk<
     }
 
     return DATA;
+  } catch (err: any) {
+    return thunkAPI.rejectWithValue("Ошибка при добавлении обращения");
+  }
+});
+
+export const deleteAppeal = createAsyncThunk<
+  boolean,
+  number,
+  { rejectValue: string }
+>("appeals/deleteAppeal", async (payload, thunkAPI) => {
+  try {
+    const response = await api.post<AppealsForm>("delete_appeal/", {
+      id: payload,
+    });
+
+    const { success, message } = response.data;
+
+    if (!success) {
+      return thunkAPI.rejectWithValue(
+        message || "Ошибка при добавлении обращения"
+      );
+    }
+
+    return success;
   } catch (err: any) {
     return thunkAPI.rejectWithValue("Ошибка при добавлении обращения");
   }
@@ -89,6 +107,19 @@ const appealsSlice = createSlice({
         state.DATA = action.payload;
       })
       .addCase(addAppeal.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Ошибка";
+      })
+
+      // deleteAppeal
+      .addCase(deleteAppeal.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteAppeal.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(deleteAppeal.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Ошибка";
       });

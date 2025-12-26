@@ -4,17 +4,21 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 
-import { getAppeals } from "@/store/slices/appealsSlice";
+import type { Planner } from "@/types/planner/planner";
+import type { Appeal } from "@/types/appeals/appeals";
+
+import { deleteAppeal, getAppeals } from "@/store/slices/appealsSlice";
 
 import { addPlanner, getPlanner } from "@/store/slices/plannerSlice";
 import { getObjects } from "@/store/slices/objectsSlice";
 
 import AppealsPageSkeleton from "@/components/features/appeals/Skeleton/AppealsPageSkeleton";
+import Modal from "@/components/shared/ui/Modal/Modal";
+import PopupRemove from "@/components/shared/ui/PopupRemove/PopupRemove";
 import PlannerPopup from "@/components/features/planner/PlannerPopup";
-import type { Planner } from "@/types/planner/planner";
 
-import "./AppealsPage.scss";
 import testImageJpg from "@/assets/img/test-images.jpg";
+import "./AppealsPage.scss";
 
 const AppealsPage: React.FC = () => {
   // универсальный "пустой" Planner, лень ts переписывать
@@ -43,6 +47,7 @@ const AppealsPage: React.FC = () => {
     id_team: "",
     repeat_start: "",
     repeat_end: "",
+    binding_appeal: null,
   };
 
   const { loading, DATA: appeals } = useAppSelector((state) => state.appeals);
@@ -54,6 +59,9 @@ const AppealsPage: React.FC = () => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
 
   const [currentPlanner, setCurrentPlanner] = useState<Planner | null>(null);
+
+  const [currentAppeal, setCurrentAppeal] = useState<Appeal | null>(null);
+  const [isRemoveModalOpen, setRemoveModalOpen] = useState<boolean>(false);
 
   const [openFullGalleryID, setOpenFullGalleryID] = useState<number | null>(
     null
@@ -95,6 +103,14 @@ const AppealsPage: React.FC = () => {
     }
   };
 
+  const handleDeleteAppeal = async () => {
+    const result = await dispatch(deleteAppeal(currentAppeal?.id as number));
+    if (deleteAppeal.fulfilled.match(result)) {
+      await dispatch(getAppeals());
+      OnCloseModal();
+    }
+  };
+
   const onOpenModal = async () => {
     const result = await dispatch(getObjects());
 
@@ -105,6 +121,7 @@ const AppealsPage: React.FC = () => {
 
   const OnCloseModal = () => {
     setCurrentPlanner(null);
+    setRemoveModalOpen(false);
     setAddModalOpen(false);
   };
 
@@ -207,22 +224,36 @@ const AppealsPage: React.FC = () => {
                             "-"
                           )}
                         </div>
+
                         <div className="table__cell">
-                          {appealItem.status_success === 0 ? (
-                            <span className="status status--active">
-                              В работе
-                            </span>
-                          ) : (
-                            <span className="status status--success">
-                              Выполнено
-                            </span>
-                          )}
+                          {(() => {
+                            switch (appealItem.status) {
+                              case 1:
+                                return (
+                                  <span className="status status--active">
+                                    В работе
+                                  </span>
+                                );
+                              case 2:
+                                return (
+                                  <span className="status status--success">
+                                    Выполнено
+                                  </span>
+                                );
+                              default:
+                                return (
+                                  <span className="status status--not-active">
+                                    Не назначено
+                                  </span>
+                                );
+                            }
+                          })()}
                         </div>
                         <div className="table__cell">
                           <div className="appeleals-controls">
                             <span
                               className={
-                                loadingObjects
+                                loadingObjects || appealItem.status === 1
                                   ? "icon icon-add disabled"
                                   : "icon icon-add"
                               }
@@ -233,6 +264,7 @@ const AppealsPage: React.FC = () => {
                                   data_create: appealItem.date_create,
                                   id_object: String(appealItem.id_object),
                                   id_zone: String(appealItem.id_zone),
+                                  binding_appeal: appealItem.id,
                                 });
                                 onOpenModal();
                               }}
@@ -243,6 +275,10 @@ const AppealsPage: React.FC = () => {
                                   ? "icon icon-delete disabled"
                                   : "icon icon-delete"
                               }
+                              onClick={() => {
+                                setRemoveModalOpen(true);
+                                setCurrentAppeal(appealItem);
+                              }}
                             ></span>
                           </div>
                         </div>
@@ -260,6 +296,8 @@ const AppealsPage: React.FC = () => {
         )}
       </div>
 
+      {/* попап для создания задачи по обращению */}
+
       <PlannerPopup
         mode={"addAppels"}
         loading={loading}
@@ -269,6 +307,18 @@ const AppealsPage: React.FC = () => {
         handleModalClose={OnCloseModal}
         onSubmit={handleAddTask}
       />
+
+      {/* попап на удаление обращения */}
+      <Modal
+        isOpen={isRemoveModalOpen}
+        onClose={() => setRemoveModalOpen(false)}
+      >
+        <PopupRemove
+          loading={loading}
+          onSuccess={handleDeleteAppeal}
+          onClose={() => setRemoveModalOpen(false)}
+        />
+      </Modal>
     </div>
   );
 };

@@ -5,7 +5,11 @@ import type { ITask } from "@/types/tasks/tasks";
 
 import TasksPopup from "@/components/features/tasks/TasksPopup";
 
-import { getTasksAll, editTaskByID } from "@/store/slices/tasksSlice";
+import {
+  getTasksAll,
+  editTaskByID,
+  deleteTasks,
+} from "@/store/slices/tasksSlice";
 
 import { useFormatedDate } from "@/utils/forPlanner/useFormatedDate";
 import { normalizeTime } from "@/utils/forPlanner/normalizeTime";
@@ -75,9 +79,11 @@ const TasksPage: React.FC = () => {
   };
 
   const handleDeleteTask = async () => {
-    // TODO: Реализовать удаление задачи
-    console.log("Delete task:", currentTask);
-    onCloseModal();
+    const result = await dispatch(deleteTasks(currentTask?.id as string));
+    if (deleteTasks.fulfilled.match(result)) {
+      await dispatch(getTasksAll({}));
+      onCloseModal();
+    }
   };
 
   function timeToMinutes(timeStr: string) {
@@ -175,7 +181,11 @@ const TasksPage: React.FC = () => {
                     <div className="table__cell">
                       {normalizeTime(taskItem.time_end)}
                     </div>
-                    <div className="table__cell">бэка нет</div>
+                    <div className="table__cell">
+                      {taskItem.data_success
+                        ? taskItem.data_success.slice(0, -3) // 16:13:58 убрал сек
+                        : "-"}{" "}
+                    </div>
                     <div className="table__cell">{taskItem.duration} мин</div>
 
                     <div className="table__cell">
