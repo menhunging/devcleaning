@@ -136,10 +136,9 @@ const UsersForm: React.FC<UsersFormProps> = ({
     loading ||
     !formData.name ||
     !formData.surname ||
-    !formData.email ||
     !formData.login ||
+    (formData.id_object as any[]).length === 0 ||
     !formData.role;
-
   if (mode === "add") {
     btnDisabled = btnDisabled || !formData.password;
   }

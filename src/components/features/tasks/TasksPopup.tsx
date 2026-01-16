@@ -68,6 +68,7 @@ const TasksPopup: React.FC<TasksPopupProps> = ({
     why_pause_photo: initialData?.why_pause_photo || null,
     time_current: initialData?.time_current || null,
     data_success: initialData?.data_success || "",
+    time_start_fact: initialData?.time_start_fact || "",
   });
 
   const [formData, setFormData] = useState(initFormData(initialData));

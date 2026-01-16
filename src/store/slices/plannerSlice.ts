@@ -107,6 +107,30 @@ export const changeStatus = createAsyncThunk<
   }
 });
 
+export const deletePlanner = createAsyncThunk<
+  boolean,
+  number,
+  { rejectValue: string }
+>("planner/deletePlanner", async (payload, thunkAPI) => {
+  try {
+    const response = await api.post<PlannerForm>("delete_planner/", {
+      id: payload,
+    });
+
+    const { success, message } = response.data;
+
+    if (!success) {
+      return thunkAPI.rejectWithValue(
+        message || "Ошибка при удалении таски планера"
+      );
+    }
+
+    return success;
+  } catch (err: any) {
+    return thunkAPI.rejectWithValue("Ошибка при удалении таски планера");
+  }
+});
+
 const plannerSlice = createSlice({
   name: "planner",
   initialState,
@@ -149,7 +173,11 @@ const plannerSlice = createSlice({
       })
       .addCase(getPlanner.fulfilled, (state, action) => {
         state.loading = false;
-        state.DATA = action.payload;
+        // state.DATA = action.payload;
+        // мутируем , чтобы показывать сначала новый таск, короче просто revert делаю
+        state.DATA = Array.isArray(action.payload)
+          ? action.payload.slice().reverse()
+          : [];
       })
       .addCase(getPlanner.rejected, (state, action) => {
         state.loading = false;
@@ -181,6 +209,19 @@ const plannerSlice = createSlice({
       .addCase(changeStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Ошибка";
+      })
+
+      // deletePlanner
+      .addCase(deletePlanner.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deletePlanner.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(deletePlanner.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

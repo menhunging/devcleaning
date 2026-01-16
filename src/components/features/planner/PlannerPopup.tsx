@@ -371,13 +371,7 @@ const PlannerPopup: React.FC<PlannerPopupProps> = ({
             </div>
           </div>
 
-          <div
-            className={
-              mode !== "edit"
-                ? "popup-planer__col"
-                : "popup-planer__col popup-planer__col--disabled"
-            }
-          >
+          <div className={"popup-planer__col"}>
             <div className="input-date">
               <label>Дата выполнения:</label>
 

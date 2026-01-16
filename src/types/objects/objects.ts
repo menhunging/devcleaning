@@ -2,6 +2,14 @@
 
 import type { zone } from "../zones/zones";
 
+export interface ObjectGalleryItem {
+  id: number;
+  id_photo: number;
+  data_create: string;
+  photo: string;
+  date_start: string;
+}
+
 export interface ObjectItem {
   id: string;
   name: string;
@@ -13,6 +21,7 @@ export interface ObjectItem {
   users_count: number;
   manager: number;
   zones: zone[];
+  gallery: ObjectGalleryItem[];
   appeal: [
     {
       id: 1;

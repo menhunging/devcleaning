@@ -1,5 +1,3 @@
-import testImageJpg from "@/assets/img/test-images.jpg";
-
 import { useState } from "react";
 
 import type { ObjectItem } from "@/types/objects/objects";
@@ -7,22 +5,9 @@ import type { ObjectItem } from "@/types/objects/objects";
 import SwiperSlider from "@/components/shared/ui/Swiper/SwiperSlider";
 import Zones from "../Zones/Zones/Zones";
 
-import "./ObjectTabs.scss";
 import { ObjectPageItem, ObjectPageItemUsers } from "./ObjectTabsSkeleton";
 
-const images = [
-  testImageJpg,
-  testImageJpg,
-  testImageJpg,
-  testImageJpg,
-  testImageJpg,
-  testImageJpg,
-  testImageJpg,
-  testImageJpg,
-  testImageJpg,
-  testImageJpg,
-  testImageJpg,
-];
+import "./ObjectTabs.scss";
 
 interface ObjectTabsProps {
   loading: boolean;
@@ -31,6 +16,11 @@ interface ObjectTabsProps {
 
 const ObjectTabs = ({ loading, obj }: ObjectTabsProps) => {
   const [activeTab, setActiveTab] = useState<"objects" | "zones">("objects");
+
+  const galleryImages =
+    obj?.gallery?.map(
+      (item) => `${import.meta.env.VITE_API_BASE_URL}${item.photo}`
+    ) ?? [];
 
   return (
     <div className="objectTabs">
@@ -170,52 +160,23 @@ const ObjectTabs = ({ loading, obj }: ObjectTabsProps) => {
               <div className="object-page__item">
                 <span className="object-page__caption">Нарушения</span>
 
-                {obj?.appeal?.length ? (
-                  <div className="object-requests">
-                    {obj?.appeal.map((appealItem) => {
-                      return (
-                        <div
-                          className="object-requests__item"
-                          key={appealItem.id}
-                        >
-                          <span className="object-requests__name">
-                            {appealItem.name_zone}
-                          </span>
-                          <span className="object-requests__date">
-                            {/* просто преобразуем в наш формат дату */}
-                            {new Date(
-                              appealItem.date_create.replace(" ", "T")
-                            ).toLocaleDateString("ru-RU", {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "2-digit",
-                            })}
-                          </span>
-                          <span className="object-requests__work">
-                            {appealItem.message}
-                          </span>
-                          <span className="object-requests__status pass">
-                            {appealItem.status_success === 0
-                              ? "Пропуск"
-                              : "Выполнено"}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div className="empty-text">Здесь ничего нет </div>
-                )}
+                <div className="empty-text">Здесь ничего нет </div>
               </div>
             )}
 
             <div className="object-page__item object-page__item--gallery object-page__item--full">
               <span className="object-page__caption">
                 Галерея
-                <span className="object-page__desc">10</span>
+                <span className="object-page__desc">
+                  {galleryImages.length}
+                </span>
               </span>
 
-              <SwiperSlider images={images} slidesPerView={8} />
+              {galleryImages.length > 0 ? (
+                <SwiperSlider images={galleryImages} slidesPerView={8} />
+              ) : (
+                <span className="empty-text">Пока в обьекте нет фото</span>
+              )}
             </div>
           </div>
         </div>

@@ -9,22 +9,29 @@ import {
   getTasksAll,
   editTaskByID,
   deleteTasks,
+  addTask,
 } from "@/store/slices/tasksSlice";
 
 import { useFormatedDate } from "@/utils/forPlanner/useFormatedDate";
 import { normalizeTime } from "@/utils/forPlanner/normalizeTime";
 
-import "./TasksPage.scss";
 import { getObjects } from "@/store/slices/objectsSlice";
 import { fetchUsers } from "@/store/slices/usersSlice";
 import Modal from "@/components/shared/ui/Modal/Modal";
 import PopupRemove from "@/components/shared/ui/PopupRemove/PopupRemove";
 
-const statuses: Record<string, string> = {
-  "1": "В работе",
-  "2": "Выполнено",
-  "3": "На паузе",
-  "4": "Пропуск",
+import "./TasksPage.scss";
+
+type StatusConfig = {
+  label: string;
+  className: string;
+};
+
+const statuses: Record<string, StatusConfig> = {
+  "1": { label: "В работе", className: "status--active" },
+  "2": { label: "Выполнено", className: "status--success" },
+  "3": { label: "На паузе", className: "status--not-active" },
+  "4": { label: "Пропуск", className: "status--skipped" },
 };
 
 const TasksPage: React.FC = () => {
@@ -54,8 +61,26 @@ const TasksPage: React.FC = () => {
   };
 
   const handleAddTask = async (formData: ITask) => {
-    console.log("Add task:", formData);
-    onCloseModal();
+    const result = await dispatch(
+      addTask({
+        description: formData.description,
+        id_object: String(formData.id_object),
+        id_zone: String(formData.id_zone),
+        id_user: String(formData.id_user),
+        id_team: String(formData.id_team),
+        time_start: formData.time_start,
+        time_end: formData.time_end,
+        duration: String(formData.duration),
+        date_start: formData.date_start,
+        data_create: new Date().toISOString().split("T")[0],
+        name: formData.name,
+      })
+    );
+
+    if (addTask.fulfilled.match(result)) {
+      onCloseModal();
+      dispatch(getTasksAll({}));
+    }
   };
 
   const handleUpdateTask = async (formData: ITask) => {
@@ -145,6 +170,7 @@ const TasksPage: React.FC = () => {
               </div>
               <div className="table__cell">Трекер</div>
 
+              <div className="table__cell">Причина паузы</div>
               <div className="table__cell">Статус</div>
               <div className="table__cell"></div>
             </div>
@@ -176,7 +202,11 @@ const TasksPage: React.FC = () => {
                       {normalizeTime(taskItem.time_start)}
                     </div>
 
-                    <div className="table__cell">бэка нет</div>
+                    <div className="table__cell">
+                      {taskItem.time_start_fact
+                        ? taskItem.time_start_fact.slice(0, -3) // 16:13:58 убрал сек
+                        : "-"}{" "}
+                    </div>
 
                     <div className="table__cell">
                       {normalizeTime(taskItem.time_end)}
@@ -199,7 +229,17 @@ const TasksPage: React.FC = () => {
                     </div>
 
                     <div className="table__cell">
-                      {statuses[taskItem.status]}
+                      {taskItem.why_name ? taskItem.why_name : "-"}
+                    </div>
+
+                    <div className="table__cell">
+                      <span
+                        className={`status ${
+                          statuses[taskItem.status]?.className
+                        }`}
+                      >
+                        {statuses[taskItem.status]?.label}
+                      </span>
                     </div>
 
                     <div className="table__cell">

@@ -37,7 +37,7 @@ const Zones: React.FC = () => {
 
     if (obj) {
       FormData.id_object = obj.id;
-      FormData.qr = "https://fouro.ru/"; // пока не передаем никакой qr
+      // FormData.qr = `http://devclear.ru/zone/${FormData.id_zone}`; // будем на бэке создавать qr
 
       const result = await dispatch(addZone(FormData));
 

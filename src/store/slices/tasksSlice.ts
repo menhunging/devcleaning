@@ -73,6 +73,40 @@ export const getTasksAll = createAsyncThunk<
   }
 });
 
+export const addTask = createAsyncThunk<
+  boolean,
+  {
+    description: string;
+    id_object: string;
+    id_zone: string;
+    id_user: string;
+    id_team: string;
+    time_start: string;
+    time_end: string;
+    duration: string;
+    date_start: string;
+    data_create: string;
+    name: string;
+  },
+  { rejectValue: string }
+>("tasks/addTask", async (payload, thunkAPI) => {
+  try {
+    const response = await api.post("add_planner_user/", payload);
+
+    const { success, message } = response.data;
+
+    if (!success) {
+      return thunkAPI.rejectWithValue(
+        message || "Ошибка при добавлении задачи"
+      );
+    }
+
+    return success;
+  } catch (err: any) {
+    return thunkAPI.rejectWithValue("Ошибка при добавлении задачи");
+  }
+});
+
 export const editTaskByID = createAsyncThunk<
   boolean,
   {
@@ -143,9 +177,26 @@ const tasksSlice = createSlice({
       })
       .addCase(getTasksAll.fulfilled, (state, action) => {
         state.loading = false;
-        state.DATA = action.payload;
+        // state.DATA = action.payload;
+        // мутируем , чтобы показывать сначала новый таск, короче просто revert делаю
+        state.DATA = Array.isArray(action.payload)
+          ? action.payload.slice().reverse()
+          : [];
       })
       .addCase(getTasksAll.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // addTask
+      .addCase(addTask.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addTask.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(addTask.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })

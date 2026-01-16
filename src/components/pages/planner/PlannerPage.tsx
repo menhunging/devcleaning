@@ -10,6 +10,7 @@ import { fetchUsers } from "@/store/slices/usersSlice";
 import {
   addPlanner,
   changeStatus,
+  deletePlanner,
   getPlanner,
   updatePlanner,
 } from "@/store/slices/plannerSlice";
@@ -19,6 +20,8 @@ import { normalizeTime } from "@/utils/forPlanner/normalizeTime";
 import { Switcher } from "@/components/shared/ui/Switcher/Switcher";
 
 import "./PlannerPage.scss";
+import Modal from "@/components/shared/ui/Modal/Modal";
+import PopupRemove from "@/components/shared/ui/PopupRemove/PopupRemove";
 
 const PlannerPage: React.FC = () => {
   const { loading, DATA: planners } = useAppSelector((state) => state.planner);
@@ -26,6 +29,7 @@ const PlannerPage: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const [currentPlanner, setCurrentPlanner] = useState<Planner | null>(null);
+  const [isRemoveModalOpen, setRemoveModalOpen] = useState<boolean>(false);
 
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
@@ -65,6 +69,14 @@ const PlannerPage: React.FC = () => {
     if (updatePlanner.fulfilled.match(result)) {
       OnCloseModal();
       dispatch(getPlanner());
+    }
+  };
+
+  const handleDeleteTask = async () => {
+    const result = await dispatch(deletePlanner(currentPlanner?.id as number));
+    if (deletePlanner.fulfilled.match(result)) {
+      await dispatch(getPlanner());
+      setRemoveModalOpen(false);
     }
   };
 
@@ -165,6 +177,14 @@ const PlannerPage: React.FC = () => {
                             onOpenModal("edit");
                           }}
                         ></span>
+
+                        <span
+                          className="icon-delete"
+                          onClick={() => {
+                            setCurrentPlanner(plannerItem);
+                            setRemoveModalOpen(true);
+                          }}
+                        ></span>
                       </div>
                     </div>
                   </div>
@@ -190,6 +210,18 @@ const PlannerPage: React.FC = () => {
         handleModalClose={OnCloseModal}
         onSubmit={isUpdateModalOpen ? handleUpdateTask : handleAddTask}
       />
+
+      {/* попап на удаление обьекта */}
+      <Modal
+        isOpen={isRemoveModalOpen}
+        onClose={() => setRemoveModalOpen(false)}
+      >
+        <PopupRemove
+          loading={loading}
+          onSuccess={handleDeleteTask}
+          onClose={() => setRemoveModalOpen(false)}
+        />
+      </Modal>
     </div>
   );
 };

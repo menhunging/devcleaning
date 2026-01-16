@@ -15,6 +15,7 @@ import NotFoundPage from "../pages/notPage/NotFoundPage";
 import PlannerPage from "../pages/planner/PlannerPage";
 import TasksPage from "../pages/tasks/TasksPage";
 import AppealsPage from "../pages/appeals/AppealsPage";
+import ZonePage from "../pages/zone/ZonePage";
 
 const App: React.FC = () => {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
@@ -50,6 +51,8 @@ const App: React.FC = () => {
         />
       ))}
       <Route path="/auth" element={<AuthPage />} />
+      <Route path="/zone/" element={<ZonePage />} />
+      <Route path="/zone/:id" element={<ZonePage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

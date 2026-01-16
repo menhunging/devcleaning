@@ -211,6 +211,7 @@ picture {
   .page__body {
     width: 100%;
     margin-top: 30px;
+    overflow: auto;
   }
 
   .page__btn-back {
@@ -493,6 +494,7 @@ picture {
     align-items: center;
     border-radius: 10px;
     display: table-row;
+    transition: box-shadow 0.3s;
 
     & + .table__row {
       margin-top: 6px;
@@ -580,6 +582,12 @@ picture {
   &--success {
     &::before {
       background-color: #68f35c;
+    }
+  }
+
+  &--skipped {
+    &::before {
+      background-color: #f35c5c;
     }
   }
 }
