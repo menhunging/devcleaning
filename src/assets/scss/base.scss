@@ -590,6 +590,12 @@ picture {
       background-color: #f35c5c;
     }
   }
+
+  &--inwork {
+    &::before {
+      background-color: #eb0d0d;
+    }
+  }
 }
 
 .switcher {

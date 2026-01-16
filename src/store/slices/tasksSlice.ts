@@ -111,6 +111,7 @@ export const editTaskByID = createAsyncThunk<
   boolean,
   {
     id: string;
+    name: string;
     description: string;
     id_user: string;
     id_team: string;

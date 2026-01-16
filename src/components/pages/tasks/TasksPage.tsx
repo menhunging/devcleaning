@@ -32,6 +32,7 @@ const statuses: Record<string, StatusConfig> = {
   "2": { label: "Выполнено", className: "status--success" },
   "3": { label: "На паузе", className: "status--not-active" },
   "4": { label: "Пропуск", className: "status--skipped" },
+  "7": { label: "Активно", className: "status--inwork" },
 };
 
 const TasksPage: React.FC = () => {
@@ -87,6 +88,7 @@ const TasksPage: React.FC = () => {
     const result = await dispatch(
       editTaskByID({
         id: formData.id,
+        name: formData.name,
         description: formData.description,
         id_user: String(formData.id_user),
         id_team: String(formData.id_team),
