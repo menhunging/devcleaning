@@ -75,7 +75,7 @@ const TasksPage: React.FC = () => {
         date_start: formData.date_start,
         data_create: new Date().toISOString().split("T")[0],
         name: formData.name,
-      })
+      }),
     );
 
     if (addTask.fulfilled.match(result)) {
@@ -90,13 +90,14 @@ const TasksPage: React.FC = () => {
         id: formData.id,
         name: formData.name,
         description: formData.description,
+        id_zone: String(formData.id_zone),
         id_user: String(formData.id_user),
         id_team: String(formData.id_team),
         time_start: formData.time_start,
         time_end: formData.time_end,
         duration: String(formData.duration),
         date_start: formData.date_start,
-      })
+      }),
     );
 
     if (editTaskByID.fulfilled.match(result)) {

@@ -60,7 +60,7 @@ export const getTasksAll = createAsyncThunk<
 
     if (!success) {
       return thunkAPI.rejectWithValue(
-        message || "Ошибка при получении заданий"
+        message || "Ошибка при получении заданий",
       );
     }
 
@@ -68,7 +68,7 @@ export const getTasksAll = createAsyncThunk<
   } catch (err: any) {
     const error = err as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Ошибка при получении всех заданий"
+      error.response?.data?.message || "Ошибка при получении всех заданий",
     );
   }
 });
@@ -97,7 +97,7 @@ export const addTask = createAsyncThunk<
 
     if (!success) {
       return thunkAPI.rejectWithValue(
-        message || "Ошибка при добавлении задачи"
+        message || "Ошибка при добавлении задачи",
       );
     }
 
@@ -113,6 +113,7 @@ export const editTaskByID = createAsyncThunk<
     id: string;
     name: string;
     description: string;
+    id_zone: string;
     id_user: string;
     id_team: string;
     time_start: string;
@@ -151,7 +152,7 @@ export const deleteTasks = createAsyncThunk<
 
     if (!success) {
       return thunkAPI.rejectWithValue(
-        message || "Ошибка при добавлении обращения"
+        message || "Ошибка при добавлении обращения",
       );
     }
 
