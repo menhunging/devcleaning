@@ -20,7 +20,7 @@ export const addZone = createAsyncThunk<boolean, zone, { rejectValue: string }>(
 
       if (!success) {
         return thunkAPI.rejectWithValue(
-          message || "Ошибка при добавлении зоны"
+          message || "Ошибка при добавлении зоны",
         );
       }
 
@@ -28,10 +28,10 @@ export const addZone = createAsyncThunk<boolean, zone, { rejectValue: string }>(
     } catch (err: any) {
       const error = err as { response?: { data?: { message?: string } } };
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Ошибка при добавлении зоны"
+        error.response?.data?.message || "Ошибка при добавлении зоны",
       );
     }
-  }
+  },
 );
 
 export const updateZone = createAsyncThunk<
@@ -46,7 +46,7 @@ export const updateZone = createAsyncThunk<
 
     if (!success) {
       return thunkAPI.rejectWithValue(
-        message || "Ошибка при получении объектов"
+        message || "Ошибка при получении объектов",
       );
     }
 
@@ -54,7 +54,7 @@ export const updateZone = createAsyncThunk<
   } catch (err: any) {
     const error = err as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Ошибка при получении всех обьектов"
+      error.response?.data?.message || "Ошибка при получении всех обьектов",
     );
   }
 });
@@ -77,7 +77,7 @@ export const deleteZone = createAsyncThunk<
   } catch (err: any) {
     const error = err as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Ошибка при удалении зоны"
+      error.response?.data?.message || "Ошибка при удалении зоны",
     );
   }
 });
@@ -89,7 +89,6 @@ export const getZoneByID = createAsyncThunk<
 >("zones/getZoneByID", async (payload, thunkAPI) => {
   try {
     const response = await api.post("get_planner_user_zone/", {
-      id_user: payload.id_user,
       id_zone: payload.id_zone,
     });
 
@@ -97,7 +96,7 @@ export const getZoneByID = createAsyncThunk<
 
     if (!success) {
       return thunkAPI.rejectWithValue(
-        message || "Ошибка при получении задач для зоны"
+        message || "Ошибка при получении задач для зоны",
       );
     }
 
@@ -105,7 +104,7 @@ export const getZoneByID = createAsyncThunk<
   } catch (err: any) {
     const error = err as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || "Ошибка при получении задач для зоны"
+      error.response?.data?.message || "Ошибка при получении задач для зоны",
     );
   }
 });
